@@ -1,0 +1,6 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^dane$
+^cache$
+^dropbox$
+^vignettes/.*_cache$
