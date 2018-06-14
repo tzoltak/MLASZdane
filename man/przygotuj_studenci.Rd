@@ -14,4 +14,3 @@ studenci to plik wyeksportowany z systemu POL-on, zawierający informacje
 o absolwentach podlegających monitorowaniu, którzy kontunuują naukę na
 uczelniach wyższych
 }
-

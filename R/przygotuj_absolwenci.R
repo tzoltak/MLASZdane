@@ -12,6 +12,6 @@ przygotuj_absolwenci = function(){
   colnames(absolwenci) = tolower(colnames(absolwenci))
   # tu będą się znajdować przekształcenia struktury pliku
   #   jak już będzie wiadomo, jak on dokładnie wygląda
-  class(absolwenci) = c('studenci_df', class(absolwenci))
+  class(absolwenci) = c('absolwenci_df', class(absolwenci))
   return(absolwenci)
 }

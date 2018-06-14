@@ -3,7 +3,7 @@
 #' uczniowie to plik wyeksportowany z systemu SIO2, który zawiera informacje
 #' o monitorowanych absolwentach, którzy kontynuują naukę w szkołach
 #' (niebędących uczelniami wyższymi)
-#' @return ramka danych (klasy 'zdajacy_egzaminy_df')
+#' @return ramka danych (klasy 'uczniowie_df')
 #' @export
 #' @importFrom rio import
 przygotuj_uczniowie = function(){

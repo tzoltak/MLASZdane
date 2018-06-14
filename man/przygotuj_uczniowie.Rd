@@ -7,11 +7,10 @@
 przygotuj_uczniowie()
 }
 \value{
-ramka danych (klasy 'zdajacy_egzaminy_df')
+ramka danych (klasy 'uczniowie_df')
 }
 \description{
 uczniowie to plik wyeksportowany z systemu SIO2, który zawiera informacje
 o monitorowanych absolwentach, którzy kontynuują naukę w szkołach
 (niebędących uczelniami wyższymi)
 }
-

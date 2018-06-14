@@ -13,4 +13,3 @@ ramka danych (klasy 'zdajacy_egzaminy_df')
 zdajacy_egzaminy to plik z CKE/OKE, zawierający wyniki egzaminów zawodowych
 monitorowanych absolwentów
 }
-

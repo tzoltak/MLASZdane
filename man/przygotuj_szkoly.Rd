@@ -13,4 +13,3 @@ ramka danych (klasy 'szkoly_df')
 szkoly to plik wyeksporotwany z SIO, zawierający informacje o szkołach,
 dla których mają zostać obliczone wartości wskaźników
 }
-

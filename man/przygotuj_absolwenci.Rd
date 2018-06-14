@@ -15,4 +15,3 @@ badaniu monitorującemu - w szczególności zawierający informacje o tym, czy
 wyrazili oni zgodę na wykorzystanie ich nr. PESEL do łączenia danych
 (i ew. ten PESEL, jub jego zpseudonimizowane przekształcenie)
 }
-
