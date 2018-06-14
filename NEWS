@@ -1,3 +1,10 @@
+# MLASZdane 0.0.2 (27.12.2017)
+
+- Nowe funkcjeL
+  - wczytaj_wyniki_pilrm();
+  - imputuj_mies_pk_pilrm();
+  - przywroc_etykiety() (nieeksportowana).
+
 # MLASZdane 0.0.1 (23.12.2016)
 
 - Pierwsza wersja wypchnięta na GitHub.
