@@ -5,6 +5,9 @@
 #' absolwentóW i przekształca go na zbiory: czasów odpowiedzi, epizodów,
 #' członków gospodarstw domowych i zbiór obejmujący pozostałe zmienne
 #' @param x nazwa pliku z wynikami (ciąg znaków)
+#' @details Jeśli przy wczytywaniu pliku z wynikami badania pojawiając się
+#' błędy dotyczące alokacji pamięci, może pomóc downgrade pakietu \emph{haven}
+#' do wersji 1.1.0: \code{devtools::install_github("tidyverse/haven@v1.1.0")}.
 #' @return lista ramek danych
 #' @export
 #' @importFrom stats setNames
@@ -75,7 +78,7 @@ wczytaj_wyniki_pilrm = function(x){
       zp2h = ~ifelse(zp2h %in% c(1:2, 8), zp2h, NA),
       zp2i = ~ifelse(zp2i %in% 1:2, zp2i, NA),
       zp2j = ~ifelse(zp2j %in% 1:2, zp2j, NA),
-      zp2j = ~ifelse(zp2k %in% 1:2, zp2k, NA),
+      zp2k = ~ifelse(zp2k %in% 1:3, zp2k, NA),
       typ_epizodu = ~"LO dla dorosłych",
       nr = ~1,
       czas_rozp = ~ifelse(is.na(zp2a), 7, zp2a) - 6 + 12 * (zp2b - 2015),
@@ -306,7 +309,7 @@ wczytaj_wyniki_pilrm = function(x){
         pio1 = ~ifelse(pio1 %in% 1:4, pio1, NA),
         pio2 = ~ifelse(!(tolower(pio2) %in% c("nie dotyczy", "nie pracowałem zawodowo")),
                        enc2native(tolower(pio2)), "."),
-        pio3 = ~ifelse(!(tolower(pio3) %in% c("NIE DOTYCZY", "nie pracowałem zawodowo")),
+        pio3 = ~ifelse(!(tolower(pio3) %in% c("nie dotyczy", "nie pracowałem zawodowo")),
                        enc2native(tolower(pio3)), "."),
         pio4 = ~ifelse(pio4 %in% 1:99995, pio4, NA),
         pio5 = ~ifelse(pio5 %in% 1:6, pio5, NA),

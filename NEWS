@@ -1,6 +1,6 @@
 # MLASZdane 0.0.2 (27.12.2017)
 
-- Nowe funkcjeL
+- Nowe funkcje:
   - wczytaj_wyniki_pilrm();
   - imputuj_mies_pk_pilrm();
   - przywroc_etykiety() (nieeksportowana).
