@@ -5,9 +5,6 @@
 #' absolwentóW i przekształca go na zbiory: czasów odpowiedzi, epizodów,
 #' członków gospodarstw domowych i zbiór obejmujący pozostałe zmienne
 #' @param x nazwa pliku z wynikami (ciąg znaków)
-#' @details Jeśli przy wczytywaniu pliku z wynikami badania pojawiając się
-#' błędy dotyczące alokacji pamięci, może pomóc downgrade pakietu \emph{haven}
-#' do wersji 1.1.0: \code{devtools::install_github("tidyverse/haven@v1.1.0")}.
 #' @return lista ramek danych
 #' @export
 #' @importFrom stats setNames
