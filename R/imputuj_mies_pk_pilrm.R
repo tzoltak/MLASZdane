@@ -136,7 +136,7 @@ imputuj_mies_pk_pilrm = function(x) {
                 rok_rozp_f * r5s2,
               data = x))})
   tabeleCzas = lapply(modeleCzas, function(x) {
-    l = range(c(unique(round(predict(x), 0), model.frame(x)[, 1])))
+    l = range(c(round(predict(x), 0), model.frame(x)[, 1]))
     return(table(przewidywanie = factor(round(predict(x), 0), levels = l[1]:l[2]),
                  dl = factor(model.frame(x)[, 1], levels = l[1]:l[2])))
   })
@@ -178,7 +178,7 @@ imputuj_mies_pk_pilrm = function(x) {
                 rok_kon_f * r5s2,
               data = x))})
   tabeleDl = lapply(modeleDl, function(x) {
-    l = range(c(unique(round(predict(x), 0), model.frame(x)[, 1])))
+    l = range(c(round(predict(x), 0), model.frame(x)[, 1]))
     return(table(przewidywanie = factor(round(predict(x), 0), levels = l[1]:l[2]),
                  dl = factor(model.frame(x)[, 1], levels = l[1]:l[2])))
   })

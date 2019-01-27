@@ -1,7 +1,7 @@
 Package: MLASZdane
 Type: Package
 Title: Pakiet do zlaczania danych na potrzeby projektu MLEZAiMD
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: person("Tomasz", "Żółtak", email = "t.zoltak@ibe.edu.pl", role = c("aut", "cre"))
 Description: Pakiet do złączania danych z rejestrów, baz danych administracyjnych,
     baz danych wyników egzaminów i wyników badań sondażowych na potrzeby projektu
@@ -11,13 +11,13 @@ LazyData: TRUE
 Depends: R (>= 3.0.0)
 Imports:
     methods,
-    tidyr,
+    tidyr (>= 0.8.1),
     dplyr (>= 0.5.0),
-    haven,
+    haven (>= 1.1.2),
     MLAKdane (>= 0.7.2),
     rio
 Suggests:
     testthat,
     readxl
 Encoding: UTF-8
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
