@@ -4,9 +4,9 @@
 #' dla których mają zostać obliczone wartości wskaźników
 #' @return ramka danych (klasy 'szkoly_df')
 #' @export
-#' @importFrom rio import
+#' @importFrom utils read.csv2
 przygotuj_szkoly = function(){
-  szkoly = import(list.files(pattern = "^szkoły[.].{3,4}$"))
+  szkoly = read.csv2(list.files(pattern = "^szkoły[.].csv$"))
   colnames(szkoly) = tolower(colnames(szkoly))
   # tu będą się znajdować przekształcenia struktury pliku
   #   jak już będzie wiadomo, jak on dokładnie wygląda

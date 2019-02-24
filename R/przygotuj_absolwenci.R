@@ -6,9 +6,9 @@
 #' (i ew. ten PESEL, jub jego zpseudonimizowane przekształcenie)
 #' @return ramka danych (klasy 'absolwenci_df')
 #' @export
-#' @importFrom rio import
+#' @importFrom utils read.csv2
 przygotuj_absolwenci = function(){
-  absolwenci = import(list.files(pattern = "^absolwenci[.].{3,4}$"))
+  absolwenci = read.csv2(list.files(pattern = "^absolwenci[.].csv$"))
   colnames(absolwenci) = tolower(colnames(absolwenci))
   # tu będą się znajdować przekształcenia struktury pliku
   #   jak już będzie wiadomo, jak on dokładnie wygląda

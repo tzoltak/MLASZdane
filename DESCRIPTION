@@ -11,13 +11,12 @@ LazyData: TRUE
 Depends: R (>= 3.0.0)
 Imports:
     methods,
-    tidyr (>= 0.8.1),
-    dplyr (>= 0.5.0),
-    haven (>= 1.1.2),
-    MLAKdane (>= 0.7.2),
-    rio
+    tidyr (>= 0.8.2),
+    dplyr (>= 0.8.0),
+    haven (>= 2.1.0)
 Suggests:
     testthat,
-    readxl
+    covr,
+    MLAKdane
 Encoding: UTF-8
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1

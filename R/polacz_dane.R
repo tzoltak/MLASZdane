@@ -19,7 +19,7 @@
 #' @param szkoly dane wygenerowane za pomocą funkcji
 #'   \code{\link{przygotuj_szkoly}}
 #' @param pnaPowiaty dane wygenerowane za pomocą funkcji
-#'   \code{\link[MLAKdane]{przygotuj_pna_powiaty_mb}}
+#'   \code{\link[MLAKdane]{polacz_pna_powiaty}}
 #' @param dataMin początek okresu uwzględnionego w danych ZUS (jako łańcuch
 #'   znaków, np. '2014-01-01')
 #' @param dataMax koniec okresu uwzględnionego w danych ZUS (jako łańcuch
@@ -28,7 +28,6 @@
 #' @export
 #' @importFrom dplyr anti_join left_join select_ filter_ mutate_ distinct %>%
 #' @importFrom methods is
-#' @importFrom MLAKdane data2okres
 polacz_dane = function(absolwenci, zus, zdajacyEgzaminy, uczniowie, studenci,
                        szkoly, pnaPowiaty, dataMin, dataMax){
   stopifnot(
@@ -47,7 +46,14 @@ polacz_dane = function(absolwenci, zus, zdajacyEgzaminy, uczniowie, studenci,
             "' zawiera obserwacje, które nie występują w zbiorze danych 'absolwenci'!")
   }
 
-  okresy = data2okres(dataMin):data2okres(dataMax)
+  # w pakiecie MLAKdane jest od tego funkcja data2okres()
+  okresy =
+    as.integer(
+      sub('-.*$', '', dataMin) * 12 + sub('^[0-9]+-([0-9]+).*$', '\\1', dataMin)
+    ):as.integer(
+      sub('-.*$', '', dataMax) * 12 + sub('^[0-9]+-([0-9]+).*$', '\\1', dataMax)
+    )
+
   wynik = data.frame(
     id        = rep(absolwenci$id,        each = length(okresy)),
     data_rozp = rep(absolwenci$data_rozp, each = length(okresy)),

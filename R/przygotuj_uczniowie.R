@@ -5,9 +5,9 @@
 #' (niebędących uczelniami wyższymi)
 #' @return ramka danych (klasy 'uczniowie_df')
 #' @export
-#' @importFrom rio import
+#' @importFrom utils read.csv2
 przygotuj_uczniowie = function(){
-  uczniowie = import(list.files(pattern = "^uczniowie[.].{3,4}$"))
+  uczniowie = read.csv2(list.files(pattern = "^uczniowie[.].csv$"))
   colnames(uczniowie) = tolower(colnames(uczniowie))
   # tu będą się znajdować przekształcenia struktury pliku
   #   jak już będzie wiadomo, jak on dokładnie wygląda

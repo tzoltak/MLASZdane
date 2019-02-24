@@ -4,9 +4,9 @@
 #' monitorowanych absolwentów
 #' @return ramka danych (klasy 'zdajacy_egzaminy_df')
 #' @export
-#' @importFrom rio import
+#' @importFrom utils read.csv2
 przygotuj_zdajacy = function(){
-  zE = import(list.files(pattern = "^zadający_egzaminy[.].{3,4}$"))
+  zE = read.csv2(list.files(pattern = "^zadający_egzaminy[.].csv$"))
   colnames(zE) = tolower(colnames(zE))
   # tu będą się znajdować przekształcenia struktury pliku
   #   jak już będzie wiadomo, jak on dokładnie wygląda

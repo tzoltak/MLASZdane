@@ -2,8 +2,7 @@
 % Please edit documentation in R/wczytaj_wyniki_pilrm.R
 \name{wczytaj_wyniki_pilrm}
 \alias{wczytaj_wyniki_pilrm}
-\title{Wczytuje zbiór z wynikami pierwszej rundy monitorowania losow
-absolwentow}
+\title{Wczytuje zbiór z wynikami pilotazowej rundy monitorowania losow absolwentow}
 \usage{
 wczytaj_wyniki_pilrm(x)
 }
@@ -16,5 +15,10 @@ lista ramek danych
 \description{
 Funkcja wczytuje plik z wynikami pilotażowej rundy monitoringu losów
 absolwentóW i przekształca go na zbiory: czasów odpowiedzi, epizodów,
-członków gospodarstw domowych i zbiór obejmujący pozostałe zmienne
+członków gospodarstw domowych i zbiór obejmujący pozostałe zmienne.
+}
+\details{
+Funkcja jest całkowicie nieodporna na niewystępowanie w zbiorze kolumn,
+których istnienia oczekuje - w takiej sytuacji będzie rzucać umiarkowanie
+informatywnymi błędami.
 }

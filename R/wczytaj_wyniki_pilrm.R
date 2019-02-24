@@ -1,24 +1,36 @@
-#' @title Wczytuje zbiór z wynikami pierwszej rundy monitorowania losow
-#' absolwentow
+#' @title Wczytuje zbiór z wynikami pilotazowej rundy monitorowania losow absolwentow
 #' @description
 #' Funkcja wczytuje plik z wynikami pilotażowej rundy monitoringu losów
 #' absolwentóW i przekształca go na zbiory: czasów odpowiedzi, epizodów,
-#' członków gospodarstw domowych i zbiór obejmujący pozostałe zmienne
+#' członków gospodarstw domowych i zbiór obejmujący pozostałe zmienne.
 #' @param x nazwa pliku z wynikami (ciąg znaków)
+#' @details
+#' Funkcja jest całkowicie nieodporna na niewystępowanie w zbiorze kolumn,
+#' których istnienia oczekuje - w takiej sytuacji będzie rzucać umiarkowanie
+#' informatywnymi błędami.
 #' @return lista ramek danych
 #' @export
 #' @importFrom stats setNames
 #' @importFrom haven read_spss
 #' @importFrom tidyr gather spread
-#' @importFrom dplyr bind_cols bind_rows case_when filter_ funs group_by_
-#' left_join mutate mutate_ mutate_all mutate_at one_of rename_ select select_
-#' starts_with summarise_ vars
+#' @importFrom dplyr .data bind_cols bind_rows case_when filter group_by
+#' left_join matches mutate mutate_all mutate_at one_of rename select
+#' starts_with summarise vars
 wczytaj_wyniki_pilrm = function(x){
   stopifnot(is.character(x), length(x) == 1)
-  stopifnot(file.exists(x),
-            file.access(x, 4) == 0)
-
+  if (!grepl("[.]sav$", x)) {
+    stop("Podany plik nie jest w formacie .sav.")
+  }
+  if (!file.exists(x)) {
+    stop("Plik o podanej nazwie nie istnieje.")
+  }
+  if (file.access(x, 4) != 0) {
+    stop("Brak uprawnień do odczytania podanego pliku.")
+  }
   dane = read_spss(x)
+  if (!any(grepl("^ID_IBE$", names(dane), ignore.case = TRUE))) {
+    stop("W zbiorze brak identyfikatora respondenta (tj. zmiennej `ID_IBE`).")
+  }
   names(dane) = names(dane) %>% tolower()
   names(dane) = sub("^id_ibe$", "ID", names(dane))
   labTemp = attributes(dane$ID)
@@ -30,9 +42,9 @@ wczytaj_wyniki_pilrm = function(x){
   #|->
   message("Wyłączanie zbioru z czasami odpowiedzi.")
   czasy = dane %>%
-    select_(~ID, ~r41, ~starts_with("t_")) %>%
-    mutate_at(vars(starts_with("t_")), funs(as.difftime(., "%H:%M:%S",
-                                                        units = "secs")))
+    select("ID", "r41", starts_with("t_")) %>%
+    mutate_at(vars(starts_with("t_")), list(~as.difftime(., "%H:%M:%S",
+                                                         units = "secs")))
   for (i in grep("t_", names(czasy))) {
     attributes(czasy[[i]])$label = paste0("Czas odp. na pyt. opisywane zmienną ",
                                           names(czasy)[i], " [s]")
@@ -61,28 +73,29 @@ wczytaj_wyniki_pilrm = function(x){
   #|-> nauka w LO dla dorosłych
   message("  nauki w LO dla dorosłych,")
   labTemp = dane %>%
-    filter_(~zp1 %in% 1) %>%
-    select_(~ID, ~matches("^zp2"))
+    filter(.data$zp1 %in% 1) %>%
+    select("ID", matches("^zp2"))
   naukaLOdD = labTemp %>%
-    mutate_(.dots = list(
-      zp2a = ~ifelse(zp2a %in% 1:12, zp2a, NA),
-      zp2b = ~ifelse(zp2b %in% 2000:2100, zp2b, NA),
-      zp2c = ~ifelse(zp2c %in% 1:4, zp2c, NA),
-      zp2d = ~ifelse(zp2d %in% 1:2, zp2d, NA),
-      zp2e = ~ifelse(zp2e %in% 1:2, zp2e, NA),
-      zp2f = ~ifelse(zp2f %in% 1:12, zp2f, NA),
-      zp2g = ~ifelse(zp2g %in% 2000:2100, zp2g, NA),
-      zp2h = ~ifelse(zp2h %in% c(1:2, 8), zp2h, NA),
-      zp2i = ~ifelse(zp2i %in% 1:2, zp2i, NA),
-      zp2j = ~ifelse(zp2j %in% 1:2, zp2j, NA),
-      zp2k = ~ifelse(zp2k %in% 1:3, zp2k, NA),
-      typ_epizodu = ~"LO dla dorosłych",
-      nr = ~1,
-      czas_rozp = ~ifelse(is.na(zp2a), 7, zp2a) - 6 + 12 * (zp2b - 2015),
-      czas_kon = ~ifelse(is.na(zp2f), 6, zp2f) - 6 + 12 * (zp2g - 2015),
-      czy_zakonczony = ~ifelse(zp2c %in% c(1, 4), 1, 2))) %>%
-    select_(~ID, ~typ_epizodu, ~nr, ~czas_rozp, ~czas_kon, ~czy_zakonczony,
-            ~starts_with("zp"))
+    mutate(zp2a = ifelse(.data$zp2a %in% 1:12, .data$zp2a, NA),
+           zp2b = ifelse(.data$zp2b %in% 2000:2100, .data$zp2b, NA),
+           zp2c = ifelse(.data$zp2c %in% 1:4, .data$zp2c, NA),
+           zp2d = ifelse(.data$zp2d %in% 1:2, .data$zp2d, NA),
+           zp2e = ifelse(.data$zp2e %in% 1:2, .data$zp2e, NA),
+           zp2f = ifelse(.data$zp2f %in% 1:12, .data$zp2f, NA),
+           zp2g = ifelse(.data$zp2g %in% 2000:2100, .data$zp2g, NA),
+           zp2h = ifelse(.data$zp2h %in% c(1:2, 8), .data$zp2h, NA),
+           zp2i = ifelse(.data$zp2i %in% 1:2, .data$zp2i, NA),
+           zp2j = ifelse(.data$zp2j %in% 1:2, .data$zp2j, NA),
+           zp2k = ifelse(.data$zp2k %in% 1:3, .data$zp2k, NA),
+           typ_epizodu = "LO dla dorosłych",
+           nr = 1,
+           czas_rozp = ifelse(is.na(.data$zp2a), 7, .data$zp2a) - 6 +
+             12 * (.data$zp2b - 2015),
+           czas_kon = ifelse(is.na(.data$zp2f), 6, .data$zp2f) - 6 +
+             12 * (.data$zp2g - 2015),
+           czy_zakonczony = ifelse(.data$zp2c %in% c(1, 4), 1, 2)) %>%
+    select("ID", "typ_epizodu", "nr", "czas_rozp", "czas_kon", "czy_zakonczony",
+            starts_with("zp"))
   naukaLOdD = przywroc_etykiety(naukaLOdD, labWspolne)
   naukaLOdD = przywroc_etykiety(naukaLOdD, labTemp)
   for (i in c("zp2a", "zp2b", "zp2f", "zp2g")) {
@@ -92,45 +105,49 @@ wczytaj_wyniki_pilrm = function(x){
   #|-> studia (i zdawanie na nie)
   message("  studiowania,")
   labTemp = dane %>%
-    filter_(~sp1_1 %in% 1) %>%
-    select_(~ID, ~matches("^sp(2|3a|[45]_1)$|^sp[3]_1_|^sp6([dfg]|[ce][12])_1$|sp6h_1_[123]$")) %>%
-    setNames(sub("_1", "", names(.)))
-  studia =  suppressWarnings(
+    filter(.data$sp1_1 %in% 1) %>%
+    select("ID", matches("^sp(2|3a|[45]_1)$|^sp[3]_1_|^sp6([dfg]|[ce][12])_1$|sp6h_1_[123]$"))
+  names(labTemp) = sub("_1", "", names(labTemp))
+  studia = suppressWarnings(
     dane %>%
-      filter_(~sp1_1 %in% 1) %>%
-      select_(~ID, ~matches("^sp[23456]")) %>%
-      gather("zmienna", "value", one_of(setdiff(names(.), c("ID", "sp2", "sp3a")))) %>%
-      mutate_(.dots = list(
-        nr = ~as.numeric(sub("^sp([345]|6[dfgh]|6[ce][12])_([[:digit:]]+).*$", "\\2", zmienna)),
-        zmienna = ~sub("^sp([345]|6[dfgh]|6[ce][12])_[[:digit:]]+", "sp\\1", zmienna))) %>%
+      filter(.data$sp1_1 %in% 1) %>%
+      select("ID", matches("^sp[23456]")) %>%
+      gather("zmienna", "value", -one_of("ID", "sp2", "sp3a"))) %>%
+      mutate(nr = as.numeric(sub("^sp([345]|6[dfgh]|6[ce][12])_([[:digit:]]+).*$",
+                                 "\\2", .data$zmienna)),
+             zmienna = sub("^sp([345]|6[dfgh]|6[ce][12])_[[:digit:]]+",
+                           "sp\\1", .data$zmienna)) %>%
       spread("zmienna", "value", convert = TRUE) %>%
-      filter_(~nr <= sp2) %>%
-      mutate_(.dots = list(
-        sp3a = ~ifelse(sp3a < sp2, sp3a, NA),
-        sp3_kierunek = ~enc2native(tolower(sp3_kierunek)),
-        sp3_uczelnia = ~enc2native(tolower(sp3_uczelnia)),
-        czy_preferowany = ~ifelse(sp3a < 6, 2 - as.numeric(nr == sp3a), NA),
-        czy_preferowany = ~ifelse(sp2 %in% 1, 1, czy_preferowany),
-        sp4 = ~ifelse(sp4 %in% 1:2, sp4, NA),
-        sp5 = ~ifelse(sp5 %in% 1:2, sp5, NA),
-        sp6c1 = ~ifelse(sp6c1 %in% 1:12, sp6c1, NA),
-        sp6c2 = ~ifelse(sp6c2 %in% 2000:2100, sp6c2, NA),
-        sp6d = ~ifelse(sp6d %in% 1:4, sp6d, NA),
-        sp6e1 = ~ifelse(sp6e1 %in% 1:12, sp6e1, NA),
-        sp6e2 = ~ifelse(sp6e2 %in% 2000:2100, sp6e2, NA),
-        sp6f = ~ifelse(sp6f %in% 1:3, sp6f, NA),
-        sp6g = ~ifelse(sp6g %in% 1:2, sp6g, NA),
-        sp6h_1 = ~ifelse(sp6h_1 %in% 0:1, 2 - sp6h_1, NA),
-        sp6h_2 = ~ifelse(sp6h_2 %in% 0:1, 2 - sp6h_2, NA),
-        sp6h_3 = ~ifelse(sp6h_3 %in% 0:1, 2 - sp6h_3, NA),
-        typ_epizodu = ~ifelse(sp5 %in% 1, "studia", "zdawanie na studia"),
-        czas_rozp = ~ifelse(is.na(sp6c1), 7, sp6c1) - 6 + 12 * (sp6c2 - 2015),
-        czas_kon = ~ifelse(is.na(sp6e1), 6, sp6e1) - 6 + 12 * (sp6e2 - 2015),
-        czy_zakonczony = ~ifelse(sp6d %in% c(1, 4), 1, 2),
-        czy_zakonczony = ~ifelse(typ_epizodu %in% "studia", czy_zakonczony, NA))) %>%
-      select_(~-sp6h_4) %>%
-      select_(~ID, ~typ_epizodu, ~nr, ~czas_rozp, ~czas_kon, ~czy_zakonczony,
-              ~czy_preferowany, ~starts_with("sp")))
+      filter(.data$nr <= .data$sp2) %>%
+    mutate(sp3a = ifelse(.data$sp3a < .data$sp2, .data$sp3a, NA),
+           sp3_kierunek = enc2native(tolower(.data$sp3_kierunek)),
+           sp3_uczelnia = enc2native(tolower(.data$sp3_uczelnia)),
+           czy_preferowany = ifelse(.data$sp3a < 6,
+                                    2 - as.numeric(.data$nr == .data$sp3a), NA),
+           czy_preferowany = ifelse(.data$sp2 %in% 1, 1, .data$czy_preferowany),
+           sp4 = ifelse(.data$sp4 %in% 1:2, .data$sp4, NA),
+           sp5 = ifelse(.data$sp5 %in% 1:2, .data$sp5, NA),
+           sp6c1 = ifelse(.data$sp6c1 %in% 1:12, .data$sp6c1, NA),
+           sp6c2 = ifelse(.data$sp6c2 %in% 2000:2100, .data$sp6c2, NA),
+           sp6d = ifelse(.data$sp6d %in% 1:4, .data$sp6d, NA),
+           sp6e1 = ifelse(.data$sp6e1 %in% 1:12, .data$sp6e1, NA),
+           sp6e2 = ifelse(.data$sp6e2 %in% 2000:2100, .data$sp6e2, NA),
+           sp6f = ifelse(.data$sp6f %in% 1:3, .data$sp6f, NA),
+           sp6g = ifelse(.data$sp6g %in% 1:2, .data$sp6g, NA),
+           sp6h_1 = ifelse(.data$sp6h_1 %in% 0:1, 2 - .data$sp6h_1, NA),
+           sp6h_2 = ifelse(.data$sp6h_2 %in% 0:1, 2 - .data$sp6h_2, NA),
+           sp6h_3 = ifelse(.data$sp6h_3 %in% 0:1, 2 - .data$sp6h_3, NA),
+           typ_epizodu = ifelse(.data$sp5 %in% 1, "studia", "zdawanie na studia"),
+           czas_rozp = ifelse(is.na(.data$sp6c1), 7, .data$sp6c1) - 6 +
+             12 * (.data$sp6c2 - 2015),
+           czas_kon = ifelse(is.na(.data$sp6e1), 6, .data$sp6e1) - 6 +
+             12 * (.data$sp6e2 - 2015),
+           czy_zakonczony = ifelse(.data$sp6d %in% c(1, 4), 1, 2),
+           czy_zakonczony = ifelse(.data$typ_epizodu %in% "studia",
+                                   .data$czy_zakonczony, NA)) %>%
+  select(-"sp6h_4") %>%
+  select("ID", "typ_epizodu", "nr", "czas_rozp", "czas_kon", "czy_zakonczony",
+         "czy_preferowany", starts_with("sp"))
   studia = przywroc_etykiety(studia, labWspolne)
   attributes(studia$czy_preferowany)$label = "Czy był to kierunek, na który najbardziej chciał(a) się Pan(i) dostać?"
   studia = przywroc_etykiety(studia, labTemp)
@@ -145,46 +162,50 @@ wczytaj_wyniki_pilrm = function(x){
   message("  nauki w SPolic.,")
   names(dane) = sub("pp6i([[:digit:]]+_.*)$", "pp6i_\\1", names(dane))
   labTemp = dane %>%
-    filter_(~sp1_2 %in% 1) %>%
-    select_(~ID, ~matches("^pp(2|3a|[45]_1)$|^pp[3]_1_|^pp6([degh]|[cf][12])_1$|pp6i_1_[123]$")) %>%
-    setNames(sub("_1", "", names(.)))
+    filter(.data$sp1_2 %in% 1) %>%
+    select("ID", matches("^pp(2|3a|[45]_1)$|^pp[3]_1_|^pp6([degh]|[cf][12])_1$|pp6i_1_[123]$"))
+  names(labTemp) = sub("_1", "", names(labTemp))
   spolic =  suppressWarnings(
     dane %>%
-      filter_(~sp1_2 %in% 1) %>%
-      select_(~ID, ~matches("^pp[23456]")) %>%
-      gather("zmienna", "value", one_of(setdiff(names(.), c("ID", "pp2", "pp3a")))) %>%
-      mutate_(.dots = list(
-        nr = ~as.numeric(sub("^pp([345]|6[deghi]|6[cf][12])_([[:digit:]]+).*$", "\\2", zmienna)),
-        zmienna = ~sub("^pp([345]|6[deghi]|6[cf][12])_[[:digit:]]+", "pp\\1", zmienna))) %>%
+      filter(.data$sp1_2 %in% 1) %>%
+      select("ID", matches("^pp[23456]")) %>%
+      gather("zmienna", "value", -one_of("ID", "pp2", "pp3a"))) %>%
+      mutate(nr = as.numeric(sub("^pp([345]|6[deghi]|6[cf][12])_([[:digit:]]+).*$",
+                                 "\\2", .data$zmienna)),
+             zmienna = sub("^pp([345]|6[deghi]|6[cf][12])_[[:digit:]]+",
+                           "pp\\1", .data$zmienna)) %>%
       spread("zmienna", "value", convert = TRUE) %>%
-      filter_(~nr <= pp2) %>%
-      mutate_(.dots = list(
-        pp3a = ~ifelse(pp3a < pp2, pp3a, NA),
-        pp3_kierunek = ~enc2native(tolower(pp3_kierunek)),
-        pp3_miejscowosc = ~enc2native(tolower(pp3_miejscowosc)),
-        czy_preferowany = ~ifelse(pp3a < 6, 2 - as.numeric(nr == pp3a), NA),
-        czy_preferowany = ~ifelse(pp2 %in% 1, 1, czy_preferowany),
-        pp4 = ~ifelse(pp4 %in% 1:2, pp4, NA),
-        pp5 = ~ifelse(pp5 %in% 1:2, pp5, NA),
-        pp6c1 = ~ifelse(pp6c1 %in% 1:12, pp6c1, NA),
-        pp6c2 = ~ifelse(pp6c2 %in% 2000:2100, pp6c2, NA),
-        pp6d = ~ifelse(pp6d %in% 1:4, pp6d, NA),
-        pp6e = ~ifelse(pp6e %in% 1:4, pp6e, NA),
-        pp6f1 = ~ifelse(pp6f1 %in% 1:12, pp6f1, NA),
-        pp6f2 = ~ifelse(pp6f2 %in% 2000:2100, pp6f2, NA),
-        pp6g = ~ifelse(pp6g %in% 1:3, pp6g, NA),
-        pp6h = ~ifelse(pp6h %in% 1:2, pp6h, NA),
-        pp6i_1 = ~ifelse(pp6i_1 %in% 0:1, 2 - pp6i_1, NA),
-        pp6i_2 = ~ifelse(pp6i_2 %in% 0:1, 2 - pp6i_2, NA),
-        pp6i_3 = ~ifelse(pp6i_3 %in% 0:1, 2 - pp6i_3, NA),
-        typ_epizodu = ~ifelse(pp5 %in% 1, "SPolic.", "zdawanie do SPolic."),
-        czas_rozp = ~ifelse(is.na(pp6c1), 7, pp6c1) - 6 + 12 * (pp6c2 - 2015),
-        czas_kon = ~ifelse(is.na(pp6f1), 6, pp6f1) - 6 + 12 * (pp6f2 - 2015),
-        czy_zakonczony = ~ifelse(pp6d %in% c(1, 4), 1, 2),
-        czy_zakonczony = ~ifelse(typ_epizodu %in% "SPolic.", czy_zakonczony, NA))) %>%
-      select_(~-pp6i_4) %>%
-      select_(~ID, ~typ_epizodu, ~nr, ~czas_rozp, ~czas_kon, ~czy_zakonczony,
-              ~czy_preferowany, ~starts_with("pp")))
+      filter(.data$nr <= .data$pp2) %>%
+    mutate(pp3a = ifelse(.data$pp3a < .data$pp2, .data$pp3a, NA),
+           pp3_kierunek = enc2native(tolower(.data$pp3_kierunek)),
+           pp3_miejscowosc = enc2native(tolower(.data$pp3_miejscowosc)),
+           czy_preferowany = ifelse(.data$pp3a < 6,
+                                    2 - as.numeric(.data$nr == .data$pp3a), NA),
+           czy_preferowany = ifelse(.data$pp2 %in% 1, 1, .data$czy_preferowany),
+           pp4 = ifelse(.data$pp4 %in% 1:2, .data$pp4, NA),
+           pp5 = ifelse(.data$pp5 %in% 1:2, .data$pp5, NA),
+           pp6c1 = ifelse(.data$pp6c1 %in% 1:12, .data$pp6c1, NA),
+           pp6c2 = ifelse(.data$pp6c2 %in% 2000:2100, .data$pp6c2, NA),
+           pp6d = ifelse(.data$pp6d %in% 1:4, .data$pp6d, NA),
+           pp6e = ifelse(.data$pp6e %in% 1:4, .data$pp6e, NA),
+           pp6f1 = ifelse(.data$pp6f1 %in% 1:12, .data$pp6f1, NA),
+           pp6f2 = ifelse(.data$pp6f2 %in% 2000:2100, .data$pp6f2, NA),
+           pp6g = ifelse(.data$pp6g %in% 1:3, .data$pp6g, NA),
+           pp6h = ifelse(.data$pp6h %in% 1:2, .data$pp6h, NA),
+           pp6i_1 = ifelse(.data$pp6i_1 %in% 0:1, 2 - .data$pp6i_1, NA),
+           pp6i_2 = ifelse(.data$pp6i_2 %in% 0:1, 2 - .data$pp6i_2, NA),
+           pp6i_3 = ifelse(.data$pp6i_3 %in% 0:1, 2 - .data$pp6i_3, NA),
+           typ_epizodu = ifelse(.data$pp5 %in% 1, "SPolic.", "zdawanie do SPolic."),
+           czas_rozp = ifelse(is.na(.data$pp6c1), 7, .data$pp6c1) - 6 +
+             12 * (.data$pp6c2 - 2015),
+           czas_kon = ifelse(is.na(.data$pp6f1), 6, .data$pp6f1) - 6 +
+             12 * (.data$pp6f2 - 2015),
+           czy_zakonczony = ifelse(.data$pp6d %in% c(1, 4), 1, 2),
+           czy_zakonczony = ifelse(.data$typ_epizodu %in% "SPolic.",
+                                   .data$czy_zakonczony, NA)) %>%
+  select(-"pp6i_4") %>%
+  select("ID", "typ_epizodu", "nr", "czas_rozp", "czas_kon", "czy_zakonczony",
+         "czy_preferowany", starts_with("pp"))
   spolic = przywroc_etykiety(spolic, labWspolne)
   attributes(spolic$czy_preferowany)$label = "Czy był to kierunek/zawód, na który najbardziej chciał(a) się Pan(i) dostać?"
   spolic = przywroc_etykiety(spolic, labTemp)
@@ -198,34 +219,36 @@ wczytaj_wyniki_pilrm = function(x){
   #|-> egzaminy (uprawnienia)
   message("  odbywania kursów i zdobywania uprawnień,")
   labTemp = dane %>%
-    filter_(~u1 %in% 1) %>%
-    select_(~ID, ~matches("^u2[bcdfg]_1|^u2e[12]_1")) %>%
-    setNames(sub("_1", "", names(.)))
+    filter(.data$u1 %in% 1) %>%
+    select("ID", matches("^u2[bcdfg]_1|^u2e[12]_1"))
+  names(labTemp) = sub("_1", "", names(labTemp))
   uprawnienia =  suppressWarnings(
     dane %>%
-      filter_(~u1 %in% 1) %>%
-      select_(~ID, ~matches("^u2")) %>%
-      gather("zmienna", "value", one_of(setdiff(names(.), "ID"))) %>%
-      mutate_(.dots = list(
-        nr = ~as.numeric(sub("^u2([bcdfg]|e[12])_([[:digit:]]+).*$", "\\2", zmienna)),
-        zmienna = ~sub("^u2([bcdfg]|e[12])_[[:digit:]]+(|_in)$", "u2\\1\\2", zmienna))) %>%
-      spread("zmienna", "value", convert = TRUE) %>%
-      filter_(~u2b != "NIE DOTYCZY") %>%
-      mutate_(.dots = list(
-        u2b = ~enc2native(tolower(u2b)),
-        u2c = ~ifelse(u2c %in% 1:5, u2c, NA),
-        u2c_in = ~ifelse(u2c_in != "NIE DOTYCZY", enc2native(tolower(u2c_in)), "."),
-        u2d = ~ifelse(u2d %in% 1:2, u2d, NA),
-        u2e1 = ~ifelse(u2e1 %in% 1:12, u2e1, NA),
-        u2e2 = ~ifelse(u2e2 %in% 2000:2100, u2e2, NA),
-        u2f = ~ifelse(u2f %in% 1:4, u2f, NA),
-        u2g = ~ifelse(u2g %in% 1:4, u2g, NA),
-        typ_epizodu = ~"uprawnienia",
-        czas_rozp = ~NA,
-        czas_kon = ~ifelse(is.na(u2e1), 6, u2e1) - 6 + 12 * (u2e2 - 2015),
-        czy_zakonczony = ~ifelse(u2d %in% 1, 1, 2))) %>%
-      select_(~ID, ~typ_epizodu, ~nr, ~czas_rozp, ~czas_kon, ~czy_zakonczony,
-              ~starts_with("u2")))
+      filter(.data$u1 %in% 1) %>%
+      select("ID", matches("^u2")) %>%
+      gather("zmienna", "value", -"ID")) %>%
+    mutate(nr = as.numeric(sub("^u2([bcdfg]|e[12])_([[:digit:]]+).*$", "\\2",
+                               .data$zmienna)),
+           zmienna = sub("^u2([bcdfg]|e[12])_[[:digit:]]+(|_in)$", "u2\\1\\2",
+                         .data$zmienna)) %>%
+    spread("zmienna", "value", convert = TRUE) %>%
+    filter(.data$u2b != "NIE DOTYCZY") %>%
+    mutate(u2b = enc2native(tolower(.data$u2b)),
+           u2c = ifelse(.data$u2c %in% 1:5, .data$u2c, NA),
+           u2c_in = ifelse(.data$u2c_in != "NIE DOTYCZY",
+                           enc2native(tolower(.data$u2c_in)), "."),
+           u2d = ifelse(.data$u2d %in% 1:2, .data$u2d, NA),
+           u2e1 = ifelse(.data$u2e1 %in% 1:12, .data$u2e1, NA),
+           u2e2 = ifelse(.data$u2e2 %in% 2000:2100, .data$u2e2, NA),
+           u2f = ifelse(.data$u2f %in% 1:4, .data$u2f, NA),
+           u2g = ifelse(.data$u2g %in% 1:4, .data$u2g, NA),
+           typ_epizodu = "uprawnienia",
+           czas_rozp = NA,
+           czas_kon = ifelse(is.na(.data$u2e1), 6, .data$u2e1) - 6 +
+             12 * (.data$u2e2 - 2015),
+           czy_zakonczony = ifelse(.data$u2d %in% 1, 1, 2)) %>%
+    select("ID", "typ_epizodu", "nr", "czas_rozp", "czas_kon", "czy_zakonczony",
+           starts_with("u2"))
   uprawnienia = przywroc_etykiety(uprawnienia, labWspolne)
   uprawnienia = przywroc_etykiety(uprawnienia, labTemp)
   for (i in c("u2e1", "u2e2")) {
@@ -242,86 +265,87 @@ wczytaj_wyniki_pilrm = function(x){
   names(dane) = sub("^pg4$", "pg1b_99", names(dane))
   names(dane) = sub("^pi5$", "pi7", names(dane))
   labTemp = dane %>%
-    filter_(~pg1b_97_1 %in% 0) %>%
-    select_(~ID, ~matches("^pg2[bcdefghij].*_1$")) %>%
-    setNames(sub("_1", "", names(.)))
+    filter(.data$pg1b_97_1 %in% 0) %>%
+    select("ID", matches("^pg2[bcdefghij].*_1$"))
+  names(labTemp) = sub("_1", "", names(labTemp))
   labTempPI =  dane %>%
-    filter_(~pg1b_97_1 %in% 0) %>%
-    select_(~ID, ~matches("^p[i]")) %>%
-    setNames(sub("^pi", "pio", names(.)))
+    filter(.data$pg1b_97_1 %in% 0) %>%
+    select("ID", matches("^p[i]"))
+  names(labTempPI) = sub("^pi", "pio", names(labTempPI))
   labTempPO =  dane %>%
-    filter_(~pg1b_97_1 %in% 0) %>%
-    select_(~ID, ~matches("^p[o]")) %>%
-    setNames(sub("^po", "pio", names(.)))
+    filter(.data$pg1b_97_1 %in% 0) %>%
+    select("ID", matches("^p[o]"))
+  names(labTempPO) = sub("^po", "pio", names(labTempPO))
   prace = suppressWarnings(
     dane %>%
-      select_(~ID, ~matches("^pg[12]")) %>%
-      gather("zmienna", "value", one_of(setdiff(names(.), "ID"))) %>%
-      mutate_(.dots = list(
-        nr = ~as.numeric(sub("^.*_([[:digit:]]+)$", "\\1", zmienna)),
-        zmienna = ~sub("^(.*)_[[:digit:]]+$", "\\1", zmienna))) %>%
-      spread("zmienna", "value", convert = TRUE) %>%
-      filter_(~pg1b != "NIE DOTYCZY") %>%
-      select_(~-pg1b_97, ~-pg2a) %>%
-      mutate_(.dots = list(
-        pg1b = ~ifelse(grepl("^MP", pg1b), pg1b, "MP99"),
-        pg2c = ~ifelse(pg2c %in% 1:12, pg2c, NA),
-        pg2d = ~ifelse(pg2d %in% 2000:2100, pg2d, NA) %>% as.numeric(),
-        pg2e = ~ifelse(pg2e %in% 1:12, pg2e, NA),
-        czy_zakonczony = ~ifelse(pg2f %in% 9995, 2, 1),
-        pg2f = ~ifelse(pg2f %in% 2000:2100, pg2f, NA),
-        pg2g = ~ifelse(pg2g %in% 1:5, pg2g, NA),
-        pg2h = ~ifelse(pg2h %in% c(1:5, 7:8), pg2h, NA),
-        pg2h_in = ~ifelse(pg2h_in == "NIE DOTYCZY", ".", enc2native(tolower(pg2h_in))),
-        pg2i = ~ifelse(pg2i %in% 1:3, pg2i, NA),
-        pg2ia = ~ifelse(pg2ia %in% 1:16, pg2ia, NA),
-        pg2ib = ~ifelse(pg2ib %in% 1:9995, pg2ib, NA),
-        pg2ic = ~ifelse(pg2ic %in% c(1:14, 98), pg2ic, NA),
-        pg2j = ~ifelse(pg2j %in% 1:2, pg2j, NA),
-        typ_epizodu = ~"praca",
-        czas_rozp = ~ifelse(is.na(pg2c), 7, pg2c) - 6 + 12 * (pg2d - 2015),
-        czas_kon = ~ifelse(is.na(pg2e), 6, pg2e) - 6 + 12 * (pg2f - 2015))))
+      select("ID", matches("^pg[12]")) %>%
+      gather("zmienna", "value", -"ID")) %>%
+    mutate(nr = as.numeric(sub("^.*_([[:digit:]]+)$", "\\1", .data$zmienna)),
+           zmienna = sub("^(.*)_[[:digit:]]+$", "\\1", .data$zmienna)) %>%
+    spread("zmienna", "value", convert = TRUE) %>%
+    filter(.data$pg1b != "NIE DOTYCZY") %>%
+    select(-"pg1b_97", -"pg2a") %>%
+    mutate(pg1b = ifelse(grepl("^MP", .data$pg1b), .data$pg1b, "MP99"),
+           pg2c = ifelse(.data$pg2c %in% 1:12, .data$pg2c, NA),
+           pg2d = ifelse(.data$pg2d %in% 2000:2100, .data$pg2d, NA) %>% as.numeric(),
+           pg2e = ifelse(.data$pg2e %in% 1:12, .data$pg2e, NA),
+           czy_zakonczony = ifelse(.data$pg2f %in% 9995, 2, 1),
+           pg2f = ifelse(.data$pg2f %in% 2000:2100, .data$pg2f, NA),
+           pg2g = ifelse(.data$pg2g %in% 1:5, .data$pg2g, NA),
+           pg2h = ifelse(.data$pg2h %in% c(1:5, 7:8), .data$pg2h, NA),
+           pg2h_in = ifelse(.data$pg2h_in == "NIE DOTYCZY",
+                            ".", enc2native(tolower(.data$pg2h_in))),
+           pg2i = ifelse(.data$pg2i %in% 1:3, .data$pg2i, NA),
+           pg2ia = ifelse(.data$pg2ia %in% 1:16, .data$pg2ia, NA),
+           pg2ib = ifelse(.data$pg2ib %in% 1:9995, .data$pg2ib, NA),
+           pg2ic = ifelse(.data$pg2ic %in% c(1:14, 98), .data$pg2ic, NA),
+           pg2j = ifelse(.data$pg2j %in% 1:2, .data$pg2j, NA),
+           typ_epizodu = "praca",
+           czas_rozp = ifelse(is.na(.data$pg2c), 7, .data$pg2c) - 6 +
+             12 * (.data$pg2d - 2015),
+           czas_kon = ifelse(is.na(.data$pg2e), 6, .data$pg2e) - 6 +
+             12 * (.data$pg2f - 2015))
   lPrac = prace %>%
-    group_by_(~ID) %>%
-    summarise_(.dots = list(
-      nr_min = ~min(nr),
-      nr_max = ~max(nr)))
+    group_by(.data$ID) %>%
+    summarise(nr_min = min(.data$nr),
+              nr_max = max(.data$nr))
   pracePO = suppressWarnings(suppressMessages(
     bind_rows(
       dane %>%
-        select_(~ID, ~matches("^pi")) %>%
-        setNames(sub("^pi", "pio", names(.))) %>%
+        select("ID", matches("^pi")) %>%
+        setNames(sub("^pi", "pio", names(select(dane, "ID", matches("^pi"))))) %>%
         left_join(lPrac %>%
-                    select_(~ID, ~nr_min) %>%
-                    rename_(.dots = list(nr = ~nr_min))),
+                    select("ID", "nr_min") %>%
+                    rename(nr = .data$nr_min)),
       dane %>%
-        select_(~ID, ~matches("^po")) %>%
-        setNames(sub("^po", "pio", names(.))) %>%
+        select("ID", matches("^po")) %>%
+        setNames(sub("^po", "pio", names(select(dane, "ID", matches("^po"))))) %>%
         left_join(lPrac %>%
-                    select_(~ID, ~nr_max) %>%
-                    rename_(.dots = list(nr = ~nr_max)))) %>%
-      filter_(~pio1 %in% 1:4) %>%
-      mutate_(.dots = list(
-        pio0 = ~ifelse(pio0 %in% 0:95, pio0, NA),
-        pio1 = ~ifelse(pio1 %in% 1:4, pio1, NA),
-        pio2 = ~ifelse(!(tolower(pio2) %in% c("nie dotyczy", "nie pracowałem zawodowo")),
-                       enc2native(tolower(pio2)), "."),
-        pio3 = ~ifelse(!(tolower(pio3) %in% c("nie dotyczy", "nie pracowałem zawodowo")),
-                       enc2native(tolower(pio3)), "."),
-        pio4 = ~ifelse(pio4 %in% 1:99995, pio4, NA),
-        pio5 = ~ifelse(pio5 %in% 1:6, pio5, NA),
-        pio6_1 = ~ifelse(pio6_1 %in% 1:6, pio6_1, NA),
-        pio6_2 = ~ifelse(pio6_2 %in% 1:6, pio6_2, NA),
-        pio6_3 = ~ifelse(pio6_3 %in% 1:6, pio6_3, NA),
-        pio6_4 = ~ifelse(pio6_4 %in% 1:6, pio6_4, NA),
-        pio6_5 = ~ifelse(pio6_5 %in% 1:6, pio6_5, NA),
-        pio6_6 = ~ifelse(pio6_6 %in% 1:6, pio6_6, NA),
-        pio7 = ~ifelse(pio7 %in% 1:4, pio7, NA)))))
+                    select("ID", "nr_max") %>%
+                    rename(nr = .data$nr_max)))) %>%
+      filter(.data$pio1 %in% 1:4) %>%
+      mutate(pio0 = ifelse(.data$pio0 %in% 0:95, .data$pio0, NA),
+             pio1 = ifelse(.data$pio1 %in% 1:4, .data$pio1, NA),
+             pio2 = ifelse(!(tolower(.data$pio2) %in% c("nie dotyczy",
+                                                        "nie pracowałem zawodowo")),
+                           enc2native(tolower(.data$pio2)), "."),
+             pio3 = ifelse(!(tolower(.data$pio3) %in% c("nie dotyczy",
+                                                        "nie pracowałem zawodowo")),
+                           enc2native(tolower(.data$pio3)), "."),
+             pio4 = ifelse(.data$pio4 %in% 1:99995, .data$pio4, NA),
+             pio5 = ifelse(.data$pio5 %in% 1:6, .data$pio5, NA),
+             pio6_1 = ifelse(.data$pio6_1 %in% 1:6, .data$pio6_1, NA),
+             pio6_2 = ifelse(.data$pio6_2 %in% 1:6, .data$pio6_2, NA),
+             pio6_3 = ifelse(.data$pio6_3 %in% 1:6, .data$pio6_3, NA),
+             pio6_4 = ifelse(.data$pio6_4 %in% 1:6, .data$pio6_4, NA),
+             pio6_5 = ifelse(.data$pio6_5 %in% 1:6, .data$pio6_5, NA),
+             pio6_6 = ifelse(.data$pio6_6 %in% 1:6, .data$pio6_6, NA),
+             pio7 = ifelse(.data$pio7 %in% 1:4, .data$pio7, NA)))
   prace = suppressWarnings(suppressMessages(
     prace %>%
-      left_join(pracePO) %>%
-      select_(~ID, ~typ_epizodu, ~nr, ~czas_rozp, ~czas_kon, ~czy_zakonczony,
-              ~starts_with("pg"), ~starts_with("pio"))))
+      left_join(pracePO))) %>%
+    select("ID", "typ_epizodu", "nr", "czas_rozp", "czas_kon", "czy_zakonczony",
+           starts_with("pg"), starts_with("pio"))
   attributes(prace$pg1b)$label = "Identyfikator pracodawcy (unikalny w ramach osoby ale nie między badanymi)"
   prace = przywroc_etykiety(prace, labWspolne)
   prace = przywroc_etykiety(prace, labTemp)
@@ -338,33 +362,36 @@ wczytaj_wyniki_pilrm = function(x){
   #|-> okresy bezrobocia
   message("  bezrobocia.")
   labTemp = dane %>%
-    filter_(~pb0 %in% 1) %>%
-    select_(~ID, ~matches("^pb1[bcdefgh]_1$")) %>%
-    setNames(sub("_1", "", names(.)))
+    filter(.data$pb0 %in% 1) %>%
+    select("ID", matches("^pb1[bcdefgh]_1$"))
+  names(labTemp) = sub("_1", "", names(labTemp))
   bezrobocie =  suppressWarnings(
     dane %>%
-      filter_(~pb0 %in% 1) %>%
-      select_(~ID, ~matches("^pb1[bcdefgh]")) %>%
-      gather("zmienna", "value", one_of(setdiff(names(.), "ID"))) %>%
-      mutate_(.dots = list(
-        nr = ~as.numeric(sub("^pb1[bcdefgh]_([[:digit:]]+)$", "\\1", zmienna)),
-        zmienna = ~sub("^(pb1[bcdefgh])_[[:digit:]]+$", "\\1", zmienna))) %>%
-      spread("zmienna", "value", convert = TRUE) %>%
-      mutate_(.dots = list(
-        pb1b = ~ifelse(pb1b %in% 1:12, pb1b, NA),
-        pb1c = ~ifelse(pb1c %in% 2000:2100, pb1c, NA),
-        pb1d = ~ifelse(pb1d %in% 1:12, pb1d, NA),
-        czy_zakonczony = ~ifelse(pb1e %in% 9995, 2, 1),
-        pb1e = ~ifelse(pb1e %in% 2000:2100, pb1e, NA),
-        pb1f = ~ifelse(pb1f %in% 1:2, pb1f, NA),
-        pb1g = ~ifelse(pb1g %in% 1:8, pb1g, NA),
-        pb1h = ~ifelse(pb1h %in% 1:2, pb1h, NA),
-        typ_epizodu = ~"bezrobocie",
-        czas_rozp = ~ifelse(is.na(pb1b), 7, pb1b) - 6 + 12 * (pb1c - 2015),
-        czas_kon = ~ifelse(is.na(pb1d), 6, pb1d) - 6 + 12 * (pb1e - 2015))) %>%
-      filter_(~rowSums(is.na(.)) < 7) %>%
-      select_(~ID, ~typ_epizodu, ~nr, ~czas_rozp, ~czas_kon, ~czy_zakonczony,
-              ~starts_with("pb")))
+      filter(.data$pb0 %in% 1) %>%
+      select("ID", matches("^pb1[bcdefgh]")) %>%
+      gather("zmienna", "value", -"ID")) %>%
+    mutate(nr = as.numeric(sub("^pb1[bcdefgh]_([[:digit:]]+)$","\\1",
+                               .data$zmienna)),
+           zmienna = sub("^(pb1[bcdefgh])_[[:digit:]]+$", "\\1",
+                         .data$zmienna)) %>%
+    spread("zmienna", "value", convert = TRUE) %>%
+    mutate(pb1b = ifelse(.data$pb1b %in% 1:12, .data$pb1b, NA),
+           pb1c = ifelse(.data$pb1c %in% 2000:2100, .data$pb1c, NA),
+           pb1d = ifelse(.data$pb1d %in% 1:12, .data$pb1d, NA),
+           czy_zakonczony = ifelse(.data$pb1e %in% 9995, 2, 1),
+           pb1e = ifelse(.data$pb1e %in% 2000:2100, .data$pb1e, NA),
+           pb1f = ifelse(.data$pb1f %in% 1:2, .data$pb1f, NA),
+           pb1g = ifelse(.data$pb1g %in% 1:8, .data$pb1g, NA),
+           pb1h = ifelse(.data$pb1h %in% 1:2, .data$pb1h, NA),
+           typ_epizodu = "bezrobocie",
+           czas_rozp = ifelse(is.na(.data$pb1b), 7, .data$pb1b) - 6 +
+             12 * (.data$pb1c - 2015),
+           czas_kon = ifelse(is.na(.data$pb1d), 6, .data$pb1d) - 6 +
+             12 * (.data$pb1e - 2015))
+  bezrobocie = bezrobocie %>%
+    filter(rowSums(is.na(bezrobocie)) < 7) %>%
+    select("ID", "typ_epizodu", "nr", "czas_rozp", "czas_kon", "czy_zakonczony",
+           starts_with("pb"))
   bezrobocie = przywroc_etykiety(bezrobocie, labWspolne)
   bezrobocie = przywroc_etykiety(bezrobocie, labTemp)
   for (i in c("pb1b", "pb1c", "pb1d", "pb1e")) {
@@ -390,34 +417,32 @@ wczytaj_wyniki_pilrm = function(x){
   #|-> członkowie gosp. dom.
   message("Wyłączanie zbioru członków gosp. dom.")
   labTemp = dane %>%
-    select_(~ID, ~m9, ~matches("^m10[bcdef].*_1$")) %>%
-    setNames(sub("_1", "", names(.)))
+    select("ID", "m9", matches("^m10[bcdef].*_1$"))
+  names(labTemp) = sub("_1", "", names(labTemp))
   gospDom = suppressWarnings(
     dane %>%
-      select_(~ID, ~m9, ~matches("^m10[bcdef]_")) %>%
-      gather("zmienna", "value", one_of(setdiff(names(.), c("ID", "m9")))) %>%
-      mutate_(.dots = list(
-        nr_osoby = ~as.numeric(sub("^.*_([[:digit:]]+)$", "\\1", zmienna)),
-        zmienna = ~sub("_[[:digit:]]+$", "", zmienna))) %>%
-      spread("zmienna", "value", convert = TRUE) %>%
-      filter_(~nr_osoby < m9) %>%
-      mutate_(.dots = list(
-        nr_osoby = ~nr_osoby + 1,
-        m10c = ~ifelse(m10c > 99995, NA, m10c),
-        m10c_wiek = ~2017 - m10c,
-        m10d_in = ~ifelse(m10d_in %in% c("NIE DOTYCZY", "odmowa"),
-                          ".", tolower(m10d_in)),
-        m10d_rekod = ~case_when(
-          grepl("brat taty|w[óu]jek|ciocia|ciotka|kuzyn", m10d_in) ~ "wuj/ciotka",
-          grepl("brat babci", m10d_in) ~ "dziadkowie moi lub partnera",
-          grepl("chłopak", m10d_in) ~ "mąż/żona/partner /partnerka",
-          grepl("drugi maz mamy|ojczym|partner mamy|ojciec partnera", m10d_in) ~ "rodzice/teściowie",
-          grepl("rodzina zast[eę]pcza", m10d_in) ~ "moje rodzeństwo",
-          grepl("brata( syn|nek|nica)|c[oó]rka (brata|siostry)|siostrzen(iec|ica)|synek brata|ciotki syn", m10d_in) ~ "bratanek(ica)/siostrzeniec(ica)",
-          grepl("kolega", m10d_in) ~ "współlokator/ka",
-          grepl("brat (meza|partnera)|szwagier|bratowa|mąż córki", m10d_in) ~ "szwagier/szwagierka/bratowa",
-          TRUE ~ m10d_in),
-        m10f = ~ifelse(m10f %in% 7, NA, m10e))))
+      select("ID", "m9", matches("^m10[bcdef]_")) %>%
+      gather("zmienna", "value", -one_of(c("ID", "m9")))) %>%
+    mutate(nr_osoby = as.numeric(sub("^.*_([[:digit:]]+)$", "\\1", .data$zmienna)),
+           zmienna = sub("_[[:digit:]]+$", "", .data$zmienna)) %>%
+    spread("zmienna", "value", convert = TRUE) %>%
+    filter(.data$nr_osoby < .data$m9) %>%
+    mutate(nr_osoby = .data$nr_osoby + 1,
+           m10c = ifelse(.data$m10c > 99995, NA, .data$m10c),
+           m10c_wiek = 2017 - .data$m10c,
+           m10d_in = ifelse(.data$m10d_in %in% c("NIE DOTYCZY", "odmowa"),
+                            ".", tolower(.data$m10d_in)),
+           m10d_rekod = case_when(
+             grepl("brat taty|w[óu]jek|ciocia|ciotka|kuzyn", .data$m10d_in) ~ "wuj/ciotka",
+             grepl("brat babci", .data$m10d_in) ~ "dziadkowie moi lub partnera",
+             grepl("chłopak", .data$m10d_in) ~ "mąż/żona/partner /partnerka",
+             grepl("drugi maz mamy|ojczym|partner mamy|ojciec partnera", .data$m10d_in) ~ "rodzice/teściowie",
+             grepl("rodzina zast[eę]pcza", .data$m10d_in) ~ "moje rodzeństwo",
+             grepl("brata( syn|nek|nica)|c[oó]rka (brata|siostry)|siostrzen(iec|ica)|synek brata|ciotki syn", .data$m10d_in) ~ "bratanek(ica)/siostrzeniec(ica)",
+             grepl("kolega", .data$m10d_in) ~ "współlokator/ka",
+             grepl("brat (meza|partnera)|szwagier|bratowa|mąż córki", .data$m10d_in) ~ "szwagier/szwagierka/bratowa",
+             TRUE ~ m10d_in),
+           m10f = ifelse(.data$m10f %in% 7, NA, .data$m10e))
   gospDom$m10d_rekod = ifelse(
     gospDom$m10d %in% 7,
     gospDom$m10d_rekod,
@@ -439,42 +464,16 @@ wczytaj_wyniki_pilrm = function(x){
   #|->
   message("Czynności końcowe.")
   dane = dane %>%
-    select_(~-matches("^zp2")) %>%
-    select_(~-matches("^sp[23456]")) %>%
-    select_(~-matches("^pp[23456]")) %>%
-    select_(~-matches("^u2")) %>%
-    select_(~-matches("^pg[12]")) %>%
-    select_(~-matches("^pb1")) %>%
-    select_(~-matches("^m10[bcdef]_"))
+    select(-matches("^zp2")) %>%
+    select(-matches("^sp[23456]")) %>%
+    select(-matches("^pp[23456]")) %>%
+    select(-matches("^u2")) %>%
+    select(-matches("^pg[12]")) %>%
+    select(-matches("^pb1")) %>%
+    select(-matches("^m10[bcdef]_"))
   #|<-
   return(list(dane = dane,
               epizody = epizody,
               gospDom = gospDom,
               czasy = czasy))
-}
-#' @title Obrobka danych etykietowanych
-#' @description
-#' Funkcja pozwala szybko i wygodnie przywracać etykiety zmiennych i wartości,
-#' które "gubią się" w niektórych operacjach na ramkach danych (o ile wcześniej
-#' zostały one zapisane).
-#' @param x ramka danych, której zmiennym mają zostać przypisane etykiety
-#' @param labTemp ramka danych (lub lista) z której mają zostać skopiowane
-#' etykiety zmiennych i wartości zmiennych
-#' @return ramka danych
-#' @importFrom haven read_spss
-przywroc_etykiety = function(x, labTemp) {
-  nieMaZm = setdiff(names(labTemp), names(x))
-  if (length(nieMaZm) > 0) {
-    warning("W ramce z danymi nie ma zmiennych: '", paste(nieMaZm, collapse = "', '"), "'.")
-    labTemp = labTemp[, names(labTemp) %in% names(x)]
-  }
-  for (i in names(labTemp)) {
-    attributes(x[[i]])$label = enc2native(attributes(labTemp[[i]])$label)
-    attributes(x[[i]])$labels = attributes(labTemp[[i]])$labels
-    if (!is.null(attributes(x[[i]])$labels)) {
-      names(attributes(x[[i]])$labels) =
-        enc2native(names(attributes(x[[i]])$labels))
-    }
-  }
-  return(x)
 }

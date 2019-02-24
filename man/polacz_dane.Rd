@@ -28,7 +28,7 @@ polacz_dane(absolwenci, zus, zdajacyEgzaminy, uczniowie, studenci, szkoly,
 \code{\link{przygotuj_szkoly}}}
 
 \item{pnaPowiaty}{dane wygenerowane za pomocą funkcji
-\code{\link[MLAKdane]{przygotuj_pna_powiaty_mb}}}
+\code{\link[MLAKdane]{polacz_pna_powiaty}}}
 
 \item{dataMin}{początek okresu uwzględnionego w danych ZUS (jako łańcuch
 znaków, np. '2014-01-01')}
