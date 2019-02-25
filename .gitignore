@@ -35,4 +35,4 @@ vignettes/*.dia
 .Rproj.user
 
 # test data not to be publicly available
-/data_local/
+tests/**/*.sav

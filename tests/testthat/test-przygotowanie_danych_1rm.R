@@ -1,6 +1,6 @@
-if (dir.exists("../../data_local")) {
+if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodowaniem.sav")) {
   context("Wczytanie danych z 1. rundy monitoringu")
-  w1rm = wczytaj_wyniki_1rm("../../data_local/MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodowaniem.sav")
+  w1rm = wczytaj_wyniki_1rm("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodowaniem.sav")
   test_that("wczytaj_wyniki_1rm()", {
 
     expect_type(w1rm, "list")
