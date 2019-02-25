@@ -3,7 +3,7 @@
 #' Funkcja imputuje braki danych w zmiennych opisujących miesiąc rozpoczęcia
 #' i miesiąc zakończenia epizodów pracy nauki i bezrobocia w danych sondażowych
 #' z pilotażowej rundy monitringu.
-#' @param x lista zwracana przez funkcję \code{\link{wczytaj_wyniki_pilrm}}
+#' @param x lista zwracana przez funkcję \code{\link{wczytaj_wyniki_1rm}}
 #' @return ramka danych
 #' @export
 #' @importFrom stats lm model.frame predict relevel

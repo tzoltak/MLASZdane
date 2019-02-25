@@ -7,7 +7,7 @@
 imputuj_mies_pk_1rm(x)
 }
 \arguments{
-\item{x}{lista zwracana przez funkcję \code{\link{wczytaj_wyniki_pilrm}}}
+\item{x}{lista zwracana przez funkcję \code{\link{wczytaj_wyniki_1rm}}}
 }
 \value{
 ramka danych
