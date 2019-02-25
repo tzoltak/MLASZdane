@@ -16,7 +16,6 @@ Imports:
     haven (>= 2.1.0)
 Suggests:
     testthat,
-    covr,
-    MLAKdane
+    covr
 Encoding: UTF-8
 RoxygenNote: 6.1.1
