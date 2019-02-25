@@ -10,7 +10,8 @@ imputuj_mies_pk_1rm(x)
 \item{x}{lista zwracana przez funkcję \code{\link{wczytaj_wyniki_1rm}}}
 }
 \value{
-ramka danych
+lista ramek danych o takiej samej strukturze, jak zwracana przez
+\code{\link{wczytaj_wyniki_1rm}}
 }
 \description{
 Funkcja imputuje braki danych w zmiennych opisujących miesiąc rozpoczęcia

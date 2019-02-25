@@ -4,7 +4,8 @@
 #' i miesiąc zakończenia epizodów pracy nauki i bezrobocia w danych sondażowych
 #' z pilotażowej rundy monitringu.
 #' @param x lista zwracana przez funkcję \code{\link{wczytaj_wyniki_pilrm}}
-#' @return ramka danych
+#' @return lista ramek danych o takiej samej strukturze, jak zwracana przez
+#' \code{\link{wczytaj_wyniki_pilrm}}
 #' @export
 #' @importFrom stats lm model.frame predict relevel
 #' @importFrom tidyr gather spread
