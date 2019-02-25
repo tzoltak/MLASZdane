@@ -33,3 +33,6 @@ vignettes/*.dia
 *.utf8.md
 *.knit.md
 .Rproj.user
+
+# test data not to be publicly available
+/data_local/

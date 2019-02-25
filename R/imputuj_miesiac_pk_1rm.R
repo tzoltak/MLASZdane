@@ -10,7 +10,7 @@
 #' @importFrom stats lm model.frame predict relevel
 #' @importFrom dplyr .data bind_rows case_when do filter group_by left_join
 #' mutate rename summarise ungroup
-imputuj_mies_pk_1rm = function(x) {
+imputuj_miesiac_pk_1rm = function(x) {
   stopifnot(is.list(x),
             all(c("dane", "epizody") %in% names(x)))
   mp = options()$max.print
@@ -123,10 +123,17 @@ imputuj_mies_pk_1rm = function(x) {
     return(table(przewidywanie = factor(round(predict(x), 0), levels = l[1]:l[2]),
                  czas_rozp = factor(model.frame(x)[, 1], levels = l[1]:l[2])))
   })
-  message("R-kwadrat")
-  lapply(modeleCzas, function(x) {return(summary(x)$r.squared)}) %>% print()
-  message("odsetek poprawnych klasyfikacji")
-  lapply(tabeleCzas, function(x) {return(sum(diag(x)) / sum(x))}) %>% print()
+  cat("    statystyki dopasowania\n")
+  data.frame(zmienna = names(modeleCzas),
+             R2 = lapply(modeleCzas, function(x) {return(summary(x)$r.squared)}) %>%
+               unlist() %>%
+               round(3),
+             `odsetek poprawn. klasyf.` =
+               lapply(tabeleCzas, function(x) {return(sum(diag(x)) / sum(x))}) %>%
+               unlist() %>%
+               round(3),
+             check.names = FALSE) %>%
+    print(row.names = FALSE)
   epizodyImputM = mapply(function(x, m) {
     x = suppressWarnings(
       x %>%
@@ -166,10 +173,17 @@ imputuj_mies_pk_1rm = function(x) {
     return(table(przewidywanie = factor(round(predict(x), 0), levels = l[1]:l[2]),
                  dl = factor(model.frame(x)[, 1], levels = l[1]:l[2])))
   })
-  message("R-kwadrat")
-  lapply(modeleDl, function(x) {return(summary(x)$r.squared)}) %>% print()
-  message("odsetek poprawnych klasyfikacji")
-  lapply(tabeleDl, function(x) {return(sum(diag(x)) / sum(x))}) %>% print()
+  cat("    statystyki dopasowania\n")
+  data.frame(zmienna = names(modeleDl),
+             R2 = lapply(modeleDl, function(x) {return(summary(x)$r.squared)}) %>%
+               unlist() %>%
+               round(3),
+             `odsetek poprawn. klasyf.` =
+               lapply(tabeleDl, function(x) {return(sum(diag(x)) / sum(x))}) %>%
+               unlist() %>%
+               round(3),
+             check.names = FALSE) %>%
+    print(row.names = FALSE)
   epizodyImputM = mapply(function(x, m) {
     x = x %>%
       mutate(rok_zakon_f =
@@ -201,6 +215,7 @@ imputuj_mies_pk_1rm = function(x) {
     select("ID_RESP", "typ_epizodu", "nr", "czas_rozp", "czas_zakon",
            "czy_zakonczony") %>%
     rename(imput_czas_rozp = .data$czas_rozp, imput_czas_zakon = .data$czas_zakon)
+  message("Wyniki imputacji:")
   table(imput_czas_rozp = epizodyImput$imput_czas_rozp,
         imput_czas_zakon = epizodyImput$imput_czas_zakon, exclude = NULL) %>%
     print()
