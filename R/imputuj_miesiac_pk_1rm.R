@@ -222,6 +222,9 @@ imputuj_mies_pk_1rm = function(x) {
       select(-"imput_czas_rozp", -"imput_czas_zakon")
   x$epizody = przywroc_etykiety(x$epizody, labWspolne)
   x$epizody$typ_epizodu = enc2native(x$epizody$typ_epizodu)
+  maska = !grepl("^(ID_RESP|typ_epizodu|nr|swiadectwo)$|^(czas|czy)_",
+                 names(x$epizody))
+  names(x$epizody)[maska] = paste0("ABS_", names(x$epizody)[maska])
 
   return(x)
 }
