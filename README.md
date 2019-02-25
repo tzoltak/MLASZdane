@@ -1,7 +1,8 @@
 ![KL+RP+IBE+EFS](inst/Belka-Losy-absolwentow-Kolor-PL.png)
 
-[![Travis build status](https://travis-ci.org/tzoltak/MLASZraporty.svg?branch=master)](https://travis-ci.org/tzoltak/MLASZraporty)
-[![Coverage status](https://codecov.io/gh/tzoltak/MLASZraporty/branch/master/graph/badge.svg)](https://codecov.io/github/tzoltak/MLASZraporty?branch=master)
+
+[![Travis build status](https://travis-ci.org/tzoltak/MLASZdane.svg?branch=master)](https://travis-ci.org/tzoltak/MLASZdane)
+[![Coverage status](https://codecov.io/gh/tzoltak/MLASZdane/branch/master/graph/badge.svg)](https://codecov.io/github/tzoltak/MLASZdane?branch=master)
 
 # MLASZdane
 
