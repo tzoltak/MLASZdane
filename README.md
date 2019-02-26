@@ -66,7 +66,7 @@ head(osMies1RM)
 write_sav(osMies1RM, "MLEZAiMD_runda1_osobo-miesiace.sav")
 ```
 
-Więcej informacji na temat struktury i zawartości tworzonych zbiorów danych zawiera [dokumentacja dot. 1. rundy monitoringu](./inst/doc/runda_1-dokumentacja.Rmd).
+Więcej informacji na temat struktury i zawartości tworzonych zbiorów danych zawiera [dokumentacja dot. 1. rundy monitoringu](./inst/doc/runda_1-dokumentacja.md).
 
 ## Pilotażowa runda monitoringu
 
@@ -109,4 +109,4 @@ head(osMiesPilRM)
 write_sav(osMiesPilRM, "MLEZAiMD_runda_pilot_osobo-miesiace.sav")
 ```
 
-Więcej informacji na temat struktury i zawartości tworzonych zbiorów danych zawiera [dokumentacja dot. pilotażowej rundy monitoringu](./inst/doc/runda_pilotazowa-dokumentacja.Rmd).
+Więcej informacji na temat struktury i zawartości tworzonych zbiorów danych zawiera [dokumentacja dot. pilotażowej rundy monitoringu](./inst/doc/runda_pilotazowa-dokumentacja.md).
