@@ -147,9 +147,7 @@ Tak samo postąpiono z datami rozpoczęcia/zakończenia epizodów pracy i bezr
 
 Tak przypisane wartości oznacznone są w zmiennych `czas_rozp_imput` i `czas_zakon_imput` jako zaimputowane.
 
-## 3.2. Uzupełnianie wartości zmiennych `czas_rozp` i `czas_zakon` w epizodach pracy i bezrobocia nieoznaczane jako imputacja (tylko dane z 2. fali)
-
-Opisane poniżej działania przeprowadzono tylko w odniesieniu do danych z badania absolwentów (2. fali). W 1 fali badania (badanie uczniów) nie zbierano danych o długości trwania epizodu.
+## 3.2. Uzupełnianie wartości zmiennych `czas_rozp` i `czas_zakon` w epizodach pracy i bezrobocia nieoznaczane jako imputacja
 
 Jeśli respondent dla danego *epizodu*:
 
@@ -160,7 +158,7 @@ a także udzielił odpowiedzi na pytanie o szacunkową długość trwania epiz
 
 Obliczone w ten sposób wartości **nie są** w zmiennych 'czas_rozp_impt` i `zas_zakon_imput` oznaczane jako zaimputowane.
 
-## 3.3. Imputacja na podstawie modeli regresji (tylko dane z 2. fali)
+## 3.3. Imputacja na podstawie modeli regresji
 
 Imputacji brakujących wartości zmiennych `czas_rozp` i `czas_zakon` dla *epizodów* typu 'praca' i 'bezrobocie' dokonano przy użyciu modeli regresji liniowej.
 
@@ -226,7 +224,7 @@ Jak widać, skuteczność modelu imputacji, zwłaszcza w odniesieniu do epizod�
 
 Także tutaj skuteczność modelu imputacji pozostawia nieco do życzenia. W praktyce model imputacji nie jest w stanie skutecznie przewidywać bardzo długich (można by powiedzieć *nietypowo długich*) *epizodów*. W odniesieniu do tych trwających od 0 do 9 miesięcy (a więc typowych, które mogą się pojawić w zbiorze) jest co prawda nie bardzo dokładny, ale jednak dający sensowne przewidywania.
 
-## 3.4. Podsumowanie liczby braków danych dot. czasu rozpoczęcia i zakończenia epizodów w danych z 2. fali badania
+## 3.4. Podsumowanie liczby braków danych dot. czasu rozpoczęcia i zakończenia epizodów w danych z badania absolwentów
 
 **Bez dokonania opisanych powyżej przypisań i imputacji**
 
