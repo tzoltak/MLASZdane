@@ -2,7 +2,9 @@
 title: "Przetwarzanie zbiorów z pilotażowej rundy monitoringu"
 author: "Tomasz Żółtak"
 date: "27 października 2017"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    keep_md: true
 lang: pl
 vignette: >
   %\VignetteIndexEntry{Przetwarzanie zbiorów z pilotażowej rundy monitoringu}

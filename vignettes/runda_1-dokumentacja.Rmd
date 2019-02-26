@@ -2,7 +2,9 @@
 title: "Przetwarzanie zbiorów z 1. rundy monitoringu"
 author: "Tomasz Żółtak"
 date: "31 stycznia 2019"
-output: rmarkdown::html_vignette
+output:
+  html_vignette:
+    keep_md: true
 lang: pl
 vignette: >
   %\VignetteIndexEntry{Przetwarzanie zbiorów z 1. rundy monitoringu}
