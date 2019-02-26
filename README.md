@@ -39,7 +39,9 @@ Do przetwarzania wyników badań sondażowych przeprowadzonych w projekcie MLEZ
 
 Wszystkie ww. funkcje przygotowują zbiory danych w taki sposób, że możliwe jest łatwe zapisanie ich do plików w formacie .sav, korzystając z funkcji pakietu [*haven*](https://haven.tidyverse.org).
 
-Schemat wykorzystania tych funkcji wygląda następująco:
+Więcej informacji na temat struktury i zawartości tworzonych zbiorów danych zawiera [dokumentacja dot. 1. rundy monitoringu](./inst/doc/runda_1-dokumentacja.md).
+
+Schemat wykorzystania ww. funkcji wygląda następująco:
 
 ```r
 library(MLASZdane)
@@ -66,8 +68,6 @@ head(osMies1RM)
 write_sav(osMies1RM, "MLEZAiMD_runda1_osobo-miesiace.sav")
 ```
 
-Więcej informacji na temat struktury i zawartości tworzonych zbiorów danych zawiera [dokumentacja dot. 1. rundy monitoringu](./inst/doc/runda_1-dokumentacja.md).
-
 ## Pilotażowa runda monitoringu
 
 Do przetwarzania wyników badań sondażowych przeprowadzonych w projekcie MLEZAiMD w ramach pilotażowej rundy monitoringu (zbiór danych: *MLEZAMiD_absolwent_n2959_20171013.sav*) służą następujące funkcje:
@@ -82,7 +82,9 @@ Do przetwarzania wyników badań sondażowych przeprowadzonych w projekcie MLEZ
 
 Wszystkie ww. funkcje przygotowują zbiory danych w taki sposób, że możliwe jest łatwe zapisanie ich do plików w formacie .sav, korzystając z funkcji pakietu [*haven*](https://haven.tidyverse.org).
 
-Schemat wykorzystania tych funkcji wygląda następująco:
+Więcej informacji na temat struktury i zawartości tworzonych zbiorów danych zawiera [dokumentacja dot. pilotażowej rundy monitoringu](./inst/doc/runda_pilotazowa-dokumentacja.md).
+
+Schemat wykorzystania ww. funkcji wygląda następująco:
 
 ```r
 library(MLASZdane)
@@ -108,5 +110,3 @@ osMiesPilRM = przygotuj_zbior_osobo_miesiecy_pilrm(danePilRM)
 head(osMiesPilRM)
 write_sav(osMiesPilRM, "MLEZAiMD_runda_pilot_osobo-miesiace.sav")
 ```
-
-Więcej informacji na temat struktury i zawartości tworzonych zbiorów danych zawiera [dokumentacja dot. pilotażowej rundy monitoringu](./inst/doc/runda_pilotazowa-dokumentacja.md).
