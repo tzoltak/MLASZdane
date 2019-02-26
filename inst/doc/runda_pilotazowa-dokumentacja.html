@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl" xml:lang="pl">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Tomasz Żółtak" />
+
+
+<title>Przetwarzanie zbiorów z pilotażowej rundy monitoringu</title>
+
+
+
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Przetwarzanie zbiorów z pilotażowej rundy monitoringu</h1>
+<h4 class="author"><em>Tomasz Żółtak</em></h4>
+<h4 class="date"><em>27 października 2017</em></h4>
+
+
+
+<div id="wprowadzenie" class="section level1">
+<h1>1. Wprowadzenie</h1>
+<div id="funkcja-wczytaj_wyniki_pilrm" class="section level3">
+<h3>1.1. Funkcja wczytaj_wyniki_pilrm()</h3>
+<p>Na podstawie zbioru z badania absolwentów (<em>MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodowaniem.sav</em>) funkcja <code>wczytaj_wyniki_1rm()</code> zwraca listę ramek danych (zbiorów) zawierającą następujące elementy:</p>
+<ul>
+<li><code>dane</code> - zawiera odpowiedzie na pytania niedotyczące <em>epizodów</em> (por. niżej);</li>
+<li><code>epizody</code> - zawiera informacje dotyczące wymienionych przez respondentów <em>epizodów</em>:
+<ul>
+<li>nauki w szkole, jako uczeń której badany został zrekrutowany do badania (ważny ze względu na informację o momencie zakończenia tej nauki);</li>
+<li>nauki w LO dla dorosłych,</li>
+<li>zdawania do szkół policealnych i nauki w szkołach policealnych,</li>
+<li>zdawania na studia i studiowania,</li>
+<li>odbywania szkoleń i zdobywania certyfikatów (niezwiązanych bezpośrednio z nauką w ww. formach),</li>
+<li>pracy,</li>
+<li>bezrobocia;</li>
+</ul></li>
+<li><code>gospDom</code> - zawiera informacje o członkach gospodarstw domowych respondentów;</li>
+<li><code>czasy</code> - zawiera informacje o czasach udzielania odpowiedzi na pytania.</li>
+</ul>
+</div>
+<div id="funkcja-imputuj_miesiac_pk_pilrm" class="section level3">
+<h3>1.2. Funkcja imputuj_miesiac_pk_pilrm()</h3>
+<p>Funkcja <code>imputuj_miesiac_pk_pilrm()</code> przetwarza listę zbiorów danych zwróconą przez <code>wczytaj_wyniki_pilrm()</code> i zwraca listę zbiorów danych o dokładnie takiej samej strukturze (p. wyżej).</p>
+<p>Metody imputacji wartości zmiennych opisujących moment rozpoczęcia i moment zakończenia <em>epizodów</em> opisane zostały szczegółowo w sekcji 3. tego dokumentu.</p>
+</div>
+<div id="funkcja-przygotuj_zbior_osobo_miesiecy_pilrm" class="section level3">
+<h3>1.3. Funkcja przygotuj_zbior_osobo_miesiecy_pilrm()</h3>
+<p>Funkcja <code>przygotuj_zbior_osobo_miesiecy_pilrm()</code> przetwarza listę zbiorów danych zwróconą przez <code>imputuj_miesiac_pk_pilrm()</code> i zwraca ramkę danych (zbiór) zawierający dane o <em>epizodach</em> nauki, pracy i bezrobocia przekształcone do postaci osobo-miesięcy (obserwacją jest osoba w danym miesiącu).</p>
+<p>Struktura zbioru i sposób jego tworzenia zostały szczegółowo opisane w sekcji 6. tego dokumentu.</p>
+</div>
+<div id="identyfikator-respondenta" class="section level2">
+<h2>1.4. Identyfikator respondenta</h2>
+<p>Identyfikatorem respondenta w zbiorach jest zmienna <code>ID</code> (W oryginalnym zbiorze danych z wynikami badania absolwentów zmienna ta nazywa się <code>ID_IBE</code>).</p>
+</div>
+</div>
+<div id="struktura-zbioru-danych-epizodow" class="section level1">
+<h1>2. Struktura zbioru danych <em>epizodów</em></h1>
+<div id="zmienne-specjalne-wzbiorze-epizodow" class="section level2">
+<h2>2.1. Zmienne specjalne w zbiorze <em>epizodów</em></h2>
+<p>Aby możliwe było łatwiejsze identyfikowanie interesujących nas w analizie <em>epizodów</em>, w zbiorze utworzone zostały specjalne zmienne (znajdują się na początku zbioru):</p>
+<ul>
+<li><code>ID</code> - identyfikator respondenta, umożliwia łączenie z innymi zbiorami danych z badania;</li>
+<li><code>typ_epizodu</code> - typ <em>epizodu</em>, przyjmuje jedną z ośmiu wartości:
+<ol style="list-style-type: decimal">
+<li>‘LO dla dorosłych’;</li>
+<li>‘zdawanie do SPolic.’;</li>
+<li>‘SPolic.’;</li>
+<li>‘zdawanie na studia’;</li>
+<li>‘studia’;</li>
+<li>‘uprawnienia’;</li>
+<li>‘praca’;</li>
+<li>‘bezrobocie’.</li>
+</ol>
+<ul>
+<li><strong>Uwaga!</strong> Epizody ‘studia’ i ‘SPolic.’ są specyficzne, gdyż zawierają również informacje dotyczące zdawania na te kierunki studiów/do tych szkół policealnych, na/w których respondent podjął naukę. W związku z tym, jeśli przedmiotem analizy mają być kierunki/szkoły na/do których respondent zdawał, należy w niej uwzględnić odpowiednio zarówno <em>epizody</em> typu ‘zdawanie na studia’, jak i <em>epizody</em> typu ‘studia’ albo zarówno <em>epizody</em> typu ‘zdawanie do SPolic.’, jak i <em>epizody</em> typu ‘SPolic.’.</li>
+</ul></li>
+<li><code>nr</code> - wartość zmiennej wskazuje, jako który z kolei (inaczej mówiąc, w którym <em>obiegu pętli skryptu</em>, czy też w którym <em>wierszu tabeli reprezentującej odpowiedzi na blok pytań o „epizody” danego typu w „papierowej” wersji kwestionariusza</em>) <em>epizod</em> określonego typu respondent wymienił dany <em>epizod</em>;
+<ul>
+<li><strong>Uwaga!</strong> Respondenci niekoniecznie wymieniali <em>epizody</em> w zgodzie z ich chronologiczną kolejnością. Jeśli chce się mieć pewność, że <em>epizody</em> uszeregowane są w kolejności chronologicznej, należy posłużyć się w pierwszej kolejności zmiennymi <code>czas_rozp</code> lub <code>czas_kon</code>, a dopiero w dalszej zmienną <code>nr</code>.</li>
+<li>Zmienna <code>nr</code> odnosi się łącznie do <em>epizodów</em> typu ‘zdawanie do SPolic.’ i ‘SPolic.’ (tj. epizody obu tych typów w ramach tej samej osoby posiadają jedną, ciągłą <em>numerację</em>) oraz łącznie do <em>epizodów</em> typu ‘zdawanie na studia’ i ‘studia’, co wiąże się z opisaną wyżej specyfiką <em>epizodów</em> typów ‘studia’ i ‘SPolic.’.</li>
+<li>Dla <em>epizodów</em> typu ‘LO dla dorosłych’ jako wartość zmiennej <code>nr</code> występuje tylko 1, gdyż kwestionariusz nie dopuszczał wymienienia kilku <em>epizodów</em> tego typu.</li>
+<li>W przypadku <em>epizodów</em> typu ‘praca’ <strong>wartość zmiennej <code>nr</code> równa 99</strong> oznacza, że dany <em>epizod</em> pracy został <em>dopowiedziany</em> w wyniku udzielenia przez respondenta odpowiedzi na pytania PG5.</li>
+</ul></li>
+<li><code>czas_rozp</code> - czas rozpoczęcia trwania danego <em>epizodu</em>, wyrażony jako liczba miesięcy od czerwca 2015 r. (a więc <em>domyślnego</em> momentu ukończenia szkoły, jako absolwent której respondent został zakwalifikowany do badania);
+<ul>
+<li>zmienna może przyjmować wartości ujemne (typowo zdarza się to w odniesieniu do <em>epizodów</em> pracy);</li>
+<li>nie ma zastosowania dla <em>epizodów</em> typu ‘uprawnienia’;</li>
+<li><strong>jeśli respondent nie podał miesiąca</strong>, w jakim rozpoczął się dany <em>epizod</em>, dla epizodów typu ‘praca’ i ‘bezrobocie’ dokonano imputacji wartości zmiennej <code>czas_rozp</code> (p. odpowiednia sekcja); dla epizodów pozostałych typów zawsze arbitralnie przyjmowano, że był to czerwiec;</li>
+<li>należy mieć na uwadze, że mimo to zdarzają się <em>epizody</em> (do których ma zastosowanie data rozpoczęcia) z brakami danych w tej zmiennej (respondenci czasem nie byli w stanie podać nawet roku);</li>
+</ul></li>
+<li><code>czas_kon</code> - czas zakończenia trwania danego <em>epizodu</em>, wyrażony jako liczba miesięcy od czerwca 2015 r. (a więc <em>domyślnego</em> momentu ukończenia szkoły, jako absolwent której respondent został zakwalifikowany do badania);
+<ul>
+<li>zmienna może przyjmować wartości ujemne (typowo zdarza się to w odniesieniu do <em>epizodów</em> pracy);</li>
+<li>nie ma zastosowania dla <em>epizodów</em> typu ‘zdawanie na studia’ i ‘zdawanie do SPolic.’;</li>
+<li><strong>jeśli respondent nie podał miesiąca</strong>, w jakim zakończył się dany <em>epizod</em>, dla epizodów typu ‘praca’ i ‘bezrobocie’ dokonano imputacji wartości zmiennej <code>czas_rozp</code> (p. odpowiednia sekcja); dla epizodów pozostałych typów zawsze arbitralnie przyjmowano, że był to lipiec;</li>
+<li>należy mieć na uwadze, że mimo to zdarzało się, że respondenci nie byli w stanie podać nawet roku i jako wartość zmiennej występuje brak danych;</li>
+<li><strong>brak danych w zmiennej <code>czas_kon</code> może też wskazywać na to, że dany epizod wciąż trwa</strong> - aby sprawdzić, czy mamy z tym do czynienia, należy posłużyć się zmienną <code>czy_zakonczony</code>.</li>
+</ul></li>
+<li><code>czy_zakonczony</code> - dychotomiczna zmienna wskazująca, czy dany <em>epizod</em> się zakończył, czy w momencie realizacji wywiadu z respondentem wciąż trwał:
+<ul>
+<li>dla <em>epizodów</em> typu ‘LO dla dorosłych’, ‘studia’, ‘SPolic.’ i ‘uprawnienia’ wartość zmiennej została przekodowana ze zmiennych odpowiednio: <code>zp2c</code>, <code>sp6d</code>, <code>pp6d</code> (jako wskazujące na zakończenie <em>epizodu</em> traktowano odpowiedzi mówiące o uzyskaniu dyplomu, jak i o przerwaniu nauki) oraz <code>u2d</code>;</li>
+<li>dla <em>epizodów</em> typu ‘praca’ i ‘bezrobocie’ wartość zmiennej została zakodowana na podstawie zmiennych odpowiednio: <code>pg2f</code>, i <code>pb1e</code>;</li>
+<li><strong>przy kodowaniu wartości dla <em>epizodów</em> wszystkich ww. typów, jeśli respondent nie udzielił odpowiedzi na odpowiednie pytanie, przyjmowano, że <em>epizod</em> się zakończył</strong>;</li>
+<li>dla <em>epizodów</em> typu ‘zdawanie na studia’ i ‘zdawanie do SPolic.’ wartością zmiennej jest brak danych.</li>
+</ul></li>
+</ul>
+</div>
+<div id="roznice-wnazwach-ietykietach-wzgledem-oryginalnego-zbioru-spss" class="section level2">
+<h2>2.2. Różnice w nazwach i etykietach względem oryginalnego zbioru SPSS</h2>
+<ul>
+<li>Nazwy wszystkich zmiennych w zbiorach przekształconych do postaci <em>długiej</em>, z jedynym wyjątkiem zmiennej <code>ID</code>, przekształcone zostały na pisane małymi literami.</li>
+<li>Nazwy zmiennych w zbiorze <em>epizodów</em> zasadniczo odpowiadają nazwom zmiennych z oryginalnego pliku w formacie SPSS, z tym że pozbawione zostały elementów wskazujących na <em>nr pętli</em> (w zależności od zmiennej przyrostek tego rodzaju mógł występować albo na końcu nazwy zmiennej, albo nieco wcześniej).
+<ul>
+<li>Wyjątkiem są zmienne związane z pytaniami o pierwszą i ostatnią pracę (p. niżej).</li>
+</ul></li>
+<li>Ze względu na ograniczenia techniczne (biblioteki służącej do zapisu z R plików w formacie Staty) wartości zmiennych, które mają mieć przypisane etykiety wartości, muszą stanowić (nieprzerwany) ciąg kolejnych liczb całkowitych, począwszy od 1. W związku z tym <strong>wartości powiązane z niektórymi etykietami w zbiorze <em>epizodów</em> mogą różnić się od tych, jakie są im przypisane w oryginalnym pliku w formacie SPSS</strong>.
+<ul>
+<li>Typowo dotyczy to kodów specjalnych opisujących tzw. <em>braki danych użytkownika</em>.</li>
+<li>Wszystkie zmienne, które mają etykiety wartości “tak”-“nie” zakodowane są w zbiorach w postaci długiej wg schematu: 1-tak, 2-nie (w zmiennych <code>sp6h_1</code> - <code>sp6h_3</code> i <code>pp6i_1</code> - <code>pp6i_3</code> w oryginalnym zbiorze SPSS wartości kodowane były wg schematu 0-nie, 1-tak).</li>
+<li>W praktyce ma to jednak niewielkie znaczenie, gdyż wartości <em>braków danych użytkownika</em> przy przekształcaniu do postaci długiej były przekodowywane na <em>systemowe</em> braki danych.</li>
+</ul></li>
+<li>Braki danych w zmiennych tekstowych oznaczone są ciągiem znaków składającym się z pojedynczej kropki: ‘.’ (Stata nie akceptuje pustych ciągów znaków).</li>
+</ul>
+</div>
+<div id="epizody-dotyczace-zdawania-do-szko-policealnych-lub-na-studia" class="section level2">
+<h2>2.3. Epizody dotyczące zdawania do szkół policealnych lub na studia</h2>
+<ul>
+<li>Specyfika podziału na <em>epizody</em> typu ‘studia’ i ‘SPolic.’ oraz epizody typu ‘zdawanie na studia’ i ‘zdawanie do SPolic.’ została omówiona w sekcji <em>Zmienne specjalne w zbiorach w postaci „długiej”</em>.</li>
+<li>Na podstawie zmiennych odpowiednio <code>pp3a</code> i <code>sp3a</code> utworzona została zmienna <code>czy_preferowany</code> opisująca to, czy szkoła lub kierunek był preferowany przez respondenta (spośród potencjalnie kilku, do których/na które zdawał) przy pomocy wartości: 1-tak, 2-nie.
+<ul>
+<li>Jeśli respondent zdawał tylko do jednej szkoły czy na jedne studia, w zmiennej <code>czy_preferowany</code> przypisana została do danej szkoły/kierunku wartość 1 (tak).</li>
+<li>Jeśli respondent nie wskazał preferowanego kierunku/szkoły, wartością zmiennej jest brak danych.</li>
+</ul></li>
+</ul>
+</div>
+<div id="epizody-pracy" class="section level2">
+<h2>2.4. Epizody pracy</h2>
+<ul>
+<li>Zmienna <code>pg1b</code> podaje kod pracodawcy, który w sytuacji, gdy respondent miał wiele <em>epizodów</em> pracy, pozwala stwierdzić, czy była to praca u różnych, czy u tego samego pracodawcy. Zmienna ta ma następujące własności i ograniczenia:
+<ul>
+<li>Kody (numery) pracodawców pozwalają ich identyfikować tylko w ramach rekordów opisujących tego samego respondenta.</li>
+<li>Dla <em>epizodów</em> pracy, które zostały <em>dopowiedziane</em> w ramach odpowiedzi na pytania PG4, nazwa pracodawcy nie została przez PBS zakodowana w sposób analogiczny do tego, jak postąpiono w zasadniczej pętli pytań o pracę. W związku z tym konieczne było przyjęcie arbitralnego założenia, że <em>epizod</em> ten dotyczy innego pracodawcy, niż wcześniej wymienieni. W takim przypadku jako kod pracodawcy wpisana została wartość 99.</li>
+</ul></li>
+<li>Zakres informacji o <em>epizodach</em> pracy różni się w zależności od tego, czy był to pierwszy, ostatni, czy któryś inny <em>epizod</em> pracy. W przypadku pierwszych i ostatnich epizodów dołączono bowiem do zbioru informacje o odpowiedziach na pytania odpowiednio PI0-PI6 oraz PO0-PO6.
+<ul>
+<li>Przedrostki nazw zmiennych opisujących pierwszą i ostatnią pracę zostały zmienione na wspólny: <em>pio</em>.</li>
+<li>Nazwę zmiennej opisującej odpowiedzi na pytanie PI5 zmieniono na `pio7’.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="imputacja-wartosci-zmiennych-czas_rozp-iczas_kon" class="section level1">
+<h1>3. Imputacja wartości zmiennych czas_rozp i czas_kon</h1>
+<p>Imputacji brakujących wartości zmiennych <code>czas_rozp</code> i <code>czas_kon</code> dla <em>epizodów</em> typu ‘praca’ i ‘bezrobocie’ dokonano przy użyciu modeli regresji liniowej.</p>
+<ul>
+<li>Modele estymowane były oddzielnie dla każdego z tych dwóch typów <em>epizodów</em>.</li>
+<li>W procedurze imputacji (zarówno przy estymacji modeli, jak i przy samym imputowaniu braków danych) brano pod uwagę wyłącznie epizody, które rozpoczęły się w 2015 r. lub później.</li>
+</ul>
+<div id="zmienna-czas_rozp" class="section level2">
+<h2>3.1. Zmienna czas_rozp</h2>
+<ul>
+<li>Zmienną zależną w modelu była <code>czas_rozp</code>.</li>
+<li>Jako predyktory wykorzystano:
+<ol style="list-style-type: decimal">
+<li>typ szkoły (dwie zmienne <em>dummy</em> zakodowane na podstawie zmiennej <code>typ_szkoly</code>);</li>
+<li>płeć respondenta (zmienna <code>m1</code>);</li>
+<li>formę pracy lub rozróżnienie na bezrobotnych (poszukujących pracy) i biernych zawodowo - p. opis zmiennych <code>praca</code> i <code>bezrobocie</code> w sekcji <em>Zbiór z danymi w postaci osobo-miesięcy</em> (przekodowane na zestaw zmiennych <em>dummy</em>, przy czym brak danych uwzględniono przy przekodowaniu jako <em>legalną</em> wartość);</li>
+<li>rok, w którym rozpoczął się <em>epizod</em> (traktowany jako zmienna kategorialna - zakodowany przy pomocy zmiennych <em>dummy</em>);</li>
+<li>rok, w którym zakończył się <em>epizod</em> (traktowany jako zmienna kategorialna - zakodowany przy pomocy zmiennych <em>dummy</em>);</li>
+<li>liczbę wszystkich <em>epizodów</em> pracy danego respondenta;</li>
+<li>liczbę <em>epizodów</em> pracy respondenta, o których wiadomo, że obejmowały rok, w którym rozpoczął się dany <em>epizod</em>;</li>
+<li>liczbę <em>epizodów</em> pracy respondenta, o których wiadomo, że obejmowały rok, w którym zakończył się dany <em>epizod</em>;</li>
+<li>liczbę wszystkich <em>epizodów</em> bezrobocia (lub nieaktywności zawodowej) danego respondenta;</li>
+<li>liczbę <em>epizodów</em> bezrobocia respondenta (lub nieaktywności zawodowej), o których wiadomo, że obejmowały rok, w którym rozpoczął się dany <em>epizod</em>;</li>
+<li>liczbę <em>epizodów</em> bezrobocia respondenta (lub nieaktywności zawodowej), o których wiadomo, że obejmowały rok, w którym zakończył się dany <em>epizod</em>;</li>
+<li>informację o tym, czy w (dowolnym momencie) roku rozpoczęcia danego <em>epizodu</em> respondent brał udział w edukacji formalnej, a jeśli tak, to w jakiej formie (4 zmienne <em>dummy</em>);</li>
+<li>informację o tym, czy w (dowolnym momencie) roku zakończenia danego <em>epizodu</em> respondent brał udział w edukacji formalnej, a jeśli tak, to w jakiej formie (4 zmienne <em>dummy</em>);</li>
+<li>interakcje pomiędzy 1) a 6)-13);</li>
+<li>interakcje pomiędzy 2) a 6)-13);</li>
+<li>interakcje pomiędzy 3) a 6)-13);</li>
+<li>interakcje pomiędzy 4) a 6)-13);</li>
+<li>interakcje pomiędzy 5) a 6)-13);</li>
+<li>miesiąc przeprowadzenia wywiadu (zmienna <code>r5s2</code>) i jego interakcję z 4).</li>
+</ol></li>
+<li>Model osiągał następujące statystyki dopasowania (na zbiorze epizodów, dla których znane były wartości zmiennej <code>czas_rozp</code>):
+<ul>
+<li>Dla <em>epizodów</em> typu ‘praca’: R<sup>2</sup> = 0,92; odsetek poprawnych klasyfikacji = 19,5%.</li>
+<li>Dla <em>epizodów</em> typu ‘bezrobocie’: R<sup>2</sup> = 0,95; odsetek poprawnych klasyfikacji = 47,3%.</li>
+</ul></li>
+<li>Przy dokonywaniu imputacji przewidywania wynikające z modelu zaokrąglano do najbliższych liczb całkowitych (tak aby zmienna <code>czas_rozp</code> również po imputacji przyjmowała tylko wartości całkowite).
+<ul>
+<li>Ww. odsetki poprawnych klasyfikacji zostały obliczone na podstawie tak zaokrąglonych wartości (ale wartość R<sup>2</sup> podano dla niezaokrąglonych przewidywań).</li>
+</ul></li>
+<li>Po dokonaniu imputacji dokonano sprawdzenia:
+<ul>
+<li>Czy zaimputowana wartość zmiennej zgadza się ze znanym rokiem rozpoczęcia <em>epizodu</em>.</li>
+<li>Czy zaimputowana wartość zmiennej nie wskazuje, że <em>epizod</em> rozpoczął się później, niż się zakończył (dla <em>epizodów</em>, dla których znana była wartość zmiennej <code>czas_kon</code>, ale wartość zmiennej <code>czas_rozp</code> była imputowana).</li>
+<li>W pojedynczych przypadkach, gdy stwierdzono naruszenia ww. warunków, zmieniano zaimputowaną wartość zmiennej <code>czas_rozp</code> na najbliższą mającą sens.</li>
+</ul></li>
+</ul>
+</div>
+<div id="zmienna-czas_kon" class="section level2">
+<h2>3.2. Zmienna czas_kon</h2>
+<ul>
+<li>Zmienną zależną w modelu była długość trwania <em>epizodu</em> (tj. różnica pomiędzy <code>czas_kon</code> a <code>czas_rozp</code>).
+<ul>
+<li>Przy imputacji wartość zmiennej <code>czas_kon</code> określano dodając do wartości zmiennej <code>czas_rozp</code> wartość przewidywania wynikającą z modelu (zaokrągloną do najbliższej liczby całkowitej).</li>
+</ul></li>
+<li>Jako predyktory wykorzystano:
+<ol style="list-style-type: decimal">
+<li>typ szkoły (dwie zmienne <em>dummy</em> zakodowane na podstawie zmiennej <code>typ_szkoly</code>);</li>
+<li>płeć respondenta (zmienna <code>m1</code>);</li>
+<li>formę pracy lub rozróżnienie na bezrobotnych (poszukujących pracy) i biernych zawodowo - p. opis zmiennych <code>praca</code> i <code>bezrobocie</code> w sekcji <em>Zbiór z danymi w postaci osobo-miesięcy</em> (przekodowane na zestaw zmiennych <em>dummy</em>, przy czym brak danych uwzględniono przy przekodowaniu jako <em>legalną</em> wartość);</li>
+<li>rok, w którym rozpoczął się <em>epizod</em> (traktowany jako zmienna kategorialna - zakodowany przy pomocy zmiennych <em>dummy</em>);</li>
+<li>rok, w którym zakończył się <em>epizod</em> (traktowany jako zmienna kategorialna - zakodowany przy pomocy zmiennych <em>dummy</em>);</li>
+<li>liczbę wszystkich <em>epizodów</em> pracy danego respondenta;</li>
+<li>liczbę <em>epizodów</em> pracy respondenta, o których wiadomo, że obejmowały rok, w którym rozpoczął się dany <em>epizod</em>;</li>
+<li>liczbę <em>epizodów</em> pracy respondenta, o których wiadomo, że obejmowały rok, w którym zakończył się dany <em>epizod</em>;</li>
+<li>liczbę wszystkich <em>epizodów</em> bezrobocia (lub nieaktywności zawodowej) danego respondenta;</li>
+<li>liczbę <em>epizodów</em> bezrobocia respondenta (lub nieaktywności zawodowej), o których wiadomo, że obejmowały rok, w którym rozpoczął się dany <em>epizod</em>;</li>
+<li>liczbę <em>epizodów</em> bezrobocia respondenta (lub nieaktywności zawodowej), o których wiadomo, że obejmowały rok, w którym zakończył się dany <em>epizod</em>;</li>
+<li>informację o tym, czy w (dowolnym momencie) roku rozpoczęcia danego <em>epizodu</em> respondent brał udział w edukacji formalnej, a jeśli tak, to w jakiej formie (4 zmienne <em>dummy</em>);</li>
+<li>informację o tym, czy w (dowolnym momencie) roku zakończenia danego <em>epizodu</em> respondent brał udział w edukacji formalnej, a jeśli tak, to w jakiej formie (4 zmienne <em>dummy</em>);</li>
+<li>interakcje pomiędzy 1) a 6)-13);</li>
+<li>interakcje pomiędzy 2) a 6)-13);</li>
+<li>interakcje pomiędzy 3) a 6)-13);</li>
+<li>interakcje pomiędzy 4) a 6)-13);</li>
+<li>interakcje pomiędzy 5) a 6)-13);</li>
+<li>miesiąc przeprowadzenia wywiadu (zmienna <code>r5s2</code>) i jego interakcję z 5);</li>
+<li>datę (miesięczną) rozpoczęcia danego epizodu (zmienna <code>czas_rozp</code>) - uwzględniano przy tym również wartości tej zmiennej, które zostały zaimputowane.</li>
+</ol></li>
+<li>Model osiągał następujące statystyki dopasowania (na zbiorze epizodów, dla których znane były wartości zmiennej <code>czas_kon</code>):
+<ul>
+<li>Dla <em>epizodów</em> typu ‘praca’: R<sup>2</sup> = 0,85; odsetek poprawnych klasyfikacji = 21,1%.</li>
+<li>Dla <em>epizodów</em> typu ‘bezrobocie’: R<sup>2</sup> = 0,86; odsetek poprawnych klasyfikacji = 19,6%.</li>
+</ul></li>
+<li>Przy dokonywaniu imputacji przewidywania wynikające z modelu zaokrąglano do najbliższych liczb całkowitych (tak aby zmienna <code>czas_kon</code> również po imputacji przyjmowała tylko wartości całkowite).
+<ul>
+<li>Ww. odsetki poprawnych klasyfikacji zostały obliczone na podstawie tak zaokrąglonych wartości (ale wartość R<sup>2</sup> podano dla niezaokrąglonych przewidywań).</li>
+</ul></li>
+<li>Po dokonaniu imputacji dokonano sprawdzenia:
+<ul>
+<li>Czy zaimputowana wartość zmiennej zgadza się ze znanym rokiem zakończenia <em>epizodu</em>.</li>
+<li>Czy zaimputowana wartość zmiennej nie wskazuje, że <em>epizod</em> zakończył się wcześniej, niż się rozpoczął.</li>
+<li>W pojedynczych przypadkach, gdy stwierdzono naruszenia ww. warunków, zmieniano zaimputowaną wartość zmiennej <code>czas_kon</code> na najbliższą mającą sens.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="zbior-zinformacjami-o-czonkach-gospodarstw-domowych" class="section level1">
+<h1>4. Zbiór z informacjami o członkach gospodarstw domowych</h1>
+<ul>
+<li>Informacje zawarte w zmiennej <code>m10d_in</code> zostały domknięte i zespolone z <em>typowymi</em> odpowiedziami na pytanie M10 w ramach zmiennej <code>m10d_rekod</code>.</li>
+<li>Do zbioru dołączona została zmienna <code>m10c_wiek</code>, zawierająca wiek przeliczony z daty urodzenia.</li>
+</ul>
+</div>
+<div id="uwagi-oanalizie-zbioru-epizodow" class="section level1">
+<h1>5. Uwagi o analizie zbioru <em>epizodów</em></h1>
+<p>Typowo zbiór <em>epizodów</em> wykorzystywane będzie w analizie w ten sposób, że:</p>
+<ul>
+<li>najpierw dokonane zostanie zawężenie zbioru do <em>epizodów</em> określonego typu (<em>epizody</em> innych typów zostaną usunięte);</li>
+<li>następnie na tak zawężonym zbiorze wykonane zostaną pewne procedury agregacji w ramach respondentów (aby uzyskać interesujące wskaźniki);</li>
+<li>następnie tak zagregowane wyniki będą dołączane do oryginalnego zbioru danych (elementu <code>dane</code> listy zwracanej przez fukcję <code>wczytaj_wyniki_pilrm()</code>, w którym jednemu respondentowi odpowiada jeden wiersz) w celu przeprowadzenia dalszych analiz.</li>
+</ul>
+<p>Należy mieć przy tym na uwadze, że znaczna część respondentów mogła nie mieć żadnego <em>epizodu</em> właśnie analizowanego typu. W szczególności oznacza to, że:</p>
+<ul>
+<li>Typowo przy dołączaniu wyników zagregowanych do poziomu respondentów na podstawie zbioru <em>epizodów</em> do oryginalnego zbioru (w którym jednostką obserwacji jest respondent) wielu osobom w oryginalnym zbiorze, obejmującym wszystkich respondentów, przypisane zostaną braki danych.
+<ul>
+<li>Istotne może być więc zakodowanie tych braków danych zaraz po dokonaniu łączenia w sposób, który pozwoli potem na wygodne (i przede wszystkim nieprowadzące do pomyłek, w szczególności związanych z przyjęciem złej podstawy procentowania) obsłużenie ich w prowadzonych dalej analizach.</li>
+<li>Należy przy tym mieć na uwadze, że w zbiorze <em>epizodów</em> wartości <em>braków danych użytkownika</em> zostały już typowo zamienione na <em>systemowe</em> braki danych (a więc <em>systemowy</em> brak danych w połączonym zbiorze może dla wielu zmiennych równie dobrze wskazywać na to, że respondent nie miał żadnego <em>epizodu</em> danego typu, co na to, że taki <em>epizod</em> miał, ale nie był w stanie podać o nim interesującej nas informacji).</li>
+<li>W związku z tym <strong>dobrą praktyką przy agregacji zbioru danych w postaci <em>długiej</em> do poziomu respondentów jest utworzenie w nim takiej zmiennej (innej niż <code>ID</code>), co do której będziemy mieć pewność, że dla wszystkich w zagregowanym zbiorze przyjmie ona wartość niebędącą brakiem danych</strong> i będzie ją można potem wygodnie wykorzystać do stwierdzenia, którzy respondenci w oryginalnym zbiorze danych mieli choć jeden <em>epizod</em> interesującego nas typu.</li>
+</ul></li>
+<li>Jeśli zagregowany do poziomu respondentów zbiór danych w postaci <em>długiej</em> będzie analizowany bez przyłączania do oryginalnego zbioru, w kontekście podstaw procentowania należy mieć na uwadze, że zawiera on typowo tylko podzbiór spośród wszystkich badanych.</li>
+</ul>
+</div>
+<div id="zbior-zdanymi-wpostaci-osobo-miesiecy" class="section level1">
+<h1>6. Zbiór z danymi w postaci osobo-miesięcy</h1>
+<div id="struktura-zbioru" class="section level2">
+<h2>6.1. Struktura zbioru</h2>
+<p>W zbiorze zawarte zostały następujące zmienne opisujące cechy respondentów stałe w czasie:</p>
+<ul>
+<li><code>ID</code> - identyfikator respondenta, umożliwia łączenie z innymi zbiorami danych z badania;</li>
+<li><code>typ_szkoly</code> - typ szkoły, jako uczeń której respondent został zakwalifikowany do badania;</li>
+<li><code>r5s2</code> - miesiąc, w którym został przeprowadzony wywiad z respondentem;</li>
+<li><code>f6</code> - zmienna opisująca powód nieuzyskania świadectwa szkoły, jako uczeń której respondent został zakwalifikowany do badania;
+<ul>
+<li>na podstawie zebranych danych nie da się określić daty, kiedy uczeń przerwał naukę w tej szkole;</li>
+<li>jeśli respondent ukończył tę szkołę, zmiennej przypisany jest brak danych;</li>
+</ul></li>
+<li><code>f7</code> - rok uzyskania świadectwa szkoły, jako uczeń której respondent został zakwalifikowany do badania;
+<ul>
+<li>jeśli respondent nie uzyskał świadectwa tej szkoły, zmiennej przypisany jest brak danych;</li>
+</ul></li>
+<li><code>t_laczny_czas</code> - łączny czas trwania wywiadu, obliczony poprzez zsumowanie zmiennych opisujących czasy odpowiedzi na poszczególne pytania;
+<ul>
+<li>niestety <strong>w przypadku znacznej części respondentów zmienna ta podaje zafałszowany (zbyt krótki) czas trwania wywiadu</strong>;</li>
+</ul></li>
+<li><code>m1</code> - płeć respondenta;</li>
+<li><code>m2</code> - rok urodzenia respondenta;
+<ul>
+<li>w zmiennej występują (nieliczne) braki danych;</li>
+<li><strong>w zbiorze występują osoby starsze (rekordzista to rocznik ’55)</strong>;</li>
+</ul></li>
+<li><code>m3</code> - klasa wielkości miejscowości zamieszkania w momencie przeprowadzania wywiadu z absolwentem.</li>
+</ul>
+<p>W zbiorze zawarte zostały następujące zmienne opisujące statusy respondentów w poszczególnych miesiącach:</p>
+<ul>
+<li><code>data</code> - identyfikator miesiąca w formie <em>czytelnej</em>;</li>
+<li><code>czas</code> - identyfikator miesiąca w formie liczby - liczba miesięcy, jaka upłynęła od czerwca 2015 r. (a więc <em>domyślnego</em> momentu ukończenia szkoły, jako absolwent której respondent został zakwalifikowany do badania) do miesiąca, który opisuje dany rekord w zbiorze;</li>
+<li><code>status</code> - zmienna kodująca w syntetycznej formie status respondenta: wartości zmiennych (kolejno) <code>praca</code>, <code>nauka</code> i <code>bezrobocie</code> <em>sklejone</em> ze sobą w jeden ciąg znaków (składający się z trzech cyfr: cyfra setek koduje pracę, dziesiątek naukę, a jedności bezrobocie);
+<ul>
+<li>wartość zmiennej status równa ‘999’ ma specjalne znaczenie - p. następna sekcja;</li>
+</ul></li>
+<li><code>praca</code> - zmienna kodująca status zatrudnienia;</li>
+<li><code>nauka</code> - zmienna kodująca status uczestnictwa w edukacji formalnej;</li>
+<li><code>bezrobocie</code> - zmienna kodująca, czy respondent deklarował się jako pozostający bez pracy;</li>
+<li><code>praca_a_bezrobocie</code> - zmienna opisująca ew. występowanie w danym miesiącu (dla danego respondenta) <em>konfliktów</em> pomiędzy statusem zatrudnienia a statusem bezrobocia, fakt skorygowania takiego <em>konfliktu</em> (p. sekcja <em>Sposób kodowania statusów</em>) lub jego przyczynę;</li>
+<li><code>korekta_ciaglosc_nauki</code> - zmienna pozwala zidentyfikować rekordy, w których status uczestnictwa w nauce formalnej został skorygowany ze względu na stwierdzenie ciągłości nauki (p. sekcja <em>Sposób kodowania statusów</em>);</li>
+<li><code>imput_praca</code> - zmienna wskazująca, że status zatrudnienia w danym miesiącu (dla danego respondenta) został zakodowany w oparciu o zaimputowaną wartość zmiennej <code>czas_rozp</code> lub zmiennej <code>czas_kon</code>;</li>
+<li><code>imput_nauka</code> - zmienna wskazująca, że status uczestnictwa w nauce formalnej w danym miesiącu (dla danego respondenta) został zakodowany w oparciu o zaimputowaną wartość zmiennej <code>czas_rozp</code> lub zmiennej <code>czas_kon</code>;;</li>
+<li><code>imput_bezrobocie</code> - zmienna wskazująca, że status bezrobocia w danym miesiącu (dla danego respondenta) został zakodowany w oparciu o zaimputowaną wartość zmiennej <code>czas_rozp</code> lub zmiennej <code>czas_kon</code>;.</li>
+</ul>
+</div>
+<div id="okres-objety-obserwacjami-wzbiorze" class="section level2">
+<h2>6.2. Okres objęty obserwacjami w zbiorze</h2>
+<ul>
+<li>Pierwszy miesiąc występujący w zbiorze dla danego respondenta to:
+<ul>
+<li>Wrzesień 2014 r. - dla respondentów, którzy nie wymienili żadnego epizodu, który rozpoczynałby się wcześniej.</li>
+<li>Miesiąc rozpoczęcia najwcześniejszego z wymienionych epizodów, jeśli takowy jest wcześniejszy niż wrzesień 2014 r.</li>
+</ul></li>
+<li>Ostatnim miesiącem występującym w zbiorze jest dla danego respondenta miesiąc poprzedzający ten, w którym nastąpiła realizacja wywiadu (z absolwentem).</li>
+<li>Dla każdego respondenta w zbiorze zawarte są rekordy opisujące każdy kolejny miesiąc od pierwszego do ostatniego uwzględnionego dla niego w zbiorze (zgodnie z ww. regułami).</li>
+<li>Okres miesięcy objęty zbiorem można oczywiście łatwo zawęzić, odfiltrowując obserwacje na podstawie zmiennej <code>czas</code>.
+<ul>
+<li>Należy mieć na uwadze, że <strong>w ogólności analiza okresu przed 2015 r. (a na pewno przed wrześniem 2014 r.) nie ma sensu</strong>, chyba że w szczególnych przypadkach, np. gdy chcemy utworzyć zmienną opisującą w zbiorczy sposób uprzednie doświadczenie zawodowe respondenta.</li>
+</ul></li>
+</ul>
+</div>
+<div id="sposob-kodowania-statusow" class="section level2">
+<h2>6.3. Sposób kodowania statusów</h2>
+<div id="reguy-klasyfikacji-na-podstawie-epizodow-obejmujacych-poszczegolne-miesiace" class="section level3">
+<h3>6.3.1. Reguły klasyfikacji na podstawie <em>epizodów</em> obejmujących poszczególne miesiące</h3>
+<ul>
+<li>Przy kodowaniu pominięte zostały <em>epizody</em>, dla których nieznany był rok rozpoczęcia <em>epizodu</em> (tj. już po przeprowadzeniu imputacji wartością zmiennej <code>czas_rozp</code> był brak danych) lub <em>epizod</em> był zakończony (<code>czy_zakonczony</code> równe 1) i nieznany był rok zakończenia <em>epizodu</em> (tj. już po przeprowadzeniu imputacji wartością zmiennej <code>czas_kon</code> był brak danych).
+<ul>
+<li>Należy mieć na uwadze, że dla części <em>epizodów</em> respondenci nie byli w stanie podać miesiąca rozpoczęcia lub zakończenia <em>epizodu</em> i wartości zmiennych <code>czas_rozp</code> i <code>czas_kon</code> były w takich przypadkach imputowane (p. sekcje <em>Zmienne specjalne w zbiorach w postaci „długiej”</em> i <em>Imputacja wartości zmiennych <code>czas_rozp</code> i <code>czas_kon</code></em>).</li>
+</ul></li>
+<li><code>praca</code> - zmienną zakodowano na podstawie zmiennych <code>pg2g</code> i <code>pg2h</code>:
+<ul>
+<li><code>pg2h</code> równe 1 (<code>pg2g</code> równe 1, 2 lub 3) -&gt; 1 (<em>zatrudniony na umowę o pracę</em>);</li>
+<li><code>pg2h</code> równe 2 (<code>pg2g</code> równe 1, 2 lub 3) -&gt; 2 (<em>zatrudniony przez agencję pracy tymczasowej</em>);</li>
+<li><code>pg2h</code> równe 3 (<code>pg2g</code> równe 1, 2 lub 3) -&gt; 3 (<em>zatrudniony na umowie cywilnoprawnej</em>);</li>
+<li><code>pg2h</code> równe 4 (<code>pg2g</code> równe 1, 2 lub 3) -&gt; 4 (<em>samozatrudniony (praca ‘u kogoś’)</em>);</li>
+<li><code>pg2g</code> równe 4 -&gt; 5 (<em>prowadzi własną działalność (‘praca ’u siebie’)</em>);</li>
+<li><code>pg2g</code> równe 5 -&gt; 6 (<em>prowadzi własne gosp. rolne</em>);</li>
+<li><code>pg2h</code> równe 6 lub 7 (<code>pg2g</code> równe 1, 2 lub 3) -&gt; 7 (<em>odbywa staż lub praktykę absolwencką</em>);</li>
+<li><code>pg2h</code> równe 5 (<code>pg2g</code> równe 1, 2 lub 3) -&gt; 8 (<em>zatrudniony bez umowy (na czarno)</em>);</li>
+<li>wszystkie pozostałe przypadki, gdy wystąpił epizod pracy -&gt; 9;</li>
+</ul></li>
+<li><code>nauka</code> - zmienną zakodowano na podstawie zmiennej <code>typ_epizodu</code>:
+<ul>
+<li><code>typ_epizodu</code> równe ‘studia’ -&gt; 2;</li>
+<li><code>typ_epizodu</code> równe ‘SPolic.’ -&gt; 3;</li>
+<li>wszystkim miesiącom od wrześnie 2014 r. do czerwca 2015 r. (wartości zmiennej <code>czas</code> od -9 do 1) przypisano wartość 1, która oznacza, że respondent uczył się w tym czasie w szkole, jako uczeń której został zakwalifikowany do badania;</li>
+<li>Ponieważ na podstawie zebranych danych występują trudności z określeniem, kiedy respondent zakończył naukę w szkole, jako uczeń której został zakwalifikowany do badania, dla wszystkich badanych arbitralnie założono, że ukończyli naukę w tej szkole w czerwcu 2015 r. (por. sekcja <em>Warto przemyśleć przed przystąpieniem do analiz</em>).</li>
+</ul></li>
+<li><code>bezrobocie</code> - zmienną zakodowano na podstawie zmiennej <code>pb1f</code>:
+<ul>
+<li><code>pb1f</code> równe 1 -&gt; 1 (<em>bezrobotny, poszukuje pracy</em>);</li>
+<li><code>pb1f</code> równe 2 -&gt; 2 (<em>bierny zawodowo</em>);</li>
+<li>wszystkie pozostałe przypadki, gdy wystąpił epizod bezrobocia -&gt; 3;</li>
+</ul></li>
+</ul>
+</div>
+<div id="uwzglednienie-ciagosci-nauki-przez-okres-wakacji" class="section level3">
+<h3>6.3.2. Uwzględnienie ciągłości nauki (przez okres wakacji)</h3>
+<p>Jeśli stwierdzono, że respondent:</p>
+<ul>
+<li>studiował w październiku danego roku i jednocześnie uczył się w szkole dowolnego typu w maju tego samego roku,</li>
+<li>lub uczył się w szkole policealnej we wrześniu danego roku i jednocześnie uczył się w szkole dowolnego typu w maju tego samego roku,</li>
+</ul>
+<p>wszystkie miesiące (włącznie) od czerwca do odpowiednio września lub sierpnia, w których respondent nie zadeklarował, że się uczył, oznaczane były jako okres odpowiednio studiowania (<code>nauka</code> równe 2) lub nauki w szkole policealnej (<code>nauka</code> równe 3).</p>
+<p><strong>Kodowanie na podstawie niewystępowania <em>epizodów</em> obejmujących dany miesiąc</strong></p>
+<ul>
+<li><code>praca</code> - jeśli respondent nie wymienił żadnych <em>epizodów</em> pracy obejmujących dany miesiąc, zmiennej <code>praca</code> przypisywana była wartość 0;</li>
+<li><code>nauka</code> - jeśli respondent nie wymienił żadnych <em>epizodów</em> nauki obejmujących dany miesiąc, zmiennej <code>nauka</code> przypisywana była wartość 0 (z wyłączeniem miesięcy, dla których status ten zmieniono w wyniku opisanej powyżej procedury uwzględniania ciągłości nauki);</li>
+<li><code>bezrobocie</code>:
+<ul>
+<li>jeśli respondent nie wymienił żadnego <em>epizodu</em> bezrobocia obejmującego dany miesiąc i jednocześnie choć jedna zmienna spośród <code>praca</code> i <code>nauka</code> przyjmowała w tym miesiącu dla respondenta wartość inną niż 0, zmiennej <code>bezrobocie</code> przypisywano wartość 0 (<em>nie bezrobotny</em>);</li>
+<li>jeśli respondent nie wymienił żadnego <em>epizodu</em> bezrobocia obejmującego dany miesiąc i jednocześnie zarówno zmienna <code>praca</code>, jak i zmienna <code>nauka</code> przyjmowały wartość 0 (tj. respondent nie pracował, ani się nie uczył), przyjmowano, że respondent był w danym miesiącu bierny zawodowo i zmiennej <code>bezrobocie</code> przypisywano wartość 2;</li>
+<li>wystąpienie takiej sytuacji kodowane jest specjalną wartością zmiennej <code>status</code>: ‘999’;</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="relacje-pomiedzy-statusami-pracy-inauki-astatusem-bezrobocia" class="section level2">
+<h2>6.4. Relacje pomiędzy statusami pracy i nauki a statusem bezrobocia</h2>
+<p>W ramach przyjętego schematu kodowania nie narzucano wzajemnego wykluczania się <em>niezerowych</em> (tj. wskazującymi na aktywność zawodową lub edukacyjną) wartości zmiennych <code>praca</code> i <code>nauka</code> z <em>niezerowymi</em> wartościami zmiennej <code>bezrobocie</code> (wskazującymi na pozostawaniu bez zatrudnienia). W związku z występowaniem w zbiorze rekordów, w których statusy wskazują jednocześnie na bezrobocie (lub nieaktywność zawodową) i aktywność zawodową lub naukę, należy rozważyć, że:</p>
+<ol style="list-style-type: decimal">
+<li>Po dużej części są to sytuacje, które mogły mieć miejsce:
+<ul>
+<li>Jeśli przejście od bezrobocia do pracy lub odwrotnie odbyło się w środku miesiąca, respondent istotnie był w danym miesiącu zarówno pracujący jak i bezrobotny (wiersze w zbiorze, w których najprawdopodobniej mamy do czynienia z taką sytuacją wyróżnione są przez wartość ‘miesiąc graniczny’ zmiennej <code>praca_a_bezrobocie</code>).</li>
+<li>Jeśli respondent pracował <em>na czarno</em>, mógł jednocześnie być formalnie bezrobotny (choć w zbiorze nie odnotowujemy tego typu deklaracji).</li>
+<li>Postrzeganie się w kategoriach osoby bezrobotnej może być dla części respondentów oderwane od faktu kontynuowania lub nie nauki.</li>
+</ul></li>
+<li>W sytuacjach, gdy zidentyfikowano <em>konflikt</em> statusu pracy i bezrobocia, niedający się zinterpretować w kategoriach <em>miesiąca granicznego</em>, starano się je jeszcze rozstrzygnąć, biorąc pod uwagę, że niektóre statusy zostały przypisane na podstawie imputowanych wartości zmiennych <code>czas_rozp</code> i <code>czas_kon</code> i w związku z tym można je uznać za mniej wiarygodne.
+<ul>
+<li>Jeśli w danym miesiącu (dla danego respondenta) status pracy wskazujący na aktywność zawodową został zakodowany na podstawie imputowanych wartości zmiennych <code>czas_rozp</code> i <code>czas_kon</code>, a status bezrobocia wskazujący na brak pracy został zakodowany w oparciu o deklaracje respondenta dot. miesiąca rozpoczęcia lub zakończenia <em>epizodu</em> (bezrobocia), status zatrudnienia był zmieniany na brak zatrudnienia. Sytuacje takie oznaczone są w zbiorze wartością ‘skorygowano pracę’ zmiennej <code>praca_a_bezrobocie</code>.</li>
+<li>Jeśli w danym miesiącu (dla danego respondenta) status bezrobocia wskazujący na brak pracy został zakodowany na podstawie imputowanych wartości zmiennych <code>czas_rozp</code> i <code>czas_kon</code>, a status zatrudnienia wskazujący aktywność zawodową został zakodowany w oparciu o deklaracje respondenta dot. miesiąca rozpoczęcia lub zakończenia <em>epizodu</em> (pracy), status bezrobocia był zmieniany na ‘nie bezrobotny’. Sytuacje takie oznaczone są w zbiorze wartością ‘skorygowano bezrobocie’ zmiennej <code>praca_a_bezrobocie</code>.</li>
+<li>W innych przypadkach nie dało się dokonać korekt. Są one oznaczone są w zbiorze wartościami ‘sprzeczne deklaracje resp.’ lub ‘sprzeczne wyniki imputacji’ zmiennej <code>praca_a_bezrobocie</code>, w zależności od tego, czy oba statusy zostały określone na podstawie informacji o miesiącu rozpoczęcia lub zakończenia <em>epizodu</em> podanych przez respondenta, czy też oba zostały przypisane na podstawie imputowanych wartości zmiennych <code>czas_rozp</code> i <code>czas_kon</code>.</li>
+</ul></li>
+<li>W ogólności nie mamy niestety gwarancji, że respondenci odpowiadali w sposób spójny. W ramach wywiadu nie mieliśmy bowiem możliwości wyłapywania ew. konfliktów w deklaracjach na bieżąco i zmuszania respondentów do ich rozstrzygnięcia.
+<ul>
+<li>Być może w przyszłości chcąc badać historie życia respondentów, należałoby pomyśleć o zagwarantowaniu sobie, że firma realizująca je w terenie będzie używać bardziej wyspecjalizowanego pod tym kątem oprogramowania do realizacji.</li>
+</ul></li>
+</ol>
+</div>
+<div id="warto-przemyslec-przed-przystapieniem-do-analiz" class="section level2">
+<h2>6.5. Warto przemyśleć przed przystąpieniem do analiz</h2>
+<ul>
+<li>Jak przekodować trzy statusy opisane zmiennymi <code>praca</code>, <code>nauka</code> i <code>bezrobocie</code> na jeden status, biorąc pod uwagę, że (z powodów opisanych we wcześniejszej sekcji) respondent może w tym samym miesiącu być opisany jako pracujący, uczący się i bezrobotny.</li>
+<li>W danych występują również bardzo starzy respondenci (najstarszy to rocznik ’55). Jeśli chcieć, zgodnie z pierwotnymi założeniami metodologicznymi badania BLASZ, ograniczyć się do analizy osób, które w momencie badania w szkołach miały nie więcej niż 29 lat, należałoby usunąć osoby urodzone przed 1986 r. (na podstawie zmiennej <code>m2</code> - trzeba przy tym jeszcze podjąć decyzję, co z respondentami - na szczęście nielicznymi - których roku urodzenia nie znamy).</li>
+<li>Do jakie okresu organiczyć analizę.
+<ul>
+<li>Czy powinien to być ten sam okres dla każdego respondenta, czy chcemy skorzystać z faktu, że dla tych, z którymi wywiad został przeprowadzony później, dysponujemy dłuższą historią.</li>
+<li>Kiedy wyznaczyć początek analizowanego okresu. Wydaje się, że najsensowniejsze cezury plasują się pomiędzy styczniem a lipcem 2015 r. Absolutnie nie należy analizować sekwencji zdarzeń w okresie przed wrześniem 2014 r.</li>
+</ul></li>
+<li>W danych występują - szczęśliwie nieliczni - respondenci, którzy nie uzyskali świadectwa ukończenia szkoły, jako uczniowie której zostali zakwalifikowani do badania (można ich zidentyfikowaćpo tym, że zmienna <code>f6</code> nie jest brakiem danych). Być może należałoby wykluczyć ich z analizy, gdyż po pierwsze, nie do końca są absolwentami (a przynajmniej <em>nie w takim samym stopniu</em>, jak wszyscy pozostali), a po drugie (i może ważniejsze), na podstawie zebranych danych nie jesteśmy w stanie ustalić, jak długo kontynuowali oni jeszcze naukę (na potrzeby kodowania zupełnie arbitralnie przyjąłem, że <em>jak wszyscy</em> opuścili mury szkoły w czerwcu 2015 r.).</li>
+<li>W danych występują osoby, które deklarują, że świadectwo ukończenia szkoły, jako uczniowie której zostali zakwalifikowani do badania, uzyskały w innym roku, niż 2015. Można mieć jednak mieć wątpliwości, czy informacja ta jest rzetelna, biorąc pod uwagę, że 10 osób wskazuje, że dyplom ten uzyskało już w 2014 r. (realizacja wywiadów w BLASZu rozpoczęła się 26 listopada 2014 r.; osoby, które składają takie deklaracje, były uczniami ZSZ lub techników). Nie jest też jasne, jaka dokładnie była sytuacja osób, które zadeklarowały inny niż 2015 rok ukończenia takiej szkoły i jak w związku z tym najlepiej byłoby zakodować ich statusy edukacyjne. Biorąc pod uwagę niewielką liczbę takich osób (oprócz 10 deklarujących rok 2014 jeszcze 29 deklarujących rok 2016 i 5  deklarujących rok 2017), uznałem, że najlepiej (najprościej) będzie problem zignorować i konsekwentnie dla wszystkich stosować arbitralne założenie, że szkołę, jako uczniowie której trafili do badania, ukończyli w czerwcu 2015 r. Można jednak chcieć dokonać w tej kwestii innych rozstrzygnięć i odpowiednio przekodować wartości zmiennej <code>nauka</code> w opraciu o wartość zmiennej <code>f7</code> (oraz <code>czas</code>).</li>
+</ul>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
