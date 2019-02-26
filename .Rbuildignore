@@ -1,10 +1,10 @@
+^Meta$
 ^codecov\.yml$
 ^\.travis\.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^dane$
-^doc$
 ^cache$
 ^dropbox$
 ^vignettes/.*_cache$
-^testx/.*\.sav$
+^tests/.*\.sav$
+^doc$

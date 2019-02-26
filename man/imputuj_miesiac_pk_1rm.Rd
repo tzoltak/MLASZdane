@@ -18,3 +18,8 @@ Funkcja imputuje braki danych w zmiennych opisujących miesiąc rozpoczęcia
 i miesiąc zakończenia epizodów pracy nauki i bezrobocia w danych sondażowych
 z pilotażowej rundy monitringu.
 }
+\details{
+Patrz dokumentacja dot. struktury i zawartości zbiorów danych
+z \href{../doc/runda_1-dokumentacja.html}{1. rundy monitoringu}
+tworzonych przy pomocy funkcji pakietu MLASZdane.
+}

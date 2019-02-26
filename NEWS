@@ -1,11 +1,14 @@
-# MLASZdane 0.0.2 (25.02.2019)
+# MLASZdane 0.0.4 (26.02.2019)
 
 - Nowe funkcje:
   - przygotuj_zbior_osobo_miesiecy_pilrm();
   - przygotuj_zbior_osobo_miesiecy_1rm();
   - koryguj_statusy() (nieeksportowana).
 
-# MLASZdane 0.0.2 (27.12.2018)
+- Dodano "winietki" opisujące strukturę zbiorów tworzonych przez funkcje
+  służące przekształcaniu zbiorów z wynikami badań sondażowych.
+
+# MLASZdane 0.0.3 (27.12.2018)
 
 - Nowe funkcje:
   - wczytaj_wyniki_1rm();

@@ -1,7 +1,7 @@
-#' @title Wczytuje zbiór z wynikami 1. rundy monitorowania losow absolwentow
+#' @title Wczytuje zbior z wynikami 1. rundy monitorowania losow absolwentow
 #' @description
 #' Funkcja wczytuje plik z wynikami 1. rundy monitoringu losów
-#' absolwentóW i przekształca go na zbiory: epizodów, członków gospodarstw
+#' absolwentów i przekształca go na zbiory: epizodów, członków gospodarstw
 #' domowych i zbiór obejmujący pozostałe zmienne. \strong{Uwaga}, funkcja
 #' zakłada, że \strong{do zbioru zostały już dopisane kody zawodów} (zakodowane
 #' z odpowiedzi otwartych udzielonych przez respondentów).
@@ -9,7 +9,13 @@
 #' @details
 #' Funkcja jest całkowicie nieodporna na niewystępowanie w zbiorze kolumn,
 #' których istnienia oczekuje - w takiej sytuacji będzie rzucać umiarkowanie
-#' informatywnymi błędami.
+#' informatywnymi błędami. Nazwa ostatecznej wersji zbioru z wynikami badania,
+#' do wykorzystania, na której testowane było działanie funkcji to:
+#' \emph{MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodowaniem.sav}.
+#'
+#' Więcej szczegółów - patrz dokumentacja dot. struktury i zawartości zbiorów
+#' danych z \href{../doc/runda_1-dokumentacja.html}{1. rundy monitoringu}
+#' tworzonych przy pomocy funkcji pakietu MLASZdane.
 #' @return lista ramek danych
 #' @export
 #' @importFrom stats setNames

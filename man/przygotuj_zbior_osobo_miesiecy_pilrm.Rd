@@ -18,7 +18,7 @@ w ramach pilotażowej rundy monitoringu na zbiór, w którym obserwacją jest ko
 badany w konkretnym miesiącu, a zmienne opisują jego status zatrudnienia/nauki.
 }
 \details{
-Tworzony w ten sposób zbiór wbrew pozorom nie jest wykorzystywany do
-obliczania wskaźników wykorzystywanych później w raportach szkół, ale do
-analiz na potrzeby raportu podsumowującego rundę monitorigu.
+Patrz dokumentacja dot. struktury i zawartości zbiorów danych
+z \href{../doc/runda_pilotazowa-dokumentacja.html}{rundy pilotażowej}
+tworzonych przy pomocy funkcji pakietu MLASZdane.
 }

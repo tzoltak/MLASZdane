@@ -4,11 +4,10 @@
 #' w ramach 1. rundy monitoringu na zbiór, w którym obserwacją jest konkretny
 #' badany w konkretnym miesiącu, a zmienne opisują jego status zatrudnienia/nauki.
 #' @param x lista zwracana przez funkcję \code{\link{imputuj_miesiac_pk_1rm}}
-#' @details
-#' Tworzony w ten sposób zbiór wbrew pozorom nie jest wykorzystywany do
-#' obliczania wskaźników wykorzystywanych później w raportach szkół, ale do
-#' analiz na potrzeby raportu podsumowującego rundę monitorigu.
 #' @return ramka danych
+#' @details Patrz dokumentacja dot. struktury i zawartości zbiorów danych
+#' z \href{../doc/runda_1-dokumentacja.html}{1. rundy monitoringu}
+#' tworzonych przy pomocy funkcji pakietu MLASZdane.
 #' @export
 #' @importFrom tidyr unnest
 #' @importFrom dplyr .data arrange case_when filter first last left_join mutate

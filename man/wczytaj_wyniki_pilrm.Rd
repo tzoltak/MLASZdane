@@ -2,7 +2,7 @@
 % Please edit documentation in R/wczytaj_wyniki_pilrm.R
 \name{wczytaj_wyniki_pilrm}
 \alias{wczytaj_wyniki_pilrm}
-\title{Wczytuje zbiór z wynikami pilotazowej rundy monitorowania losow absolwentow}
+\title{Wczytuje zbior z wynikami pilotazowej rundy monitorowania losow absolwentow}
 \usage{
 wczytaj_wyniki_pilrm(x)
 }
@@ -14,11 +14,17 @@ lista ramek danych
 }
 \description{
 Funkcja wczytuje plik z wynikami pilotażowej rundy monitoringu losów
-absolwentóW i przekształca go na zbiory: czasów odpowiedzi, epizodów,
+absolwentów i przekształca go na zbiory: czasów odpowiedzi, epizodów,
 członków gospodarstw domowych i zbiór obejmujący pozostałe zmienne.
 }
 \details{
 Funkcja jest całkowicie nieodporna na niewystępowanie w zbiorze kolumn,
 których istnienia oczekuje - w takiej sytuacji będzie rzucać umiarkowanie
-informatywnymi błędami.
+informatywnymi błędami. Nazwa ostatecznej wersji zbioru z wynikami badania,
+do wykorzystania, na której testowane było działanie funkcji to:
+\emph{MLEZAMiD_absolwent_n2959_20171013.sav}.
+
+Więcej szczegółów - patrz dokumentacja dot. struktury i zawartości zbiorów
+danych z \href{../doc/runda_pilotazowa-dokumentacja.html}{rundy pilotażowej}
+tworzonych przy pomocy funkcji pakietu MLASZdane.
 }

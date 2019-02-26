@@ -6,6 +6,9 @@
 #' @param x lista zwracana przez funkcję \code{\link{wczytaj_wyniki_pilrm}}
 #' @return lista ramek danych o takiej samej strukturze, jak zwracana przez
 #' \code{\link{wczytaj_wyniki_pilrm}}
+#' @details Patrz dokumentacja dot. struktury i zawartości zbiorów danych
+#' z \href{../doc/runda_pilotazowa-dokumentacja.html}{rundy pilotażowej}
+#' tworzonych przy pomocy funkcji pakietu MLASZdane.
 #' @export
 #' @importFrom stats lm model.frame predict relevel
 #' @importFrom tidyr gather spread

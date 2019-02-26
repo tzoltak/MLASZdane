@@ -6,6 +6,9 @@
 #' @param x lista zwracana przez funkcję \code{\link{wczytaj_wyniki_1rm}}
 #' @return lista ramek danych o takiej samej strukturze, jak zwracana przez
 #' \code{\link{wczytaj_wyniki_1rm}}
+#' @details Patrz dokumentacja dot. struktury i zawartości zbiorów danych
+#' z \href{../doc/runda_1-dokumentacja.html}{1. rundy monitoringu}
+#' tworzonych przy pomocy funkcji pakietu MLASZdane.
 #' @export
 #' @importFrom stats lm model.frame predict relevel
 #' @importFrom dplyr .data bind_rows case_when do filter group_by left_join
