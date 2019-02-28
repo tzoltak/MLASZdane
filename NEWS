@@ -1,3 +1,14 @@
+# MLASZdane 0.0.5 (28.02.2019)
+
+- Nowe funkcje:
+  - znajdz_wskazniki_bdl();
+  - wskaznik_bdl();
+  - pobierz_dane_bdl();
+  - przeksztalc_dane_bdl();
+
+- "Winietka" opisująca sposób pobierania wskaźników z API BDL (przy pomocy ww.
+  funkcji).
+
 # MLASZdane 0.0.4 (26.02.2019)
 
 - Nowe funkcje:
