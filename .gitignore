@@ -29,3 +29,4 @@ Meta
 .Rproj.user
 # test data not to be publicly available
 tests/**/*.sav
+tests/**/*.RData

@@ -13,7 +13,8 @@ Imports:
     methods,
     tidyr (>= 0.8.2),
     dplyr (>= 0.8.0),
-    haven (>= 2.1.0)
+    haven (>= 2.1.0),
+    jsonlite (>= 1.6)
 Suggests:
     testthat,
     covr,
