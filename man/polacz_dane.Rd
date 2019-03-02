@@ -37,7 +37,7 @@ znaków, np. '2014-01-01')}
 znaków, np. '2015-09-30')}
 }
 \value{
-data.frame - połączone dane
+data frame - połączone dane
 }
 \description{
 Aby poprawnie przyłączyć statystyki powiatów macierz danych

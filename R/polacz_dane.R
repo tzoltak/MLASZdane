@@ -24,7 +24,7 @@
 #'   znaków, np. '2014-01-01')
 #' @param dataMax koniec okresu uwzględnionego w danych ZUS (jako łańcuch
 #'   znaków, np. '2015-09-30')
-#' @return data.frame - połączone dane
+#' @return data frame - połączone dane
 #' @export
 #' @importFrom dplyr anti_join left_join select_ filter_ mutate_ distinct %>%
 #' @importFrom methods is

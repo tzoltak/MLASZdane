@@ -244,6 +244,9 @@ imputuj_miesiac_pk_1rm = function(x) {
   maska = !grepl("^(ID_RESP|typ_epizodu|nr|swiadectwo)$|^(czas|czy)_",
                  names(x$epizody))
   names(x$epizody)[maska] = paste0("ABS_", names(x$epizody)[maska])
+  maska = !grepl("^(ID_RESP|typ_epizodu|nr|swiadectwo)$|^(czas|czy)_",
+                 names(x$dane))
+  names(x$dane)[maska] = paste0("ABS_", names(x$dane)[maska])
 
   return(x)
 }

@@ -1,10 +1,28 @@
+# MLASZdane 0.0.6 (02.03.2019)
+
+- Nowe funkcje (do obliczania wskaźników na poziomie indywidualnym):
+  - praca_forma_ind();
+  - praca_zamieszkanie_ind();
+  - praca_miesiac();
+  - praca_pierwsza();
+  - praca_ostatnia();
+  - nauka_czas();
+  - praca_czas();
+  - bezrobocie_miesiac();
+  - bezrobocie_czas();
+  - nauka_miesiac();
+  - praca_nauka_miesiac();
+  - studia_pierwsze();
+  - wskazniki_nie_z_epizodow();
+  - oblicz_wskazniki_ind_1rm().
+
 # MLASZdane 0.0.5 (28.02.2019)
 
 - Nowe funkcje:
   - znajdz_wskazniki_bdl();
   - wskaznik_bdl();
   - pobierz_dane_bdl();
-  - przeksztalc_dane_bdl();
+  - przeksztalc_dane_bdl().
 
 - "Winietka" opisująca sposób pobierania wskaźników z API BDL (przy pomocy ww.
   funkcji).
