@@ -30,3 +30,10 @@ Funkcja oblicza zmienne-wskaźniki opisujące ostatnią pracę
 badanego wykonywaną w analizowanym okresie. Nie jest przy tym brana pod uwagę
 praca świadczona bez umowy.
 }
+\seealso{
+\code{\link{praca_forma_ind}}, \code{\link{praca_zamieszkanie_ind}},
+\code{\link{praca_forma}}, \code{\link{praca_forma2}},
+\code{\link{praca_zamieszkanie}},
+\code{\link{praca_zgodna_z_wyksztalceniem}},
+\code{\link{praca_zarobki}}
+}

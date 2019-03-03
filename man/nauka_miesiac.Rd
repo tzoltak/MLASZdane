@@ -24,3 +24,6 @@ Funkcja oblicza zmienne-wskaźniki opisujące czy badany
 w określonym miesiącu od terminu planowego ukończenia szkoły uczył się,
 a jeśli tak, to w jakiej formie.
 }
+\seealso{
+\code{\link{nauka}}
+}

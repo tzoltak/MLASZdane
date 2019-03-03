@@ -24,3 +24,7 @@ Funkcja oblicza zmienne-wskaźniki opisujące czy badany
 w określonym miesiącu od terminu planowego ukończenia szkoły był
 zarejestrownym bezrobotnym.
 }
+\seealso{
+\code{\link{bezrobocie}},
+\code{\link{czas_agregacja}}, \code{\link{czas_rozklad}}
+}

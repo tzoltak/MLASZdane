@@ -21,3 +21,11 @@ Funkcja oblicza zmienne-wskaźniki opisujące pierwszą pracę
 badanego wykonywaną po ukończeniu szkoły (również jeśli zaczęła się
 wcześniej). Nie jest przy tym brana pod uwagę praca świadczona bez umowy.
 }
+\seealso{
+\code{\link{praca_forma_ind}}, \code{\link{praca_zamieszkanie_ind}},
+\code{\link{praca_forma}}, \code{\link{praca_forma2}},
+\code{\link{praca_przed_ukonczeniem_szkoly}},
+\code{\link{praca_zamieszkanie}},
+\code{\link{praca_zgodna_z_wyksztalceniem}},
+\code{\link{praca_zarobki}}
+}

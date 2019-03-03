@@ -5,15 +5,15 @@
 
 # MLASZdane
 
-Pakiet został opracowany w ramach projektu *Monitorowanie losów edukacyjno-zawodowych absolwentów i młodych dorosłych* (POWR.02.15.00-IP.02-00-004/16) prowadzonego w Instytucie Badań Edukacyjnych w ramach działania 2.15. Kształcenie i szkolenie zawodowe dostosowane do potrzeb zmieniającej się gospodarki II. osi priorytetowej Efektywne polityki publiczne dla rynku pracy, gospodarki i edukacji Programu Operacyjnego Wiedza, Edukacja, Rozwój
+Pakiet został opracowany w ramach projektu *Monitorowanie losów edukacyjno-zawodowych absolwentów i młodych dorosłych* (POWR.02.15.00-IP.02-00-004/16) prowadzonego w Instytucie Badań Edukacyjnych w ramach działania 2.15. Kształcenie i szkolenie zawodowe dostosowane do potrzeb zmieniającej się gospodarki II. osi priorytetowej Efektywne polityki publiczne dla rynku pracy, gospodarki i edukacji Programu Operacyjnego Wiedza, Edukacja, Rozwój
 
-Pakiet służy do złączania danych z rejestrów, baz danych administracyjnych, baz danych wyników egzaminów i wyników badań sondażowych na potrzeby projektu MLEZAiMD.
+Pakiet służy do złączania danych z rejestrów, baz danych administracyjnych, baz danych wyników egzaminów i wyników badań sondażowych na potrzeby projektu MLEZAiMD.
 
 # Instalacja / aktualizacja
 
 Pakiet nie jest wypchnięty na CRAN, więc trzeba instalować go ze źródeł.
 
-Ponieważ jednak zawiera jedynie kod w R, nie ma potrzeby zaopatrywać się w kompilatory, itp.
+Ponieważ jednak zawiera jedynie kod w R, nie ma potrzeby zaopatrywać się w kompilatory, itp.
 
 Instalację najproście przeprowadzić wykorzystując pakiet *devtools*:
 
@@ -26,7 +26,7 @@ Dokładnie w ten sam sposób można przeprowadzić aktualizację pakietu do naj
 
 # Użycie
 
-## 1. runda monitoringu
+## Przygotowanie zbiorów z 1. rundy monitoringu
 
 Do przetwarzania wyników badań sondażowych przeprowadzonych w projekcie MLEZAiMD w ramach 1. rundy monitoringu (zbiór danych: *MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodowaniem.sav*) służą następujące funkcje:
 
@@ -47,7 +47,7 @@ Schemat wykorzystania ww. funkcji wygląda następująco:
 library(MLASZdane)
 
 # wczytanie i przetworzenie zbioru z wynikami sondażu
-dane1RM = wczytaj_wyniki_pilrm("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodowaniem.sav")
+dane1RM = wczytaj_wyniki_1rm("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodowaniem.sav")
 ## wynikiem działania jest lista zbiorów
 str(dane1RM)
 head(dane1RM$epizody)
@@ -68,7 +68,48 @@ head(osMies1RM)
 write_sav(osMies1RM, "MLEZAiMD_runda1_osobo-miesiace.sav")
 ```
 
-## Pilotażowa runda monitoringu
+## Obliczenie wskaźników na poziomie indywidualnym na podstawie zbiorów z 1. rundy monitoringu
+
+Aby przygotować zbiór danych ze wskaźnikami opisującymi sytuację edukacyjno-zawodową poszczególnych absolwentów na podstawie wyników 1. rundy monitoringu należy użyć funkcji `oblicz_wskazniki_ind_1rm()`.
+
+Zakładając, że wcześniej wykonane zostały czynności opisane w poprzedniej sekcji i przetworzone zbiory danych z 1. rundy monitoringu (z zaimputowanymi brakami danych czasu rozpoczęcia i zakończenia *epizodóW*) znajdują się w obiekcie `dane1RM` wystarczy wywołać kod:
+
+```r
+wskaznikiInd = oblicz_wskazniki_ind_1rm(dane1RM)
+```
+
+## Obliczenie wskaźników na poziomie szkół i grup porównawczych na podstawie zbiorów z 1. rundy monitoringu
+
+Aby obliczyć wskaźniki na poziomie szkół oprócz zbioru danych ze wskaźnikami na poziomie indywidualnym potrzebny jest również zbiór ze wskaźnikami średnich wynagrodzeń i bezrobocia pobranych z Banku Danych Lokalnych GUS. Sposób przygotowania takiego zbioru opisany został w specjalnej dokumentacji: [wskaźniki z danych BDL](./inst/doc/wskazniki_z_danych_BDL.md). Poniżej założymy, że zbiór danych z wartościami wskaźników z BDL (pobrany przy pomocy funkcji `pobierz_dane_bdl()`) został, tak jak w przykładzie z ww. dokumentacji, przypisany do obiektu o nazwie `wskaznikiBdl` i zapisany w pliku *wskazniki_BDL.RData*. Aby przyłączyć wskaźniki z BDL do zbioru wskaźników indywidualnych, konieczne jest wykonanie kodu:
+
+```r
+load("wskazniki_BDL.RData")
+wskaznikiBdl = przeksztalc_dane_bdl(wskaznikiBdl, 2017, "SZK_")
+
+wskaznikiInd = left_join(wskaznikiInd, wskaznikiBdl)
+```
+
+Teraz można przystąpić do przygotowania zestawień wskaźników zagregowanych:
+
+  + na poziomie szkół,
+  + na poziomie typów szkół, które przy tworzeniu raportów posłużą jako punkt odniesienia dla ww. wskaźników na poziomie szkół.
+  
+Służą do tego odpowiednio funkcje `agreguj_wskazniki_szk()` i `agreguj_wskazniki_typ_szk()`. Przygotowane przy ich pomocy zbiory można następnie zapisać, w celu późniejszego wykorzystania do stworzenia raportów szkół przy pomocy pakietu [MLASZraporty](https://github.com/tzoltak/MLASZraporty).
+
+```r
+wskaznikiSzk = agreguj_wskazniki_szk(wskaznikiInd)
+wskaznikiTypSzk = agreguj_wskazniki_typ_szk(wskaznikiInd)
+save(wskaznikiSzk, wskaznikiTypSzk, file = "wskazniki_szkol.RData")
+```
+
+Należy przy tym zwrócić uwagę, że szablon 'raport_szkoly.Rmd' wymaga dołączenia do zbioru wskaźników na poziomie szkół trzech dodatkowych zmiennych, których nie daje się wygenerować na podstawie zbiorów z wynikami sondaży z 1. rundy monitoringu (konieczne jest odwołanie się w tym celu do danych z operatu losowania próby do badania):
+
+  + `SZK_nazwa` - nazwa szkoły,
+  + `SZK_adres` - adres szkoły,
+  + `SZK_l_uczn_pop` - liczba uczniów w szkole należących do badanej populacji (w odróżnieniu zarówno od liczby uczniów wylosowanych do badania, jak i liczby uczniów, których udało się zbadać).
+
+
+## Przygotowanie zbiorów z pilotażowwj rundy monitoringu
 
 Do przetwarzania wyników badań sondażowych przeprowadzonych w projekcie MLEZAiMD w ramach pilotażowej rundy monitoringu (zbiór danych: *MLEZAMiD_absolwent_n2959_20171013.sav*) służą następujące funkcje:
 

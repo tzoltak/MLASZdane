@@ -91,7 +91,7 @@ wskaznikiBdl =
               pobierz_dane_bdl(2017:2018, &quot;powiaty&quot;),
             wskaznik_bdl(64428, &quot;przeciętne miesięczne wynagrodzenia brutto&quot;) %&gt;%
               pobierz_dane_bdl(2017, &quot;powiaty&quot;))
-save(wskaznikiBdl, file = &quot;wskazniki BDL.RData&quot;)</code></pre>
+save(wskaznikiBdl, file = &quot;wskazniki_BDL.RData&quot;)</code></pre>
 </div>
 </div>
 <div id="przeksztacanie-zestawien-pobranych-zapi-bdl-na-zestawienia-wskaznikow-wykorzystywanych-wmonitorowaniu-losow-absolwentow" class="section level1">
@@ -114,7 +114,7 @@ save(wskaznikiBdl, file = &quot;wskazniki BDL.RData&quot;)</code></pre>
 <p>Przy pomocy opcjonalnego argumentu <code>prefiks</code> możliwe jest też dopisanie do nazw zmiennych identyfikujących w wynikowym zestawieniu JST (<code>teryt</code> i <code>nazwaJst</code>) prefiksu, tak aby odpowiadały one nazwom zmiennych w zbiorze, do którego ma być przyłączane zestawienie.</p>
 <p><strong>Przykładowe użycie:</strong></p>
 <pre><code>library(MLASZdane)
-load(&quot;wskazniki BDL.RData&quot;)
+load(&quot;wskazniki_BDL.RData&quot;)
 przeksztalc_dane_bdl(wskaznikiBdl, 2017)</code></pre>
 </div>
 

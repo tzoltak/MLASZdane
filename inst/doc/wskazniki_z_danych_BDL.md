@@ -69,7 +69,7 @@ wskaznikiBdl =
               pobierz_dane_bdl(2017:2018, "powiaty"),
             wskaznik_bdl(64428, "przeciętne miesięczne wynagrodzenia brutto") %>%
               pobierz_dane_bdl(2017, "powiaty"))
-save(wskaznikiBdl, file = "wskazniki BDL.RData")
+save(wskaznikiBdl, file = "wskazniki_BDL.RData")
 ```
 
 # 2. Przekształcanie zestawień pobranych z API BDL na zestawienia wskaźników wykorzystywanych w monitorowaniu losów absolwentów
@@ -98,6 +98,6 @@ Przy pomocy opcjonalnego argumentu `prefiks` możliwe jest też dopisanie do naz
 
 ```
 library(MLASZdane)
-load("wskazniki BDL.RData")
+load("wskazniki_BDL.RData")
 przeksztalc_dane_bdl(wskaznikiBdl, 2017)
 ```

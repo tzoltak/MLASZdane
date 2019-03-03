@@ -19,6 +19,9 @@ data frame zawierająca następujące kolumny:
 \itemize{
   \item{wszystkie kolumny ramki danych przekazanej argumentem \code{x},
         których nazwy \strong{nie} zaczynają się od "ABS_",}
+  \item{\code{SZK_teryt} - nr TERYT powiatu, przeliczony na podstawie
+        znajdującego się wcześniej w tej zmiennej nr TERYT gminy, na terenie
+        której znajduje się szkoła,}
   \item{\code{UCZ_plec} - płeć ucznia ("M" lub "K"),}
   \item{\code{matura_zdana} - wskaźnik opisujący, czy badany zdał maturę
         (liczba: 1 - zdał, 0 - nie zdał),}
@@ -31,4 +34,8 @@ data frame zawierająca następujące kolumny:
 \description{
 Funkcja oblicza zmienne-wskaźniki, które wymagają informacji
 nie ze zbioru epizodów.
+}
+\seealso{
+\code{\link{egz_zaw_zdawalnosc}}, \code{\link{matura_zdawalnosc}},
+\code{\link{liczba_kobiet}}
 }

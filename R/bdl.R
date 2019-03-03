@@ -226,7 +226,7 @@ przeksztalc_dane_bdl = function(daneBdl, rocznik, prefiks = "") {
                                 .data$n1) ~ paste0("jst_sr_wynagrodzenia_", .data$czas),
                           TRUE ~ paste0("jst_", gsub("[[:blank:]]", "_", .data$n1),
                                         "_", .data$czas)),
-           teryt = as.numeric(.data$teryt / 100),
+           teryt = as.numeric(.data$teryt),
            name = sub("^Powiat", "powiat", .data$name),
            name = sub("^Gmina", "gmina", .data$name)) %>%
     filter(!grepl("^-", .data$czas)) %>%

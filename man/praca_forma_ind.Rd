@@ -20,3 +20,6 @@ data frame
 Funkcja oblicza zmienne-wskaźniki opisujące, czy badany
 kiedykolwiek był zatrudniony w określonej formie
 }
+\seealso{
+\code{\link{praca_pierwsza}}, \code{\link{praca_ostatnia}}
+}

@@ -24,3 +24,6 @@ Funkcja oblicza zmienną-wskaźnik opisującą status
 edukacyjno-zawodowy respondenta w podanym miesiącu od momentu planowego
 ukończenia szkoły.
 }
+\seealso{
+\code{\link{praca_nauka}}
+}

@@ -83,4 +83,72 @@ if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodow
               'praca_nauka_9m')
     expect_named(wskInd[, names(wskInd) %in% nazwy], ignore.order = TRUE)
   })
+
+  if (file.exists("wskazniki_BDL.RData")) {
+    context("Obliczenie wskaźników na poziomie zagregowanym")
+
+    wskaznikiBdlNazwa = load("wskazniki_BDL.RData")
+    wskaznikiBdl = przeksztalc_dane_bdl(get(wskaznikiBdlNazwa), 2017, "SZK_")
+    wskaznikiInd = dplyr::left_join(wskInd, wskaznikiBdl)
+    set.seed(71624681)
+    wskaznikiInd = wskaznikiInd[wskaznikiInd$SZK_kod %in% sample(unique(wskaznikiInd$SZK_kod), 20), ]
+
+    nazwy = c('SZK_typ', 'liczba_zbadanych', 'liczba_zbadanych_kobiet',
+              'liczba_szkol', 'zawody', 'praca_nauka_0m', 'praca_nauka_1m',
+              'praca_nauka_2m', 'praca_nauka_3m', 'praca_nauka_4m',
+              'praca_nauka_5m', 'praca_nauka_6m', 'praca_nauka_7m',
+              'praca_nauka_8m', 'praca_nauka_9m',
+              'egz_zaw_zdawalnosc', 'matura_zdawalnosc',
+              'praca_przed_ukonczeniem_szkoly', 'praca_czas_rozp',
+              'praca_forma_pierwsza', 'praca_forma_ostatnia',
+              'praca_forma2_pierwsza', 'praca_forma_6m', 'praca_forma_9m',
+              'praca_forma2_6m', 'praca_forma2_9m', 'praca_forma2_bu_6m',
+              'praca_forma2_bu_9m',
+              'praca_zamieszkanie_pierwsza', 'praca_zamieszkanie_ostatnia',
+              'praca_zamieszkanie_6m', 'praca_zamieszkanie_9m',
+              'praca_zgodna_z_wyksztalceniem_pierwsza',
+              'praca_zgodna_z_wyksztalceniem_ostatnia',
+              'praca_zarobki_pierwsza', 'praca_zarobki_ostatnia',
+              'praca_spelnienie_oczekiwan_ostatnia',
+              'praca_czas_p9m_rozklad', 'praca_czas_uop_p9m_rozklad',
+              'praca_czas_gdy_bez_nauki_p9m_rozklad',
+              'praca_czas_gdy_bez_nauki_uop_p9m_rozklad',
+              'bezrobocie_czas_p9m_rozklad',
+              'bezrobocie_czas_gdy_bez_nauki_p9m_rozklad',
+              'praca_czas_p9m', 'praca_czas_gdy_bez_nauki_p9m',
+              'praca_czas_gdy_nauka_p9m', 'praca_czas_uop_p9m',
+              'praca_czas_gdy_bez_nauki_uop_p9m', 'praca_czas_gdy_nauka_uop_p9m',
+              'bezrobocie_czas_p9m', 'bezrobocie_czas_gdy_bez_nauki_p9m',
+              'bezrobocie_czas_gdy_nauka_p9m', 'bezrobocie_1m', 'bezrobocie_2m',
+              'bezrobocie_3m', 'bezrobocie_4m', 'bezrobocie_5m', 'bezrobocie_6m',
+              'bezrobocie_7m', 'bezrobocie_8m', 'bezrobocie_9m',
+              'nauka_6m', 'nauka_9m', 'studia_gdzie_pierwsze',
+              'studia_odplatnosc_pierwsze', 'studia_tryb_pierwsze', 'GRUPA_kod')
+
+    wskaznikiSzk = agreguj_wskazniki_szk(wskaznikiInd)
+    test_that("agreguj_wskazniki_szk()", {
+      expect_is(wskaznikiSzk, "data.frame")
+      expect_named(wskaznikiSzk, c("SZK_kod", nazwy), ignore.order = TRUE)
+    })
+
+    wskaznikiTypSzk = agreguj_wskazniki_typ_szk(wskaznikiInd)
+    test_that("agreguj_wskazniki_typ_szk()", {
+      expect_is(wskaznikiTypSzk, "data.frame")
+      expect_named(wskaznikiTypSzk, c("GRUPA_nazwa", nazwy), ignore.order = TRUE)
+    })
+
+    wskaznikiSzkBranza = agreguj_wskazniki_szk_branza(wskaznikiInd)
+    test_that("agreguj_wskazniki_szk_branza()", {
+      expect_is(wskaznikiSzkBranza, "data.frame")
+      expect_named(wskaznikiSzkBranza, c("SZK_kod", "UCZ_branza", nazwy),
+                   ignore.order = TRUE)
+    })
+
+    wskaznikiTypSzkBranza = agreguj_wskazniki_typ_szk_branza(wskaznikiInd)
+    test_that("agreguj_wskazniki_typ_szk_branza()", {
+      expect_is(wskaznikiTypSzkBranza, "data.frame")
+      expect_named(wskaznikiTypSzkBranza, c("UCZ_branza", "GRUPA_nazwa", nazwy),
+                   ignore.order = TRUE)
+    })
+  }
 }

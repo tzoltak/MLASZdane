@@ -20,3 +20,7 @@ data frame
 Funkcja oblicza zmienne-wskaźniki opisujące pierwszą studia
 podjęte przez badanego po ukończeniu szkoły.
 }
+\seealso{
+\code{\link{studia_gdzie}}, \code{\link{studia_odplatnosc}},
+\code{\link{studia_tryb}}
+}

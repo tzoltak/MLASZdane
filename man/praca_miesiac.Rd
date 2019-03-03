@@ -25,3 +25,7 @@ zatrudnienia i miejsce (miejsca) pracy (w stosunku do miejsca zamieszkania)
 badanego w określonym miesiącu od terminu planowego ukończenia szkoły. Nie
 jest przy tym brana pod uwagę praca świadczona bez umowy.
 }
+\seealso{
+\code{\link{praca_forma}}, \code{\link{praca_forma2}},
+\code{\link{praca_zamieszkanie}}
+}

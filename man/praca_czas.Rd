@@ -41,3 +41,6 @@ tych części zadanego okresu, kiedy badany się uczył i kiedy się nie uczył.
 Formy zatrudnienia uwzględniane w obliczeniach pozwala ograniczyć argument
 \code{pg2hWartosci}.
 }
+\seealso{
+\code{\link{czas_agregacja}}, \code{\link{czas_rozklad}}
+}

@@ -6,6 +6,7 @@
 #' @param idAbsolwenta nazwa zmiennej identyfikującej badanych (podana jako ciąg
 #' znaków lub wyrażenie)
 #' @return data frame
+#' @seealso \code{\link{praca_pierwsza}}, \code{\link{praca_ostatnia}}
 #' @export
 #' @importFrom rlang ensym
 #' @importFrom dplyr .data %>% group_by summarise ungroup
@@ -37,6 +38,7 @@ praca_forma_ind = function(x, idAbsolwenta = "ID_RESP") {
 #' @param idAbsolwenta nazwa zmiennej identyfikującej badanych (podana jako ciąg
 #' znaków lub wyrażenie)
 #' @return data frame
+#' @seealso \code{\link{praca_pierwsza}}, \code{\link{praca_ostatnia}}
 #' @export
 #' @importFrom rlang ensym
 #' @importFrom dplyr .data %>% group_by summarise ungroup
@@ -66,6 +68,8 @@ praca_zamieszkanie_ind = function(x, idAbsolwenta = "ID_RESP") {
 #' @param idAbsolwenta nazwa zmiennej identyfikującej badanych (podana jako ciąg
 #' znaków lub wyrażenie)
 #' @return data frame
+#' @seealso \code{\link{praca_forma}}, \code{\link{praca_forma2}},
+#' \code{\link{praca_zamieszkanie}}
 #' @export
 #' @importFrom rlang ensym
 #' @importFrom dplyr .data %>% filter full_join
@@ -101,6 +105,12 @@ praca_miesiac = function(epizody, miesiac, idAbsolwenta = "ID_RESP") {
 #' @param idAbsolwenta nazwa zmiennej identyfikującej badanych (podana jako ciąg
 #' znaków lub wyrażenie)
 #' @return data frame
+#' @seealso \code{\link{praca_forma_ind}}, \code{\link{praca_zamieszkanie_ind}},
+#' \code{\link{praca_forma}}, \code{\link{praca_forma2}},
+#' \code{\link{praca_przed_ukonczeniem_szkoly}},
+#' \code{\link{praca_zamieszkanie}},
+#' \code{\link{praca_zgodna_z_wyksztalceniem}},
+#' \code{\link{praca_zarobki}}
 #' @export
 #' @importFrom rlang ensym
 #' @importFrom dplyr .data %>% filter full_join mutate select
@@ -156,6 +166,11 @@ praca_pierwsza = function(epizody, idAbsolwenta = "ID_RESP") {
 #' okres, wyrażona jako liczba miesięcy od momentu planowego ukończenia szkoły
 #' (porównywana z wartością kolumny \code{czas_zakon})
 #' @return data frame
+#' @seealso \code{\link{praca_forma_ind}}, \code{\link{praca_zamieszkanie_ind}},
+#' \code{\link{praca_forma}}, \code{\link{praca_forma2}},
+#' \code{\link{praca_zamieszkanie}},
+#' \code{\link{praca_zgodna_z_wyksztalceniem}},
+#' \code{\link{praca_zarobki}}
 #' @export
 #' @importFrom rlang ensym
 #' @importFrom dplyr .data %>% filter full_join group_by mutate select ungroup
@@ -285,6 +300,7 @@ nauka_czas = function(epizody, limitG, limitD, idAbsolwenta = "ID_RESP") {
 #' @param idAbsolwenta nazwa zmiennej identyfikującej badanych (podana jako ciąg
 #' znaków lub wyrażenie)
 #' @return data frame
+#' @seealso \code{\link{czas_agregacja}}, \code{\link{czas_rozklad}}
 #' @export
 #' @importFrom rlang ensym
 #' @importFrom dplyr .data %>% filter full_join group_by mutate n_distinct
@@ -360,6 +376,8 @@ praca_czas = function(epizody, pg2hWartosci = NULL, limitG  = 9, limitD = 1,
 #' @param idAbsolwenta nazwa zmiennej identyfikującej badanych (podana jako ciąg
 #' znaków lub wyrażenie)
 #' @return data frame
+#' @seealso \code{\link{bezrobocie}},
+#' \code{\link{czas_agregacja}}, \code{\link{czas_rozklad}}
 #' @export
 #' @importFrom rlang ensym
 #' @importFrom dplyr .data %>% filter full_join
@@ -477,6 +495,7 @@ bezrobocie_czas = function(epizody, limitG  = 9, limitD = 1, sufiks = "",
 #' @param idAbsolwenta nazwa zmiennej identyfikującej badanych (podana jako ciąg
 #' znaków lub wyrażenie)
 #' @return data frame
+#' @seealso \code{\link{nauka}}
 #' @export
 #' @importFrom rlang ensym
 #' @importFrom dplyr .data %>% arrange case_when filter group_by mutate n
@@ -530,6 +549,7 @@ nauka_miesiac = function(epizody, miesiac, idAbsolwenta = "ID_RESP") {
 #' @param idAbsolwenta nazwa zmiennej identyfikującej badanych (podana jako ciąg
 #' znaków lub wyrażenie)
 #' @return data frame
+#' @seealso \code{\link{praca_nauka}}
 #' @export
 #' @importFrom rlang ensym
 #' @importFrom dplyr .data %>% arrange case_when filter group_by mutate
@@ -579,6 +599,8 @@ praca_nauka_miesiac = function(epizody, miesiac, idAbsolwenta = "ID_RESP") {
 #' @param idAbsolwenta nazwa zmiennej identyfikującej badanych (podana jako ciąg
 #' znaków lub wyrażenie)
 #' @return data frame
+#' @seealso \code{\link{studia_gdzie}}, \code{\link{studia_odplatnosc}},
+#' \code{\link{studia_tryb}}
 #' @export
 #' @importFrom rlang ensym
 #' @importFrom dplyr .data %>% case_when filter group_by mutate select ungroup
@@ -629,6 +651,9 @@ studia_pierwsze = function(epizody, idAbsolwenta = "ID_RESP") {
 #' \itemize{
 #'   \item{wszystkie kolumny ramki danych przekazanej argumentem \code{x},
 #'         których nazwy \strong{nie} zaczynają się od "ABS_",}
+#'   \item{\code{SZK_teryt} - nr TERYT powiatu, przeliczony na podstawie
+#'         znajdującego się wcześniej w tej zmiennej nr TERYT gminy, na terenie
+#'         której znajduje się szkoła,}
 #'   \item{\code{UCZ_plec} - płeć ucznia ("M" lub "K"),}
 #'   \item{\code{matura_zdana} - wskaźnik opisujący, czy badany zdał maturę
 #'         (liczba: 1 - zdał, 0 - nie zdał),}
@@ -637,23 +662,28 @@ studia_pierwsze = function(epizody, idAbsolwenta = "ID_RESP") {
 #'         dyplomu potwierdzającego kwalifikacje w zawodzie (liczba: 1 - zdał,
 #'         0 - nie zdał).}
 #' }
+#' @seealso \code{\link{egz_zaw_zdawalnosc}}, \code{\link{matura_zdawalnosc}},
+#' \code{\link{liczba_kobiet}}
 #' @export
 #' @importFrom haven is.labelled as_factor
 #' @importFrom dplyr .data %>% case_when mutate select
 wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
   stopifnot(is.data.frame(x),
             "ABS_typ_szkoly" %in% names(x),
+            "ABS_teryt_szkoly" %in% names(x),
             "ABS_m1" %in% names(x),
             "ABS_f8" %in% names(x),
             "ABS_f8a_rok" %in% names(x),
             "ABS_f10_rok" %in% names(x))
   stopifnot(is.labelled(x$ABS_typ_szkoly))
   x$ABS_typ_szkoly = as_factor(x$ABS_typ_szkoly)
+  x$ABS_typ_szkoly = levels(x$ABS_typ_szkoly)[x$ABS_typ_szkoly]
   names(x) = ifelse(grepl("_szkoly", names(x)),
                     sub("_szkoly", "", sub("^ABS_", "SZK_", names(x))),
                     names(x))
   x %>%
-    mutate(UCZ_plec = case_when(.data$ABS_m1 %in% 1 ~ "K",
+    mutate(SZK_teryt = 100 * floor(as.numeric(.data$SZK_teryt) / 100),
+           UCZ_plec = case_when(.data$ABS_m1 %in% 1 ~ "K",
                                 .data$ABS_m1 %in% 2 ~ "M"),
            matura_zdana =
              case_when(grepl("technikum", .data$SZK_typ, ignore.case = TRUE) &
