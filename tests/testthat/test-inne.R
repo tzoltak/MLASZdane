@@ -10,5 +10,8 @@ test_that("sprawdz_nazwy()", {
   expect_error(sprawdz_nazwy(c("a", "a", "b", "b"),
                              c("d", "e")),
                  "nazwy zmiennych s. zduplikowane")
+  expect_error(sprawdz_nazwy(c("a", "b"),
+                             c("d", "e")),
+               "brakuje zmiennych")
 })
 
