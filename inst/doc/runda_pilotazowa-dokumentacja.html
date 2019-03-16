@@ -41,7 +41,7 @@
 <h3>1.1. Funkcja wczytaj_wyniki_pilrm()</h3>
 <p>Na podstawie zbioru z badania absolwentów (<em>MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodowaniem.sav</em>) funkcja <code>wczytaj_wyniki_1rm()</code> zwraca listę ramek danych (zbiorów) zawierającą następujące elementy:</p>
 <ul>
-<li><code>dane</code> - zawiera odpowiedzie na pytania niedotyczące <em>epizodów</em> (por. niżej);</li>
+<li><code>dane</code> - zawiera odpowiedzi na pytania niedotyczące <em>epizodów</em> (por. niżej);</li>
 <li><code>epizody</code> - zawiera informacje dotyczące wymienionych przez respondentów <em>epizodów</em>:
 <ul>
 <li>nauki w szkole, jako uczeń której badany został zrekrutowany do badania (ważny ze względu na informację o momencie zakończenia tej nauki);</li>
@@ -58,12 +58,12 @@
 </div>
 <div id="funkcja-imputuj_miesiac_pk_pilrm" class="section level3">
 <h3>1.2. Funkcja imputuj_miesiac_pk_pilrm()</h3>
-<p>Funkcja <code>imputuj_miesiac_pk_pilrm()</code> przetwarza listę zbiorów danych zwróconą przez <code>wczytaj_wyniki_pilrm()</code> i zwraca listę zbiorów danych o dokładnie takiej samej strukturze (p. wyżej).</p>
+<p>Funkcja <code>imputuj_miesiac_pk_pilrm()</code> przetwarza listę zbiorów danych, zwróconą przez <code>wczytaj_wyniki_pilrm()</code> i zwraca listę zbiorów danych o dokładnie takiej samej strukturze (p. wyżej).</p>
 <p>Metody imputacji wartości zmiennych opisujących moment rozpoczęcia i moment zakończenia <em>epizodów</em> opisane zostały szczegółowo w sekcji 3. tego dokumentu.</p>
 </div>
 <div id="funkcja-przygotuj_zbior_osobo_miesiecy_pilrm" class="section level3">
 <h3>1.3. Funkcja przygotuj_zbior_osobo_miesiecy_pilrm()</h3>
-<p>Funkcja <code>przygotuj_zbior_osobo_miesiecy_pilrm()</code> przetwarza listę zbiorów danych zwróconą przez <code>imputuj_miesiac_pk_pilrm()</code> i zwraca ramkę danych (zbiór) zawierający dane o <em>epizodach</em> nauki, pracy i bezrobocia przekształcone do postaci osobo-miesięcy (obserwacją jest osoba w danym miesiącu).</p>
+<p>Funkcja <code>przygotuj_zbior_osobo_miesiecy_pilrm()</code> przetwarza listę zbiorów danych, zwróconą przez <code>imputuj_miesiac_pk_pilrm()</code> i zwraca ramkę danych (zbiór) zawierający dane o <em>epizodach</em> nauki, pracy i bezrobocia przekształcone do postaci osobo-miesięcy (obserwacją jest osoba w danym miesiącu).</p>
 <p>Struktura zbioru i sposób jego tworzenia zostały szczegółowo opisane w sekcji 6. tego dokumentu.</p>
 </div>
 <div id="identyfikator-respondenta" class="section level2">
@@ -92,7 +92,7 @@
 <ul>
 <li><strong>Uwaga!</strong> Epizody ‘studia’ i ‘SPolic.’ są specyficzne, gdyż zawierają również informacje dotyczące zdawania na te kierunki studiów/do tych szkół policealnych, na/w których respondent podjął naukę. W związku z tym, jeśli przedmiotem analizy mają być kierunki/szkoły na/do których respondent zdawał, należy w niej uwzględnić odpowiednio zarówno <em>epizody</em> typu ‘zdawanie na studia’, jak i <em>epizody</em> typu ‘studia’ albo zarówno <em>epizody</em> typu ‘zdawanie do SPolic.’, jak i <em>epizody</em> typu ‘SPolic.’.</li>
 </ul></li>
-<li><code>nr</code> - wartość zmiennej wskazuje, jako który z kolei (inaczej mówiąc, w którym <em>obiegu pętli skryptu</em>, czy też w którym <em>wierszu tabeli reprezentującej odpowiedzi na blok pytań o „epizody” danego typu w „papierowej” wersji kwestionariusza</em>) <em>epizod</em> określonego typu respondent wymienił dany <em>epizod</em>;
+<li><code>nr</code> - wartość zmiennej wskazuje, jako który z kolei (inaczej mówiąc, w którym <em>obiegu pętli skryptu</em>, czy też, w którym <em>wierszu tabeli reprezentującej odpowiedzi na blok pytań o „epizody” danego typu w „papierowej” wersji kwestionariusza</em>) <em>epizod</em> określonego typu respondent wymienił dany <em>epizod</em>;
 <ul>
 <li><strong>Uwaga!</strong> Respondenci niekoniecznie wymieniali <em>epizody</em> w zgodzie z ich chronologiczną kolejnością. Jeśli chce się mieć pewność, że <em>epizody</em> uszeregowane są w kolejności chronologicznej, należy posłużyć się w pierwszej kolejności zmiennymi <code>czas_rozp</code> lub <code>czas_kon</code>, a dopiero w dalszej zmienną <code>nr</code>.</li>
 <li>Zmienna <code>nr</code> odnosi się łącznie do <em>epizodów</em> typu ‘zdawanie do SPolic.’ i ‘SPolic.’ (tj. epizody obu tych typów w ramach tej samej osoby posiadają jedną, ciągłą <em>numerację</em>) oraz łącznie do <em>epizodów</em> typu ‘zdawanie na studia’ i ‘studia’, co wiąże się z opisaną wyżej specyfiką <em>epizodów</em> typów ‘studia’ i ‘SPolic.’.</li>
@@ -222,7 +222,7 @@
 <ul>
 <li>Zmienną zależną w modelu była długość trwania <em>epizodu</em> (tj. różnica pomiędzy <code>czas_kon</code> a <code>czas_rozp</code>).
 <ul>
-<li>Przy imputacji wartość zmiennej <code>czas_kon</code> określano dodając do wartości zmiennej <code>czas_rozp</code> wartość przewidywania wynikającą z modelu (zaokrągloną do najbliższej liczby całkowitej).</li>
+<li>Przy imputacji wartość zmiennej <code>czas_kon</code> określano, dodając do wartości zmiennej <code>czas_rozp</code> wartość przewidywania wynikającą z modelu (zaokrągloną do najbliższej liczby całkowitej).</li>
 </ul></li>
 <li>Jako predyktory wykorzystano:
 <ol style="list-style-type: decimal">
@@ -278,7 +278,7 @@
 <ul>
 <li>najpierw dokonane zostanie zawężenie zbioru do <em>epizodów</em> określonego typu (<em>epizody</em> innych typów zostaną usunięte);</li>
 <li>następnie na tak zawężonym zbiorze wykonane zostaną pewne procedury agregacji w ramach respondentów (aby uzyskać interesujące wskaźniki);</li>
-<li>następnie tak zagregowane wyniki będą dołączane do oryginalnego zbioru danych (elementu <code>dane</code> listy zwracanej przez fukcję <code>wczytaj_wyniki_pilrm()</code>, w którym jednemu respondentowi odpowiada jeden wiersz) w celu przeprowadzenia dalszych analiz.</li>
+<li>następnie tak zagregowane wyniki będą dołączane do oryginalnego zbioru danych (elementu <code>dane</code> listy zwracanej przez funkcję <code>wczytaj_wyniki_pilrm()</code>, w którym jednemu respondentowi odpowiada jeden wiersz) w celu przeprowadzenia dalszych analiz.</li>
 </ul>
 <p>Należy mieć przy tym na uwadze, że znaczna część respondentów mogła nie mieć żadnego <em>epizodu</em> właśnie analizowanego typu. W szczególności oznacza to, że:</p>
 <ul>
@@ -369,8 +369,8 @@
 <li><code>pg2h</code> równe 1 (<code>pg2g</code> równe 1, 2 lub 3) -&gt; 1 (<em>zatrudniony na umowę o pracę</em>);</li>
 <li><code>pg2h</code> równe 2 (<code>pg2g</code> równe 1, 2 lub 3) -&gt; 2 (<em>zatrudniony przez agencję pracy tymczasowej</em>);</li>
 <li><code>pg2h</code> równe 3 (<code>pg2g</code> równe 1, 2 lub 3) -&gt; 3 (<em>zatrudniony na umowie cywilnoprawnej</em>);</li>
-<li><code>pg2h</code> równe 4 (<code>pg2g</code> równe 1, 2 lub 3) -&gt; 4 (<em>samozatrudniony (praca ‘u kogoś’)</em>);</li>
-<li><code>pg2g</code> równe 4 -&gt; 5 (<em>prowadzi własną działalność (‘praca ’u siebie’)</em>);</li>
+<li><code>pg2h</code> równe 4 (<code>pg2g</code> równe 1, 2 lub 3) -&gt; 4 (<em>samozatrudniony (‘praca u kogoś’)</em>);</li>
+<li><code>pg2g</code> równe 4 -&gt; 5 (<em>prowadzi własną działalność (‘praca u siebie’)</em>);</li>
 <li><code>pg2g</code> równe 5 -&gt; 6 (<em>prowadzi własne gosp. rolne</em>);</li>
 <li><code>pg2h</code> równe 6 lub 7 (<code>pg2g</code> równe 1, 2 lub 3) -&gt; 7 (<em>odbywa staż lub praktykę absolwencką</em>);</li>
 <li><code>pg2h</code> równe 5 (<code>pg2g</code> równe 1, 2 lub 3) -&gt; 8 (<em>zatrudniony bez umowy (na czarno)</em>);</li>
@@ -380,7 +380,7 @@
 <ul>
 <li><code>typ_epizodu</code> równe ‘studia’ -&gt; 2;</li>
 <li><code>typ_epizodu</code> równe ‘SPolic.’ -&gt; 3;</li>
-<li>wszystkim miesiącom od wrześnie 2014 r. do czerwca 2015 r. (wartości zmiennej <code>czas</code> od -9 do 1) przypisano wartość 1, która oznacza, że respondent uczył się w tym czasie w szkole, jako uczeń której został zakwalifikowany do badania;</li>
+<li>wszystkim miesiącom od września 2014 r. do czerwca 2015 r. (wartości zmiennej <code>czas</code> od -9 do 1) przypisano wartość 1, która oznacza, że respondent uczył się w tym czasie w szkole, jako uczeń której został zakwalifikowany do badania;</li>
 <li>Ponieważ na podstawie zebranych danych występują trudności z określeniem, kiedy respondent zakończył naukę w szkole, jako uczeń której został zakwalifikowany do badania, dla wszystkich badanych arbitralnie założono, że ukończyli naukę w tej szkole w czerwcu 2015 r. (por. sekcja <em>Warto przemyśleć przed przystąpieniem do analiz</em>).</li>
 </ul></li>
 <li><code>bezrobocie</code> - zmienną zakodowano na podstawie zmiennej <code>pb1f</code>:
@@ -418,7 +418,7 @@
 <ol style="list-style-type: decimal">
 <li>Po dużej części są to sytuacje, które mogły mieć miejsce:
 <ul>
-<li>Jeśli przejście od bezrobocia do pracy lub odwrotnie odbyło się w środku miesiąca, respondent istotnie był w danym miesiącu zarówno pracujący jak i bezrobotny (wiersze w zbiorze, w których najprawdopodobniej mamy do czynienia z taką sytuacją wyróżnione są przez wartość ‘miesiąc graniczny’ zmiennej <code>praca_a_bezrobocie</code>).</li>
+<li>Jeśli przejście od bezrobocia do pracy lub odwrotnie odbyło się w środku miesiąca, respondent istotnie był w danym miesiącu zarówno pracujący, jak i bezrobotny (wiersze w zbiorze, w których najprawdopodobniej mamy do czynienia z taką sytuacją wyróżnione są przez wartość ‘miesiąc graniczny’ zmiennej <code>praca_a_bezrobocie</code>).</li>
 <li>Jeśli respondent pracował <em>na czarno</em>, mógł jednocześnie być formalnie bezrobotny (choć w zbiorze nie odnotowujemy tego typu deklaracji).</li>
 <li>Postrzeganie się w kategoriach osoby bezrobotnej może być dla części respondentów oderwane od faktu kontynuowania lub nie nauki.</li>
 </ul></li>
@@ -426,7 +426,7 @@
 <ul>
 <li>Jeśli w danym miesiącu (dla danego respondenta) status pracy wskazujący na aktywność zawodową został zakodowany na podstawie imputowanych wartości zmiennych <code>czas_rozp</code> i <code>czas_kon</code>, a status bezrobocia wskazujący na brak pracy został zakodowany w oparciu o deklaracje respondenta dot. miesiąca rozpoczęcia lub zakończenia <em>epizodu</em> (bezrobocia), status zatrudnienia był zmieniany na brak zatrudnienia. Sytuacje takie oznaczone są w zbiorze wartością ‘skorygowano pracę’ zmiennej <code>praca_a_bezrobocie</code>.</li>
 <li>Jeśli w danym miesiącu (dla danego respondenta) status bezrobocia wskazujący na brak pracy został zakodowany na podstawie imputowanych wartości zmiennych <code>czas_rozp</code> i <code>czas_kon</code>, a status zatrudnienia wskazujący aktywność zawodową został zakodowany w oparciu o deklaracje respondenta dot. miesiąca rozpoczęcia lub zakończenia <em>epizodu</em> (pracy), status bezrobocia był zmieniany na ‘nie bezrobotny’. Sytuacje takie oznaczone są w zbiorze wartością ‘skorygowano bezrobocie’ zmiennej <code>praca_a_bezrobocie</code>.</li>
-<li>W innych przypadkach nie dało się dokonać korekt. Są one oznaczone są w zbiorze wartościami ‘sprzeczne deklaracje resp.’ lub ‘sprzeczne wyniki imputacji’ zmiennej <code>praca_a_bezrobocie</code>, w zależności od tego, czy oba statusy zostały określone na podstawie informacji o miesiącu rozpoczęcia lub zakończenia <em>epizodu</em> podanych przez respondenta, czy też oba zostały przypisane na podstawie imputowanych wartości zmiennych <code>czas_rozp</code> i <code>czas_kon</code>.</li>
+<li>W innych przypadkach nie dało się dokonać korekt. Są one oznaczone w zbiorze wartościami ‘sprzeczne deklaracje resp.’ lub ‘sprzeczne wyniki imputacji’ zmiennej <code>praca_a_bezrobocie</code>, w zależności od tego, czy oba statusy zostały określone na podstawie informacji o miesiącu rozpoczęcia lub zakończenia <em>epizodu</em> podanych przez respondenta, czy też oba zostały przypisane na podstawie imputowanych wartości zmiennych <code>czas_rozp</code> i <code>czas_kon</code>.</li>
 </ul></li>
 <li>W ogólności nie mamy niestety gwarancji, że respondenci odpowiadali w sposób spójny. W ramach wywiadu nie mieliśmy bowiem możliwości wyłapywania ew. konfliktów w deklaracjach na bieżąco i zmuszania respondentów do ich rozstrzygnięcia.
 <ul>
@@ -439,13 +439,13 @@
 <ul>
 <li>Jak przekodować trzy statusy opisane zmiennymi <code>praca</code>, <code>nauka</code> i <code>bezrobocie</code> na jeden status, biorąc pod uwagę, że (z powodów opisanych we wcześniejszej sekcji) respondent może w tym samym miesiącu być opisany jako pracujący, uczący się i bezrobotny.</li>
 <li>W danych występują również bardzo starzy respondenci (najstarszy to rocznik ’55). Jeśli chcieć, zgodnie z pierwotnymi założeniami metodologicznymi badania BLASZ, ograniczyć się do analizy osób, które w momencie badania w szkołach miały nie więcej niż 29 lat, należałoby usunąć osoby urodzone przed 1986 r. (na podstawie zmiennej <code>m2</code> - trzeba przy tym jeszcze podjąć decyzję, co z respondentami - na szczęście nielicznymi - których roku urodzenia nie znamy).</li>
-<li>Do jakie okresu organiczyć analizę.
+<li>Do jakie okresu ograniczyć analizę.
 <ul>
 <li>Czy powinien to być ten sam okres dla każdego respondenta, czy chcemy skorzystać z faktu, że dla tych, z którymi wywiad został przeprowadzony później, dysponujemy dłuższą historią.</li>
 <li>Kiedy wyznaczyć początek analizowanego okresu. Wydaje się, że najsensowniejsze cezury plasują się pomiędzy styczniem a lipcem 2015 r. Absolutnie nie należy analizować sekwencji zdarzeń w okresie przed wrześniem 2014 r.</li>
 </ul></li>
-<li>W danych występują - szczęśliwie nieliczni - respondenci, którzy nie uzyskali świadectwa ukończenia szkoły, jako uczniowie której zostali zakwalifikowani do badania (można ich zidentyfikowaćpo tym, że zmienna <code>f6</code> nie jest brakiem danych). Być może należałoby wykluczyć ich z analizy, gdyż po pierwsze, nie do końca są absolwentami (a przynajmniej <em>nie w takim samym stopniu</em>, jak wszyscy pozostali), a po drugie (i może ważniejsze), na podstawie zebranych danych nie jesteśmy w stanie ustalić, jak długo kontynuowali oni jeszcze naukę (na potrzeby kodowania zupełnie arbitralnie przyjąłem, że <em>jak wszyscy</em> opuścili mury szkoły w czerwcu 2015 r.).</li>
-<li>W danych występują osoby, które deklarują, że świadectwo ukończenia szkoły, jako uczniowie której zostali zakwalifikowani do badania, uzyskały w innym roku, niż 2015. Można mieć jednak mieć wątpliwości, czy informacja ta jest rzetelna, biorąc pod uwagę, że 10 osób wskazuje, że dyplom ten uzyskało już w 2014 r. (realizacja wywiadów w BLASZu rozpoczęła się 26 listopada 2014 r.; osoby, które składają takie deklaracje, były uczniami ZSZ lub techników). Nie jest też jasne, jaka dokładnie była sytuacja osób, które zadeklarowały inny niż 2015 rok ukończenia takiej szkoły i jak w związku z tym najlepiej byłoby zakodować ich statusy edukacyjne. Biorąc pod uwagę niewielką liczbę takich osób (oprócz 10 deklarujących rok 2014 jeszcze 29 deklarujących rok 2016 i 5  deklarujących rok 2017), uznałem, że najlepiej (najprościej) będzie problem zignorować i konsekwentnie dla wszystkich stosować arbitralne założenie, że szkołę, jako uczniowie której trafili do badania, ukończyli w czerwcu 2015 r. Można jednak chcieć dokonać w tej kwestii innych rozstrzygnięć i odpowiednio przekodować wartości zmiennej <code>nauka</code> w opraciu o wartość zmiennej <code>f7</code> (oraz <code>czas</code>).</li>
+<li>W danych występują - szczęśliwie nieliczni - respondenci, którzy nie uzyskali świadectwa ukończenia szkoły, jako uczniowie której zostali zakwalifikowani do badania (można ich zidentyfikować po tym, że zmienna <code>f6</code> nie jest brakiem danych). Być może należałoby wykluczyć ich z analizy, gdyż po pierwsze, nie do końca są absolwentami (a przynajmniej <em>nie w takim samym stopniu</em>, jak wszyscy pozostali), a po drugie (i może ważniejsze), na podstawie zebranych danych nie jesteśmy w stanie ustalić, jak długo kontynuowali oni jeszcze naukę (na potrzeby kodowania zupełnie arbitralnie przyjąłem, że <em>jak wszyscy</em> opuścili mury szkoły w czerwcu 2015 r.).</li>
+<li>W danych występują osoby, które deklarują, że świadectwo ukończenia szkoły, jako uczniowie której zostali zakwalifikowani do badania, uzyskały w innym roku, niż 2015. Można mieć jednak mieć wątpliwości, czy informacja ta jest rzetelna, biorąc pod uwagę, że 10 osób wskazuje, że dyplom ten uzyskało już w 2014 r. (realizacja wywiadów w BLASZu rozpoczęła się 26 listopada 2014 r.; osoby, które składają takie deklaracje, były uczniami ZSZ lub techników). Nie jest też jasne, jaka dokładnie była sytuacja osób, które zadeklarowały inny niż 2015 rok ukończenia takiej szkoły i jak w związku z tym najlepiej byłoby zakodować ich statusy edukacyjne. Biorąc pod uwagę niewielką liczbę takich osób (oprócz 10 deklarujących rok 2014 jeszcze 29 deklarujących rok 2016 i 5  deklarujących rok 2017), uznałem, że najlepiej (najprościej) będzie problem zignorować i konsekwentnie dla wszystkich stosować arbitralne założenie, że szkołę, jako uczniowie której trafili do badania, ukończyli w czerwcu 2015 r. Można jednak chcieć dokonać w tej kwestii innych rozstrzygnięć i odpowiednio przekodować wartości zmiennej <code>nauka</code> w oparciu o wartość zmiennej <code>f7</code> (oraz <code>czas</code>).</li>
 </ul>
 </div>
 </div>

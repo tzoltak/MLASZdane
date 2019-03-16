@@ -24,11 +24,10 @@ lista o elementach:
   \item{\code{`umowa o pracę na czas określony`} - liczba [0, n],}
   \item{\code{`umowa zlecenia/o dzieło`} - liczba [0, n],}
   \item{\code{`samozatrudnienie`} - liczba [0, n],}
-  \item{\code{`umowa o pracę na czas nieokreślony`} - liczba [0, n],}
+  \item{\code{`rolnicy indywidualni`} - liczba [0, n],}
   \item{\code{`przez agencję pracy tymczasowej`} - liczba [0, n],}
   \item{\code{`staż lub praktyka`} - liczba [0, n],}
-  \item{\code{`inna`} - liczba [0, n],}
-  \item{\code{`nieznana`} - liczba [0, n].}
+  \item{\code{`inna (lub nieznana)`} - liczba [0, n].}
 }
 }
 \description{

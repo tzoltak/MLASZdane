@@ -44,11 +44,11 @@
 </ol>
 <div id="wyszukiwanie-wskaznikow" class="section level2">
 <h2>1.1. Wyszukiwanie wskaźników</h2>
-<p>Wyszukiwanie wskaźników BDL przy użyciu API nie jest łatwe, ze względu na przyjęty przez GUS nie do końca spójny (a przynajmniej niezbyt wygodny) schemat nazywania wskaźników. Wskaźniki można bowiem podzielić na dwie grupy: te, które posiadają unikalne i <em>informatywne</em> nazwy oraz te, których nazwy są <em>nieinformatywne</em> i nie są unikalne (w szczególności wskaźniki o nazwie “ogółem”). Te pierwsze można łatwo wyszukiwać po nazwach (korzystając z odpowiedniej funkcji API), te drugie trzeba znajdować przeszukując krok po kroku w głąb drzewiastą strukturę grup i podgrup wskaźników. Ponieważ to drugie podejście jest dosyć skomplikowane i słabo poddające się automatyzacji, w ramach pakietu zdecydowano się przyjąć następujące podejście:</p>
+<p>Wyszukiwanie wskaźników BDL przy użyciu API nie jest łatwe, ze względu na przyjęty przez GUS nie do końca spójny (a przynajmniej niezbyt wygodny) schemat nazywania wskaźników. Wskaźniki można bowiem podzielić na dwie grupy: te, które posiadają unikalne i <em>informatywne</em> nazwy oraz te, których nazwy są <em>nieinformatywne</em> i nie są unikalne (w szczególności wskaźniki o nazwie “ogółem”). Te pierwsze można łatwo wyszukiwać po nazwach (korzystając z odpowiedniej funkcji API), te drugie trzeba znajdować, przeszukując krok po kroku w głąb drzewiastą strukturę grup i podgrup wskaźników. Ponieważ to drugie podejście jest dosyć skomplikowane i słabo poddające się automatyzacji, w ramach pakietu zdecydowano się przyjąć następujące podejście:</p>
 <ul>
-<li>Wskaźniki, które da się w API BDL znaleźć po nazwie (np. <em>stopa bezrobocia rejestrowanego</em>) można wyszukać przy pomocy funkcji <code>znajdz_wskazniki_bdl()</code>.
+<li>Wskaźniki, które da się w API BDL znaleźć po nazwie (np. <em>stopa bezrobocia rejestrowanego</em>), można wyszukać przy pomocy funkcji <code>znajdz_wskazniki_bdl()</code>.
 <ul>
-<li>w przypadku wskaźników, których wartości GUS raportuje z częstotliwością większą niż roczna (kwartalną, miesięczną) nazwa wskaźnika opisywana jest w zwracanych wynikach dwoma kolumnami: <code>n1</code> opisuje okres sprawozdawczy w ramach roku (kwartał lub miesiąc), a <code>n2</code> jako taką nazwę wskaźnika.</li>
+<li>w przypadku wskaźników, których wartości GUS raportuje z częstotliwością większą niż roczna (kwartalną, miesięczną), nazwa wskaźnika opisywana jest w zwracanych wynikach dwoma kolumnami: <code>n1</code> opisuje okres sprawozdawczy w ramach roku (kwartał lub miesiąc), a <code>n2</code> jako taką nazwę wskaźnika.</li>
 </ul></li>
 <li>w przypadku wskaźników, których nie da się w API BDL wyszukać po nazwie (np. <em>przeciętne miesięczne wynagrodzenia brutto</em>), trzeba samodzielnie (<em>ręcznie</em>) zidentyfikować ich <code>id</code> w API BDL, a następnie użyć funkcji <code>wskaznik_bdl()</code>, aby pobrać informacje o danym wskaźniku zwrócone w analogicznej formie jak ta, w jakiej zwraca informacje o wyszukanych wskaźnikach funkcja <code>znajdz_wskazniki_bdl()</code>.
 <ul>
@@ -73,7 +73,7 @@ wskaznik_bdl(64428, &quot;przeciętne miesięczne wynagrodzenia brutto&quot;)</c
 <ul>
 <li><code>idWsk</code> - id wskaźnika w API BDL;</li>
 <li><code>subjectId</code> - id tematu (grupy wskaźników) w API BDL;</li>
-<li><code>n1</code> i ew. <code>n2</code> - kolumny opisujące nazwy wskaźnków w API BDL (por. sekcja 1.1.);</li>
+<li><code>n1</code> i ew. <code>n2</code> - kolumny opisujące nazwy wskaźników w API BDL (por. sekcja 1.1.);</li>
 <li><code>level</code> - najniższy poziom NTS, na którym raportowany jest wskaźnik;</li>
 <li><code>measureUnitId</code>, <code>measureUnitName</code> - id i nazwa jednostki, w jakiej wyrażone są wartości wskaźnika;</li>
 <li><code>idJst</code> - kod NTS jednostki terytorialnej, do której odnosi się wartość wskaźnika;</li>
@@ -96,7 +96,7 @@ save(wskaznikiBdl, file = &quot;wskazniki_BDL.RData&quot;)</code></pre>
 </div>
 <div id="przeksztacanie-zestawien-pobranych-zapi-bdl-na-zestawienia-wskaznikow-wykorzystywanych-wmonitorowaniu-losow-absolwentow" class="section level1">
 <h1>2. Przekształcanie zestawień pobranych z API BDL na zestawienia wskaźników wykorzystywanych w monitorowaniu losów absolwentów</h1>
-<p>Przekształcenie zestawień wskaźników pobranych z API BDL na zestawienia wskaźników wykorzystywanych w monitorowaniu losów absolwentów polega na zamienie formy zestawienia z <em>długiej</em> (jedna JST-wiele wierszy) na <em>szeroką</em> (jedna JST-jeden wiersz) oraz przypisaniu kolumnom takiego zestawienia w formie <em>szerokiej</em> adekwatnych nazw. Przekształcenia te wykonuje funkcja <code>przeksztalc_dane_bdl()</code>, przy czym w obecnej postaci ma ona kilka <strong>ważnych ograniczeń</strong>:</p>
+<p>Przekształcenie zestawień wskaźników pobranych z API BDL na zestawienia wskaźników wykorzystywanych w monitorowaniu losów absolwentów polega na zmianie formy zestawienia z <em>długiej</em> (jedna JST-wiele wierszy) na <em>szeroką</em> (jedna JST-jeden wiersz) oraz przypisaniu kolumnom takiego zestawienia w formie <em>szerokiej</em> adekwatnych nazw. Przekształcenia te wykonuje funkcja <code>przeksztalc_dane_bdl()</code>, przy czym w obecnej postaci ma ona kilka <strong>ważnych ograniczeń</strong>:</p>
 <ul>
 <li>nazwy wszystkich wskaźników zawierające ciąg znaków “bezrobocia” traktowane są jako jeden wskaźnik, w nazwach wynikowych zmiennych opisywany jako “bezrobocie”;</li>
 <li>nazwy wszystkich wskaźników zawierające ciąg znaków “wynagrodzenia” traktowane są jako jeden wskaźnik, w nazwach wynikowych zmiennych opisywany jako “sr_wynagrodzenia”;</li>

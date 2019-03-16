@@ -178,28 +178,27 @@ praca_czas_rozp = function(x) {
 #'   \item{\code{`umowa o pracę na czas określony`} - liczba [0, n],}
 #'   \item{\code{`umowa zlecenia/o dzieło`} - liczba [0, n],}
 #'   \item{\code{`samozatrudnienie`} - liczba [0, n],}
-#'   \item{\code{`umowa o pracę na czas nieokreślony`} - liczba [0, n],}
+#'   \item{\code{`rolnicy indywidualni`} - liczba [0, n],}
 #'   \item{\code{`przez agencję pracy tymczasowej`} - liczba [0, n],}
 #'   \item{\code{`staż lub praktyka`} - liczba [0, n],}
-#'   \item{\code{`inna`} - liczba [0, n],}
-#'   \item{\code{`nieznana`} - liczba [0, n].}
+#'   \item{\code{`inna (lub nieznana)`} - liczba [0, n].}
 #' }
 #' @seealso \code{\link{praca_miesiac}}, \code{\link{praca_pierwsza}},
 #' \code{\link{praca_ostatnia}}, \code{\link{praca_forma2}}
 #' @importFrom dplyr %>% one_of select
 praca_forma = function(x, sufiks) {
   x = x %>%
-    select(one_of(paste0("pg2h.", 1:10, sufiks)))
+    select(one_of(paste0("pg2gh.", 1:10, sufiks)))
   names(x) = sub(paste0(sufiks, "$"), "", names(x))
-  list(n = sum(x$pg2h.1 %in% c(TRUE, FALSE)) - sum(x$pg2h.6 %in% TRUE),
-       `umowa o pracę na czas nieokreślony` = sum(x$pg2h.1 %in% TRUE),
-       `umowa o pracę na czas określony` = sum(x$pg2h.2 %in% TRUE),
-       `umowa zlecenia/o dzieło` = sum(x$pg2h.4 %in% TRUE),
-       `samozatrudnienie` = sum(x$pg2h.5 %in% TRUE),
-       `przez agencję pracy tymczasowej` = sum(x$pg2h.3 %in% TRUE),
-       `staż lub praktyka` = sum(x$pg2h.7 %in% TRUE | x$pg2h.8 %in% TRUE),
-       `inna` = sum(x$pg2h.5 %in% TRUE | x$pg2h.9 %in% TRUE),
-       `nieznana` = sum(x$pg2h.10 %in% TRUE)) %>%
+  list(n = sum(!is.na(x$pg2gh.1)),
+       `umowa o pracę na czas nieokreślony` = sum(x$pg2gh.2 %in% TRUE),
+       `umowa o pracę na czas określony` = sum(x$pg2gh.1 %in% TRUE),
+       `umowa zlecenia/o dzieło` = sum(x$pg2gh.4 %in% TRUE),
+       `samozatrudnienie` = sum(x$pg2gh.5 %in% TRUE | x$pg2gh.6 %in% TRUE),
+       `rolnicy indywidualni` = sum(x$pg2gh.7 %in% TRUE),
+       `przez agencję pracy tymczasowej` = sum(x$pg2gh.3 %in% TRUE),
+       `staż lub praktyka` = sum(x$pg2gh.8 %in% TRUE),
+       `inna (lub nieznana)` = sum(x$pg2gh.9 %in% TRUE)) %>%
     return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
@@ -225,16 +224,15 @@ praca_forma = function(x, sufiks) {
 #' @importFrom dplyr %>% one_of select
 praca_forma2 = function(x, sufiks) {
   x = x %>%
-    select(one_of(paste0("pg2h.", 1:10, sufiks)))
+    select(one_of(paste0("pg2gh.", 1:10, sufiks)))
   names(x) = sub(paste0(sufiks, "$"), "", names(x))
-  list(n = sum(x$pg2h.1 %in% c(TRUE, FALSE)) - sum(x$pg2h.6 %in% TRUE),
-       `umowa o pracę na czas nieokreślony` = sum(x$pg2h.1 %in% TRUE),
-       `umowa o pracę na czas określony` = sum(x$pg2h.2 %in% TRUE),
-       `umowa zlecenia/o dzieło` = sum(x$pg2h.4 %in% TRUE),
-       `inna (lub nieznana)` = sum(x$pg2h.5 %in% TRUE | x$pg2h.3 %in% TRUE |
-                                     x$pg2h.7 %in% TRUE | x$pg2h.8 %in% TRUE |
-                                     x$pg2h.5 %in% TRUE | x$pg2h.9 %in% TRUE |
-                                     x$pg2h.10 %in% TRUE)) %>%
+  list(n = sum(!is.na(x$pg2gh.1)),
+       `umowa o pracę na czas nieokreślony` = sum(x$pg2gh.2 %in% TRUE),
+       `umowa o pracę na czas określony` = sum(x$pg2gh.1 %in% TRUE),
+       `umowa zlecenia/o dzieło` = sum(x$pg2gh.4 %in% TRUE),
+       `inna (lub nieznana)` = sum(x$pg2h.3 %in% TRUE | x$pg2h.5 %in% TRUE |
+                                     x$pg2h.6 %in% TRUE | x$pg2h.7 %in% TRUE |
+                                     x$pg2h.8 %in% TRUE | x$pg2h.9 %in% TRUE)) %>%
     return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
@@ -280,9 +278,10 @@ praca_zamieszkanie = function(x, sufiks) {
 #' \itemize{
 #'   \item{\code{n} - liczba badanych uwzględnionych w obliczeniach (tj.
 #'         pracujących, z wyłączeniem pracujących bez umowy),}
-#'   \item{\code{`w Polsce`} - liczba [0, n],}
-#'   \item{\code{`za granicą`} - liczba [0, n],}
-#'   \item{\code{`nieznane`} - liczba [0, n].}
+#'   \item{\code{`zgodna`} - liczba [0, n],}
+#'   \item{\code{`niezgodna, ale wymaga podobnych kwalifikacji`} - liczba [0, n],}
+#'   \item{\code{`niezgodna, wymaga innych kwalifikacji`} - liczba [0, n],}
+#'   \item{\code{`praca, w której wykształcenie nie ma znaczenia`} - liczba [0, n].}
 #' }
 #' @seealso \code{\link{praca_pierwsza}}, \code{\link{praca_ostatnia}}
 #' @importFrom dplyr %>% one_of select
@@ -447,7 +446,7 @@ bezrobocie = function(x, sufiks, sufiksTlo = sufiks) {
 #'   \item{\code{n} - liczba badanych uwzględnionych w obliczeniach (tj.nie
 #'         mających braku danych w zmiennej opisanej argumentem \code{zmienna}),}
 #'   \item{\code{`średnia`} - liczba [0, ),}
-  # \item{\code{`mediana`} - liczba [0, ),}
+#'   \item{\code{`mediana`} - liczba [0, ),}
 #'   \item{\code{`1.kwartyl`} - liczba [0, ),}
 #'   \item{\code{`3.kwartyl`} - liczba [0, ).}
 #' }
@@ -550,7 +549,7 @@ nauka = function(x, sufiks) {
 #'         kierunków, oddzielone przecinkami, ułożone w kolejności od
 #'         najczęściej do najrzadziej wystepujących, z pominięciem tych,
 #'         których częstość występowania była mniejsza niż 20\%,}
-#'   \item{\code{`najczęściej wybierane uczelnie`} - - ciąg znaków - nazwy
+#'   \item{\code{`najczęściej wybierane uczelnie`} - ciąg znaków - nazwy
 #'         uczelni, oddzielone przecinkami, ułożone w kolejności od
 #'         najczęściej do najrzadziej wystepujących, z pominięciem tych,
 #'         których częstość występowania była mniejsza niż 20\%.}

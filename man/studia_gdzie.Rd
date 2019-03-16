@@ -24,7 +24,7 @@ lista o elementach:
         kierunków, oddzielone przecinkami, ułożone w kolejności od
         najczęściej do najrzadziej wystepujących, z pominięciem tych,
         których częstość występowania była mniejsza niż 20\%,}
-  \item{\code{`najczęściej wybierane uczelnie`} - - ciąg znaków - nazwy
+  \item{\code{`najczęściej wybierane uczelnie`} - ciąg znaków - nazwy
         uczelni, oddzielone przecinkami, ułożone w kolejności od
         najczęściej do najrzadziej wystepujących, z pominięciem tych,
         których częstość występowania była mniejsza niż 20\%.}

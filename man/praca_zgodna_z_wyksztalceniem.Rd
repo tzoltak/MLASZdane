@@ -20,9 +20,10 @@ lista o elementach:
 \itemize{
   \item{\code{n} - liczba badanych uwzględnionych w obliczeniach (tj.
         pracujących, z wyłączeniem pracujących bez umowy),}
-  \item{\code{`w Polsce`} - liczba [0, n],}
-  \item{\code{`za granicą`} - liczba [0, n],}
-  \item{\code{`nieznane`} - liczba [0, n].}
+  \item{\code{`zgodna`} - liczba [0, n],}
+  \item{\code{`niezgodna, ale wymaga podobnych kwalifikacji`} - liczba [0, n],}
+  \item{\code{`niezgodna, wymaga innych kwalifikacji`} - liczba [0, n],}
+  \item{\code{`praca, w której wykształcenie nie ma znaczenia`} - liczba [0, n].}
 }
 }
 \description{

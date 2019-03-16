@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl" xml:lang="pl">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Tomasz Żółtak" />
+
+
+<title>Wskaźniki na poziomie indywidualnym i zagregowanym obliczane na podstawie 1. rundy monitoringu</title>
+
+
+
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Wskaźniki na poziomie indywidualnym i zagregowanym obliczane na podstawie 1. rundy monitoringu</h1>
+<h4 class="author"><em>Tomasz Żółtak</em></h4>
+<h4 class="date"><em>15 marca 2019</em></h4>
+
+
+
+<div id="wprowadzenie" class="section level1">
+<h1>1. Wprowadzenie</h1>
+<p>W dokumencie tym opisane zostały wyczerpująco procedury obliczania wartości wskaźników charakteryzujących losy edukacyjno-zawodowe absolwentów szkół zawodowych na podstawie zbiorów z wynikami badań sondażowych zrealizowanych w ramach 1. rundy monitoringu w projekcie <em>Monitorowanie losów edukacyjno-zawodowych absolwentów i młodych dorosłych</em> (POWR.02.15.00-IP.02-00-004/16). Procedury te zostały zaimplementowane w następujących funkcjach pakietu MLASZdane:</p>
+<ul>
+<li><code>oblicz_wskazniki_ind_1rm()</code> - obliczenie wskaźników na poziomie indywidualnym (poszczególnych absolwentów),</li>
+<li><code>agreguj_wskazniki_szk()</code> i <code>agreguj_wskazniki_typ_szk()</code> - obliczenie wskaźników na poziomie zagregowanym do szkół i na poziomie zagregowanym do typów szkół (w obu funkcjach używane są dokładnie takie same procedury obliczania wskaźników, jedyna różnica polega na poziomie agregacji).</li>
+</ul>
+<p>Sposób wykorzystania ww. funkcji do przygotowania zbiorów wskaźników, a następnie utworzenia raportów dla szkół opisany został w plikach README pakietów <a href="https://github.com/tzoltak/MLASZdane">MLASZdane</a> i <a href="https://github.com/tzoltak/MLASZraporty">MLASZraporty</a>.</p>
+</div>
+<div id="wskazniki-obliczane-na-poziomie-indywidualnym" class="section level1">
+<h1>2. Wskaźniki obliczane na poziomie indywidualnym</h1>
+<p>Zbiór wskaźników na poziomie indywidualnym ma postać ramki danych, w której jeden wiersz odpowiada jednemu absolwentowi, a poszczególne kolumny zawierają zmienne-wskaźniku, opisujące charakterystyki badanych, które w szczególności mogą być:</p>
+<ul>
+<li>stałe w czasie - p. sekcja 2.1.;</li>
+<li>odnoszące się do pierwszego lub ostatniego <em>epizodu</em> danego typu, jaki miał miejsce w okresie objętym badaniem, tj. 9 miesięcy od miesiąca planowego ukończenia szkoły zawodowej przez badanych (lipiec 2017-marzec 2018) - p. m.in. sekcja 2.3 i 2.4;</li>
+<li>odnoszące się do sytuacji absolwenta w konkretnym miesiącu, licząc od miesiąca planowego ukończenia szkoły zawodowej przez badanych (t. od czerwca 2017) - p. m.in. sekcja 2.5.</li>
+</ul>
+<div id="informacje-oszkole-iouczniu" class="section level2">
+<h2>2.1. Informacje o szkole i o uczniu</h2>
+<ul>
+<li><code>SZK_kod</code> – identyfikator szkoły, jednoznacznie identyfikujący placówkę,</li>
+<li><code>SZK_typ</code> – typ szkoły zawodowej: “Szkoła policealna”, “Technikum” lub “Zasadnicza Szkoła Zawodowa”.</li>
+<li><code>SZK_powiat</code> – kod TERYT powiatu, na terenie którego pracuje szkoła,</li>
+<li><code>UCZ_zawod</code> – kod Klasyfikacji Zawodów Szkolnictwa Zawodowego zawodu, którego absolwent uczył się w badanej szkole,</li>
+<li><code>UCZ_plec</code> – “K” lub “M”.</li>
+</ul>
+</div>
+<div id="wskazniki-dotyczace-wynikow-egzaminow" class="section level2">
+<h2>2.2. Wskaźniki dotyczące wyników egzaminów</h2>
+<ul>
+<li><code>matura_zdana</code> – zmienna binarna tworzona na podstawie odpowiedzi na pytanie F8 (oraz informacji o typie szkoły zawodowej):
+<ul>
+<li>1 – absolwent zdał maturę w roku ukończenia technikum,</li>
+<li>0 – absolwent nie zdał matury w roku ukończenia technikum (obejmuje również sytuacje, gdy absolwent nie podszedł do matury),</li>
+<li>brak danych – absolwenci szkół zawodowych innych, niż technikum lub brak informacji o tym, czy absolwent zdał maturę.</li>
+</ul></li>
+<li><code>egz_zaw_zdany</code> – zmienna binarna tworzona na podstawie odpowiedzi na pytania F9 i F10:
+<ul>
+<li>1 – absolwent uzyskał dyplom potwierdzający kwalifikacje zawodowe w zawodzie, którego uczył się w badanej szkole, nie później, niż w roku ukończenia tej szkoły,</li>
+<li>0 – absolwent nie uzyskał dyplomu potwierdzającego kwalifikacje zawodowe w zawodzie, którego uczył się w badanej szkole, nie później, niż w roku ukończenia tej szkoły,</li>
+<li>brak danych – brak informacji o tym, czy absolwent uzyskał dyplomu potwierdzającego kwalifikacje zawodowe w zawodzie, którego uczył się w badanej szkole.</li>
+</ul></li>
+</ul>
+</div>
+<div id="wskazniki-opisujace-pierwsza-prace-podjeta-przez-absolwenta-wciagu-9miesiecy-od-miesiaca-ukonczenia-szkoy" class="section level2">
+<h2>2.3. Wskaźniki opisujące pierwszą pracę podjętą przez absolwenta w ciągu 9 miesięcy od miesiąca ukończenia szkoły</h2>
+<p>Przy obliczaniu wskaźników nie były brane pod uwagę prace świadczone bez umowy.</p>
+<ul>
+<li><code>pio1_pierwsza</code> – ocena zgodności pierwszej pracy wykonywanej po ukończeniu szkoły z zawodem, którego absolwent uczył się w badanej szkole; tworzona na podstawie odpowiedzi na pytanie PI1:
+<ul>
+<li>1 – “tak”,</li>
+<li>2 – “nie, ale wymagała podobnej wiedzy i umiejętności”,</li>
+<li>3 – “nie, wymagała zupełnie innej wiedzy i umiejętności”,</li>
+<li>4 – “w tej pracy nie było ważne, jaką mam wiedzę i umiejętności”,</li>
+<li>brak danych – absolwent nie podjął pracy po ukończeniu szkoły lub nie odpowiedział na pytanie PI1.</li>
+</ul></li>
+<li><code>pio4_pierwsza</code> – miesięczne zarobki netto w pierwszej pracy wykonywanej po ukończeniu szkoły; tworzona na podstawie odpowiedzi na pytanie PI4:
+<ul>
+<li>liczba [PLN],</li>
+<li>brak danych - absolwent nie pracował po ukończeniu szkoły lub nie odpowiedział na pytanie PI4.</li>
+</ul></li>
+<li><code>pi5_pierwsza</code> – powód zakończenia pracy, która była pierwszą pracą wykonywaną po ukończeniu szkoły; tworzona na podstawie odpowiedzi na pytanie PI5:
+<ul>
+<li>1 – “nie przedłużono ze mną umowy o pracę”,</li>
+<li>2 – “odszedłem/odeszłam z własnej inicjatywy”,</li>
+<li>3 – “stanowisko pracy, firma została zlikwidowana”,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu szkoły lub pracował po ukończeniu szkoły tylko w jednym miejscu i pracował tam wciąż w momencie badania lub nie odpowiedział na pytanie PI5.</li>
+</ul></li>
+<li><code>praca_czas_rozp_pierwsza</code> – liczba miesięcy, od czerwca w roku ukończenia szkoły do momentu podjęcia pierwszej pracy wykonywanej po ukończeniu szkoły; tworzona na podstawie odpowiedzi na pytania PG2C i PG2D:
+<ul>
+<li>liczba [miesiące],</li>
+<li>brak danych – absolwent nie pracował po ukończeniu szkoły lub pracował, ale kontynuował pracę, którą rozpoczął przed ukończeniem szkoły lub nie odpowiedział na pytanie PG2D.</li>
+</ul></li>
+<li><code>praca_przed_ukonczeniem_szkoly_pierwsza</code> – zmienna logiczna; tworzona na podstawie odpowiedzi na pytania PG2C i PG2D:
+<ul>
+<li>TRUE – pierwsza praca, w jakiej pracował absolwent po ukończeniu szkoły, została przez niego podjęta przed ukończeniem tej szkoły,</li>
+<li>FALSE – pierwsza praca, w jakiej pracował absolwent po ukończeniu szkoły, została przez niego podjęta po ukończeniu tej szkoły,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu szkoły lub nie odpowiedział na pytanie PG2D.</li>
+</ul></li>
+<li><code>pg2gh.1_pierwsza</code> – zmienna logiczna; utworzona na podstawie odpowiedzi na pytanie PG2H:
+<ul>
+<li>TRUE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w formie “umowa o pracę na czas określony (w tym umowa na okres próbny, na zastępstwo)”,</li>
+<li>FALSE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w innej formie,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu szkoły.</li>
+</ul></li>
+<li><code>pg2gh.2_pierwsza</code> – zmienna logiczna; utworzona na podstawie odpowiedzi na pytanie PG2H:
+<ul>
+<li>TRUE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w formie “umowa o pracę na czas nieokreślony”,</li>
+<li>FALSE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w innej formie,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu szkoły.</li>
+</ul></li>
+<li><code>pg2gh.3_pierwsza</code> – zmienna logiczna; utworzona na podstawie odpowiedzi na pytanie PG2H:
+<ul>
+<li>TRUE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w formie “praca przez Agencję Pracy Tymczasowej”,</li>
+<li>FALSE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w innej formie,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu szkoły.</li>
+</ul></li>
+<li><code>pg2gh.4_pierwsza</code> – zmienna logiczna; utworzona na podstawie odpowiedzi na pytanie PG2H:
+<ul>
+<li>TRUE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w formie “umowa zlecenia/umowa o dzieło”,</li>
+<li>FALSE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w innej formie,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu szkoły.</li>
+</ul></li>
+<li><code>pg2gh.5_pierwsza</code> – zmienna logiczna; utworzona na podstawie odpowiedzi na pytanie PG2H:
+<ul>
+<li>TRUE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w formie “samozatrudnienie” (i w pytaniu PG2G absolwent zadeklarował, że jest to “praca u kogoś”),</li>
+<li>FALSE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w innej formie,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu szkoły.</li>
+</ul></li>
+<li><code>pg2gh.6_pierwsza</code> – zmienna logiczna; utworzona na podstawie odpowiedzi na pytanie PG2G:
+<ul>
+<li>TRUE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w formie “Praca u siebie: w firmie”.</li>
+<li>FALSE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w innej formie,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu szkoły.</li>
+</ul></li>
+<li><code>pg2gh.7_pierwsza</code> – zmienna logiczna; utworzona na podstawie odpowiedzi na pytanie PG2G:
+<ul>
+<li>TRUE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w formie “Praca u siebie: w gospodarstwie rolnym”,</li>
+<li>FALSE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w innej formie,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu szkoły.</li>
+</ul></li>
+<li><code>pg2gh.8_pierwsza</code> – zmienna logiczna; utworzona na podstawie odpowiedzi na pytanie PG2H:
+<ul>
+<li>TRUE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w formie “staż z urzędu pracy” lub “umowa o praktykę absolwencką”,</li>
+<li>FALSE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w innej formie,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu.</li>
+</ul></li>
+<li><code>pg2gh.9_pierwsza</code> – zmienna logiczna; utworzona na podstawie odpowiedzi na pytania PG2G i PG2H:
+<ul>
+<li>TRUE – w pierwszej pracy wykonywanej po ukończeniu szkoły absolwent był zatrudniony w formie innej, niż wymienione w opisanych wcześniej zmiennych lub odmówił odpowiedzi na pytanie o formę zatrudnienia,</li>
+<li>FALSE – absolwent pracował po ukończeniu szkoły i udzielił odpowiedzi na pytania PG2G i PG2H (to drugie, jeśli się do niego odnosiło) dotyczące formy zatrudnienia w pierwszej pracy wykonywanej po ukończeniu szkoły,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu.</li>
+</ul></li>
+<li><code>pg2i.1_pierwsza</code> – zmienna logiczna; utworzona na podstawie odpowiedzi na pytanie PG2I:
+<ul>
+<li>TRUE – pierwszą pracę wykonywaną po ukończeniu szkoły absolwent wykonywał “w Polsce, w tej samej miejscowości, w której mieszkałem/mieszkałam mając 14 lat”,</li>
+<li>FALSE – pierwszą pracę wykonywaną po ukończeniu szkoły absolwent wykonywał w innym miejscu,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu szkoły.</li>
+</ul></li>
+<li><code>pg2i.2_pierwsza</code> – zmienna logiczna; utworzona na podstawie odpowiedzi na pytanie PG2I:
+<ul>
+<li>TRUE – pierwszą pracę wykonywaną po ukończeniu szkoły absolwent wykonywał “w Polsce, w innej miejscowości niż ta, w której mieszkałem/mieszkałam mając 14 lat”,</li>
+<li>FALSE – pierwszą pracę wykonywaną po ukończeniu szkoły absolwent wykonywał w innym miejscu,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu szkoły.</li>
+</ul></li>
+<li><code>pg2i.3_pierwsza</code> – zmienna logiczna; utworzona na podstawie odpowiedzi na pytanie PG2I:
+<ul>
+<li>TRUE – pierwszą pracę wykonywaną po ukończeniu szkoły absolwent wykonywał “za granicą”,</li>
+<li>FALSE – pierwszą pracę wykonywaną po ukończeniu szkoły absolwent wykonywał w innym miejscu,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu szkoły.</li>
+</ul></li>
+<li><code>pg2i.9_pierwsza</code> – zmienna logiczna; utworzona na podstawie odpowiedzi na pytanie PG2I:
+<ul>
+<li>TRUE – absolwent pracował po ukończeniu szkoły, ale nie udzielił odpowiedzi na pytanie PG2I dotyczące miejsca pracy w pierwszej pracy wykonywanej po ukończeniu szkoły,</li>
+<li>FALSE – absolwent pracował po ukończeniu szkoły i udzielił odpowiedzi na pytanie PG2I dotyczące miejsca pracy w pierwszej pracy wykonywanej po ukończeniu szkoły,</li>
+<li>brak danych – absolwent nie pracował po ukończeniu szkoły.</li>
+</ul></li>
+</ul>
+</div>
+<div id="wskazniki-opisujace-ostatnia-prace-wykonywana-przez-absolwenta-wciagu-9miesiecy-od-miesiaca-ukonczenia-szkoy" class="section level2">
+<h2>2.4. Wskaźniki opisujące ostatnią pracę wykonywaną przez absolwenta w ciągu 9 miesięcy od miesiąca ukończenia szkoły</h2>
+<p>Przy obliczaniu wskaźników nie były brane pod uwagę prace świadczone bez umowy.</p>
+<ul>
+<li><code>pio1_ostatnia</code>, <code>pio4_ostatnia</code> – przygotowywane analogicznie, jak wskaźniki odnoszące się do pierwszej pracy; tworzone na podstawie odpowiedzi na pytanie PO1 i PO4.</li>
+<li><code>po5_ostatnia</code> – ocena, w jakim stopniu ostatnia praca wykonywana w ciągu 9 miesięcy od miesiąca ukończenia szkoły odpowiada oczekiwaniom absolwenta (ogólnie rzecz biorąc); tworzona na podstawie odpowiedzi na pytanie PO5:
+<ul>
+<li>liczba całkowita od 1 do 6 (skala ocen szkolnych: wyższa wartość wskazuje na lepszą ocenę);</li>
+<li>brak danych - absolwent nie pracował po ukończeniu szkoły lub nie odpowiedział na pytanie PO5.</li>
+</ul></li>
+<li><code>po6_1_ostatnia</code> – ocena, w jakim stopniu ostatnia praca wykonywana w ciągu 9 miesięcy od miesiąca ukończenia szkoły odpowiada oczekiwaniom absolwenta pod względem poziomu zarobków; tworzona na podstawie odpowiedzi na pytanie PO6.a):
+<ul>
+<li>liczba całkowita od 1 do 6 (skala ocen szkolnych: wyższa wartość wskazuje na lepszą ocenę);</li>
+<li>brak danych - absolwent nie pracował po ukończeniu szkoły lub nie odpowiedział na pytanie PO6.a).</li>
+</ul></li>
+<li><code>po6_2_ostatnia</code> – ocena, w jakim stopniu ostatnia praca wykonywana w ciągu 9 miesięcy od miesiąca ukończenia szkoły odpowiada oczekiwaniom absolwenta pod względem atmosfery w pracy; tworzona na podstawie odpowiedzi na pytanie PO6.b):
+<ul>
+<li>liczba całkowita od 1 do 6 (skala ocen szkolnych: wyższa wartość wskazuje na lepszą ocenę);</li>
+<li>brak danych - absolwent nie pracował po ukończeniu szkoły lub nie odpowiedział na pytanie PO6.b).</li>
+</ul></li>
+<li><code>po6_3_ostatnia</code> – ocena, w jakim stopniu ostatnia praca wykonywana w ciągu 9 miesięcy od miesiąca ukończenia szkoły odpowiada oczekiwaniom absolwenta pod względem ilości obowiązków; tworzona na podstawie odpowiedzi na pytanie PO6.c):
+<ul>
+<li>liczba całkowita od 1 do 6 (skala ocen szkolnych: wyższa wartość wskazuje na lepszą ocenę);</li>
+<li>brak danych - absolwent nie pracował po ukończeniu szkoły lub nie odpowiedział na pytanie PO6.c).</li>
+</ul></li>
+<li><code>po6_4_ostatnia</code> – ocena, w jakim stopniu ostatnia praca wykonywana w ciągu 9 miesięcy od miesiąca ukończenia szkoły odpowiada oczekiwaniom absolwenta pod względem możliwości awansu; tworzona na podstawie odpowiedzi na pytanie PO6.d):
+<ul>
+<li>liczba całkowita od 1 do 6 (skala ocen szkolnych: wyższa wartość wskazuje na lepszą ocenę);</li>
+<li>brak danych - absolwent nie pracował po ukończeniu szkoły lub nie odpowiedział na pytanie PO6.d).</li>
+</ul></li>
+<li><code>po6_5_ostatnia</code> – ocena, w jakim stopniu ostatnia praca wykonywana w ciągu 9 miesięcy od miesiąca ukończenia szkoły odpowiada oczekiwaniom absolwenta pod względem elastyczności godzin pracy; tworzona na podstawie odpowiedzi na pytanie PO6.e):
+<ul>
+<li>liczba całkowita od 1 do 6 (skala ocen szkolnych: wyższa wartość wskazuje na lepszą ocenę);</li>
+<li>brak danych - absolwent nie pracował po ukończeniu szkoły lub nie odpowiedział na pytanie PO6.e).</li>
+</ul></li>
+<li><code>po6_6_ostatnia</code> – ocena, w jakim stopniu ostatnia praca wykonywana w ciągu 9 miesięcy od miesiąca ukończenia szkoły odpowiada oczekiwaniom absolwenta pod względem możliwości rozwoju kariery; tworzona na podstawie odpowiedzi na pytanie PO6.f):
+<ul>
+<li>liczba całkowita od 1 do 6 (skala ocen szkolnych: wyższa wartość wskazuje na lepszą ocenę);</li>
+<li>brak danych - absolwent nie pracował po ukończeniu szkoły lub nie odpowiedział na pytanie PO6.f).</li>
+</ul></li>
+<li><code>pg2gh.1_ostatnia</code>, <code>pg2gh.2_ostatnia</code>, <code>pg2gh.3_ostatnia</code>, <code>pg2gh.4_ostatnia</code>, <code>pg2gh.5_ostatnia</code>, <code>pg2gh.6_ostatnia</code>, <code>pg2gh.7_ostatnia</code>, <code>pg2gh.8_ostatnia</code>, <code>pg2gh.9_ostatnia</code> – przygotowywane analogicznie, jak wskaźniki odnoszące się do pierwszej pracy.</li>
+<li><code>pg2i.1_ostatnia</code>, <code>pg2i.2_ostatnia</code>, <code>pg2i.3_ostatnia</code>, <code>pg2i.9_ostatnia</code> – przygotowywane analogicznie, jak wskaźniki odnoszące się do pierwszej pracy.</li>
+</ul>
+</div>
+<div id="wskazniki-opisujace-sytuacje-zawodowa-absolwenta-wszostym-miesiacu-od-miesiaca-ukonczenia-szkoy" class="section level2">
+<h2>2.5. Wskaźniki opisujące sytuację zawodową absolwenta w szóstym miesiącu od miesiąca ukończenia szkoły</h2>
+<p>Rozpatrując sytuację absolwenta w konkretnym miesiącu, brane były pod uwagę wszystkie jego miejsca pracy, w których był zatrudniony w tym miesiącu. Wskaźniki pokazują, czy choć jedna z tych prac była danego typu lub wykonywana w danym miejscu.</p>
+<p>Przy obliczaniu wskaźników nie były brane pod uwagę prace świadczone bez umowy.</p>
+<ul>
+<li><code>pg2gh.1_6m</code>, <code>pg2gh.2_6m</code>, <code>pg2gh.3_6m</code>, <code>pg2gh.4_6m</code>, <code>pg2gh.5_6m</code>, <code>pg2gh.6_6m</code>, <code>pg2gh.7_6m</code>, <code>pg2gh.8_6m</code>, <code>pg2gh.9_6m</code> – przygotowywane analogicznie, jak wskaźniki odnoszące się do pierwszej pracy, z tym że:
+<ul>
+<li>TRUE – <code>przynajmniej jedna</code> z prac wykonywanych w szóstym miesiącu od miesiąca ukończenia szkoły była pracą w danej formie,</li>
+<li>FALSE – <code>żadna</code> z prac wykonywanych w szóstym miesiącu od miesiąca ukończenia szkoły nie była pracą w danej formie,</li>
+<li>brak danych – absolwent nie pracował w szóstym miesiącu od miesiąca ukończeniu szkoły.</li>
+</ul></li>
+<li><code>pg2i.1_6m</code>, <code>pg2i.2_6m</code>, <code>pg2i.3_6m</code>, <code>pg2i.9_6m</code> – przygotowywane analogicznie, jak wskaźniki odnoszące się do pierwszej pracy, z tym że:
+<ul>
+<li>TRUE – <code>przynajmniej jedną</code> z prac wykonywanych w szóstym miesiącu od miesiąca ukończenia szkoły absolwent wykonywaną w danej lokalizacji,</li>
+<li>FALSE – <code>żadna</code> z prac wykonywanych w szóstym miesiącu od miesiąca ukończenia szkoły nie była pracą wykonywaną w danej lokalizacji,</li>
+<li>brak danych – absolwent nie pracował w szóstym miesiącu od miesiąca ukończeniu szkoły.</li>
+</ul></li>
+</ul>
+</div>
+<div id="wskazniki-opisujace-sytuacje-zawodowa-absolwenta-wdziewiatym-miesiacu-od-miesiaca-ukonczenia-szkoy" class="section level2">
+<h2>2.6. Wskaźniki opisujące sytuację zawodową absolwenta w dziewiątym miesiącu od miesiąca ukończenia szkoły</h2>
+<p>Rozpatrując sytuację absolwenta w konkretnym miesiącu, brane były pod uwagę wszystkie jego miejsca pracy, w których był zatrudniony w tym miesiącu. Wskaźniki pokazują, czy choć jedna z tych prac była danego typu lub wykonywana w danym miejscu.</p>
+<p>Przy obliczaniu wskaźników nie były brane pod uwagę prace świadczone bez umowy.</p>
+<ul>
+<li><code>pg2gh.1_9m</code>, <code>pg2gh.2_9m</code>, <code>pg2gh.3_9m</code>, <code>pg2gh.4_9m</code>, <code>pg2gh.5_9m</code>, <code>pg2gh.6_9m</code>, <code>pg2gh.7_9m</code>, <code>pg2gh.8_9m</code>, <code>pg2gh.9_9m</code> – przygotowywane analogicznie, jak wskaźniki opisujące sytuację w szóstym miesiącu od ukończenia szkoły.</li>
+<li><code>pg2i.1_9m</code>, <code>pg2i.2_9m</code>, <code>pg2i.3_9m</code>, <code>pg2i.9_9m</code> – przygotowywane analogicznie, jak wskaźniki opisujące sytuację w szóstym miesiącu od ukończenia szkoły.</li>
+</ul>
+</div>
+<div id="wskazniki-opisujace-przez-jaka-czesc-okresu-9miesiecy-od-miesiaca-ukonczenia-szkoy-absolwent-pracowa-lub-by-bezrobotny" class="section level2">
+<h2>2.7. Wskaźniki opisujące, przez jaką część okresu 9 miesięcy od miesiąca ukończenia szkoły absolwent pracował lub był bezrobotny</h2>
+<p>Przy obliczaniu wskaźników brano pod uwagę tylko naukę formalną (w dowolnym trybie).</p>
+<p>Przy obliczaniu tych wskaźników (odmiennie niż w procedurze przygotowywania zbioru osobo-miesięcy) jako czasu nauki <code>nie</code> traktowano okresu, jaki upłynął pomiędzy zakończeniem nauki w badanej szkole a ew. rozpoczęciem nauki w kolejnej (okresu <em>wakacji</em>).</p>
+<p>Przy obliczaniu wskaźników nie były brane pod uwagę prace świadczone bez umowy.</p>
+<ul>
+<li><code>praca_czas_gdy_bez_nauki_p9m</code> – liczba miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent pracował (w dowolnej formie, wykluczając zatrudnienie bez umowy) i jednocześnie się nie uczył podzielona przez liczbę miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent się nie uczył:
+<ul>
+<li>liczba z przedziału [0; 1];</li>
+<li>brak danych – absolwent przez cały okres się uczył.</li>
+</ul></li>
+<li><code>praca_czas_gdy_nauka_p9m</code> – liczba miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent pracował (w dowolnej formie, wykluczając zatrudnienie bez umowy) i jednocześnie się uczył podzielona przez liczbę miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent się uczył:
+<ul>
+<li>liczba z przedziału [0; 1]</li>
+<li>brak danych – absolwent przez cały okres się nie uczył.</li>
+</ul></li>
+<li><code>praca_czas_p9m</code> – liczba miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent pracował (w dowolnej formie, wykluczając zatrudnienie bez umowy) podzielona przez 9 (tj. długość okresu):
+<ul>
+<li>liczba z przedziału [0; 1].</li>
+</ul></li>
+<li><code>praca_czas_gdy_bez_nauki_uop_p9m</code> – liczba miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent pracował w formie umowy o pracę (na czas określony, lub na czas nieokreślony) i jednocześnie się nie uczył podzielona przez liczbę miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent się nie uczył:
+<ul>
+<li>liczba z przedziału [0; 1];</li>
+<li>brak danych – absolwent przez cały okres się uczył.</li>
+</ul></li>
+<li><code>praca_czas_gdy_nauka_uop_p9m</code> – liczba miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent pracował w formie umowy o pracę (na czas określony, lub na czas nieokreślony) i jednocześnie się uczył podzielona przez liczbę miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent się uczył:
+<ul>
+<li>liczba z przedziału [0; 1];</li>
+<li>brak danych – absolwent przez cały okres się nie uczył.</li>
+</ul></li>
+<li><code>praca_czas_uop_p9m</code> – liczba miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent pracował w formie umowy o pracę (na czas określony, lub na czas nieokreślony) podzielona przez 9 (tj. długość okresu):
+<ul>
+<li>liczba z przedziału [0; 1].</li>
+</ul></li>
+<li><code>bezrobocie_czas_gdy_bez_nauki_p9m</code> – liczba miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent był zarejestrowany jako bezrobotny w urzędzie pracy i jednocześnie się nie uczył podzielona przez liczbę miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent się nie uczył:
+<ul>
+<li>liczba z przedziału [0; 1];</li>
+<li>brak danych – absolwent przez cały okres się uczył.</li>
+</ul></li>
+<li><code>bezrobocie_czas_gdy_nauka_p9m</code> – liczba miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent był zarejestrowany jako bezrobotny w urzędzie pracy i jednocześnie się uczył podzielona przez liczbę miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent się uczył:
+<ul>
+<li>liczba z przedziału [0; 1];</li>
+<li>brak danych – absolwent przez cały okres się nie uczył.</li>
+</ul></li>
+<li><code>bezrobocie_czas_p9m</code> – liczba miesięcy, w ciągu okresu 9 miesięcy od miesiąca ukończenia szkoły, w czasie których absolwent był zarejestrowany jako bezrobotny w urzędzie pracy podzielona przez 9 (tj. długość okresu):
+<ul>
+<li>liczba z przedziału [0; 1].</li>
+</ul></li>
+</ul>
+</div>
+<div id="wskazniki-opisujace-czy-wkolejnych-miesiacach-po-ukonczeniu-szkoy-absolwent-by-bezrobotny" class="section level2">
+<h2>2.8. Wskaźniki opisujące, czy w kolejnych miesiącach po ukończeniu szkoły absolwent był bezrobotny</h2>
+<p>Przy obliczaniu wskaźników brano pod uwagę tylko naukę formalną (w dowolnym trybie).</p>
+<p>Przy obliczaniu tych wskaźników (odmiennie niż w procedurze przygotowywania zbioru osobo-miesięcy) jako czasu nauki <code>nie</code> traktowano okresu, jaki upłynął pomiędzy zakończeniem nauki w badanej szkole a ew. rozpoczęciem nauki w kolejnej (okresu <em>wakacji</em>).</p>
+<p>Przy obliczaniu wskaźników nie były brane pod uwagę prace świadczone bez umowy.</p>
+<ul>
+<li><code>bezrobocie_1m</code>, <code>bezrobocie_2m</code>, <code>bezrobocie_3m</code>, <code>bezrobocie_4m</code>, <code>bezrobocie_5m</code>, <code>bezrobocie_6m</code>, <code>bezrobocie_7m</code>, <code>bezrobocie_8m</code>, <code>bezrobocie_9m</code> – zmienne binarne opisujące status bezrobocia absolwentów w kolejnych miesiącach licząc od miesiąca ukończenia szkoły; tworzone na podstawie odpowiedzi na pytania PB1H, PG2G i PG2H oraz obliczonych czasów rozpoczęcia i zakończenia <em>epizodów</em> nauki;
+<ul>
+<li>1 – absolwent w danym miesiącu (licząc od miesiąca ukończenia szkoły) był zarejestrowany jako bezrobotny w urzędzie pracy;</li>
+<li>0 – absolwent w danym miesiącu (licząc od miesiąca ukończenia szkoły) pracował lub uczył się (i nie był zarejestrowany jako bezrobotny w urzędzie pracy);</li>
+<li>brak danych – absolwent w danym miesiącu (licząc od miesiąca ukończenia szkoły) nie był zarejestrowany jako bezrobotny w urzędzie pracy, nie pracował, ani się nie uczył.</li>
+</ul></li>
+</ul>
+</div>
+<div id="wskazniki-opisujace-czy-wdanych-miesiacach-po-ukonczeniu-szkoy-absolwent-uczy-sie" class="section level2">
+<h2>2.9. Wskaźniki opisujące, czy w danych miesiącach po ukończeniu szkoły absolwent uczył się</h2>
+<p>Przy obliczaniu wskaźników brano pod uwagę tylko naukę formalną (w dowolnym trybie).</p>
+<ul>
+<li><code>nauka_6m</code>, <code>nauka_9m</code> – zmienne tekstowe opisujące, w jakiej szkole uczył się absolwent w odpowiednio szóstym lub dziewiątym miesiącu po ukończeniu szkoły; tworzone na podstawie odpowiedzi na pytania ZP2A, ZP2B, ZP2C, ZP2F,ZP2G, SP6C1, SP6C2, SP6D, SP6E1, SP6E2, SP6H, PP6C1, PP6C2, PP6D, PP6F i PP6F2; jeśli absolwent w danym miesiącu uczył się w szkołach kilku różnych typów, wskaźnikowi przypisywano wartość odpowiadającą temu z nich, który na poniższej liście wymieniany jest najniżej:
+<ul>
+<li>“LO dla dorosłych”;</li>
+<li>“szkoła policealna”;</li>
+<li>“studia niestacjonarne”;</li>
+<li>“studia stacjonarne”;</li>
+<li>brak danych – absolwent w danym miesiącu (licząc od miesiąca ukończenia szkoły) nie był uczniem żadnej szkoły ww. typów.</li>
+</ul></li>
+<li><code>nauka_platna_6m</code>, <code>nauka_platna_9m</code> – zmienne binarne opisujące, czy nauka w szkole opisywanej we wskaźnikach odpowiednio <code>nauka_6m</code> i  <code>nauka_9m</code> była odpłatna; tworzone na podstawie odpowiedzi na pytania ZP2I, SP6F i PP6G:
+<ul>
+<li>1 – nauka była odpłatna;</li>
+<li>0 – nauka była darmowa;</li>
+<li>brak danych – absolwent w danym miesiącu (licząc od miesiąca ukończenia szkoły) nie był uczniem żadnej szkoły spośród typów wymienionych w opisie wskaźników <code>nauka_6m</code> i  <code>nauka_9m</code>.</li>
+</ul></li>
+</ul>
+</div>
+<div id="wskazniki-opisujace-studia-wybierane-przez-absolwentow" class="section level2">
+<h2>2.10. Wskaźniki opisujące studia wybierane przez absolwentów</h2>
+<ul>
+<li><code>studia_kierunek_pierwsze</code> – zmienna tekstowa tworzona na podstawie odpowiedzi na pytanie SP6B:
+<ul>
+<li>ciąg znaków – nazwa pierwszego kierunku studiów, które podjął absolwent po ukończeniu szkoły (w okresie 9 miesięcy od miesiąca ukończenia szkoły);</li>
+<li>brak danych – absolwent nie podjął studiów w badanym okresie lub nie podał nazwy kierunku studiów.</li>
+</ul></li>
+<li><code>studia_uczelnia_pierwsze</code> – zmienna tekstowa tworzona na podstawie odpowiedzi na pytanie SP6B:
+<ul>
+<li>ciąg znaków – nazwa uczelni prowadzącej pierwszy kierunek studiów, które podjął absolwent po ukończeniu szkoły (w okresie 9 miesięcy od miesiąca ukończenia szkoły);</li>
+<li>brak danych – absolwent nie podjął studiów w badanym okresie lub nie podał nazwy uczelni.</li>
+</ul></li>
+<li><code>studia_bezplatne_pierwsze</code>, – zmienna binarna opisujące, czy pierwsze studia, które podjął absolwent po ukończeniu szkoły (w okresie 9 miesięcy od miesiąca ukończenia szkoły), były odpłatne; tworzona na podstawie odpowiedzi na pytanie SP6F:
+<ul>
+<li>1 – studia były darmowe;</li>
+<li>0 – studia były odpłatne;</li>
+<li>brak danych – absolwent nie podjął studiów w badanym okresie lub nie podał nazwy uczelni, lub nie udzielił odpowiedzi na pytanie SP6F.</li>
+</ul></li>
+<li><code>studia_tryb_pierwsze</code>, – tryb kształcenia na pierwszych studiach, które podjął absolwent po ukończeniu szkoły (w okresie 9 miesięcy od miesiąca ukończenia szkoły); tworzona na podstawie odpowiedzi na pytanie SP6H:
+<ul>
+<li>1 – studia stacjonarne (dzienne);</li>
+<li>2 – studia niestacjonarne (wieczorowe);</li>
+<li>3 – studia niestacjonarne (weekendowe, zaoczne);</li>
+<li>brak danych – absolwent nie podjął studiów w badanym okresie lub nie podał nazwy uczelni, lub nie udzielił odpowiedzi na pytanie SP6H.</li>
+</ul></li>
+</ul>
+</div>
+<div id="wskazniki-opisujace-status-edukacyjno-zawodowy-absolwenta-wkolejnych-miesiacach-od-ukonczenia-szkoy" class="section level2">
+<h2>2.11. Wskaźniki opisujące status edukacyjno-zawodowy absolwenta w kolejnych miesiącach od ukończenia szkoły</h2>
+<p>Przy obliczaniu wskaźników brano pod uwagę tylko naukę formalną (w dowolnym trybie).</p>
+<p>Przy obliczaniu tych wskaźników (odmiennie niż w procedurze przygotowywania zbioru osobo-miesięcy) jako czasu nauki <code>nie</code> traktowano okresu, jaki upłynął pomiędzy zakończeniem nauki w badanej szkole a ew. rozpoczęciem nauki w kolejnej (okresu <em>wakacji</em>).</p>
+<p>Przy obliczaniu wskaźników nie były brane pod uwagę prace świadczone bez umowy.</p>
+<ul>
+<li><code>praca_nauka_0m</code>, <code>praca_nauka_1m</code>, <code>praca_nauka_2m</code>, <code>praca_nauka_3m</code>, <code>praca_nauka_4m</code>, <code>praca_nauka_5m</code>, <code>praca_nauka_6m</code>, <code>praca_nauka_7m</code>, <code>praca_nauka_8m</code>, <code>praca_nauka_9m</code> – zmienne tekstowe opisujące status edukacyjno-zawodowy absolwenta w kolejnych miesiącach, licząc od miesiąca ukończenia szkoły; tworzone na podstawie odpowiedzi na pytania ZP2A, ZP2B, ZP2C, ZP2F,ZP2G, SP6C1, SP6C2, SP6D, SP6E1, SP6E2, SP6H, PP6C1, PP6C2, PP6D, PP6F PP6F2, PG2C, PG2D,PG2E, PG2F:
+<ul>
+<li>“tylko praca” – absolwent w danym miesiącu pracował (w dowolnej formie, wykluczając zatrudnienie bez umowy) i jednocześnie się nie uczył;</li>
+<li>“praca i edukacja” – absolwent w danym miesiącu pracował (w dowolnej formie, wykluczając zatrudnienie bez umowy) i jednocześnie nie uczył;</li>
+<li>“tylko edukacja” – absolwent w danym miesiącu nie pracował (w dowolnej formie, wykluczając zatrudnienie bez umowy) i jednocześnie się uczył;</li>
+<li>brak danych – wszystkie pozostałe sytuacje.</li>
+</ul></li>
+</ul>
+</div>
+<div id="wskazniki-opisujace-bezrobocie-isrednie-wynagrodzenie-wpowiatach-przygotowane-na-podstawie-bdl-gus" class="section level2">
+<h2>2.12. Wskaźniki opisujące bezrobocie i średnie wynagrodzenie w powiatach przygotowane na podstawie BDL GUS</h2>
+<ul>
+<li><code>powiat_bezrobocie_1m</code>, <code>powiat_bezrobocie_2m</code>, <code>powiat_bezrobocie_3m</code>, <code>powiat_bezrobocie_4m</code>, <code>powiat_bezrobocie_5m</code>, <code>powiat_bezrobocie_6m</code>, <code>powiat_bezrobocie_7m</code>, <code>powiat_bezrobocie_8m</code>, <code>powiat_bezrobocie_9m</code> – stopa bezrobocia rejestrowanego w powiecie, w którym znajduje się szkoła (którą ukończył absolwent) w kolejnych miesiącach od miesiąca ukończenia szkoły:
+<ul>
+<li>liczba od 0 do 100 [procent].</li>
+</ul></li>
+<li><code>powiat_sr_wynagrodzenia_0r</code> – oszacowanie przeciętnego miesięcznego wynagrodzenia brutto w roku ukończenia szkoły w powiecie, w którym znajduje się szkoła (którą ukończył absolwent):
+<ul>
+<li>liczba [PLN].</li>
+</ul></li>
+</ul>
+</div>
+<div id="wskazniki-obliczane-na-poziomie-zagregowanym" class="section level2">
+<h2>3. Wskaźniki obliczane na poziomie zagregowanym</h2>
+<p>Zbiory danych na poziomie zagregowanym mają postać ramek danych, w których jeden wiersz opisuje jedną grupę (w szczególności jedną szkołę), a poszczególne kolumny zawierają zmienne-wskaźniki charakteryzujące te grupy. W odróżnieniu od wskaźników obliczanych na poziomie indywidualnym, wskaźniki obliczane na poziomie zagregowanym (z wyjątkiem tych opisanych w sekcji 3.1) nie są typowymi kolumnami w formie wektorów, ale kolumnami-listami. Dla każdego wiersza element takiej kolumny-listy sam jest listą: jej struktura (taka sama dla każdego elementu) dla poszczególnych wskaźników opisana została w dalszej części tej sekcji. Takie rozwiązanie umożliwia zawarcie w zbiorze danych zagregowanych znacznej części informacji o znaczeniu zapisywanych w nim wartości i logicznych powiązaniach pomiędzy różnymi wartościami opisującymi różne aspekty tej samej charakterystyki grupy. Umożliwia to uzyskanie względnie dobrej orientacji co do znaczenia i sposobu rozsądnej interpretacji wskaźników zawartych w zbiorze zagregowanym nawet bez odwoływania się do tej dokumentacji (choć dokumentacja ta jest niezbędna, by wyjaśnić wiele bardziej szczegółowych rozstrzygnięć dotyczących obliczania wskaźników).</p>
+</div>
+<div id="ogolne-informacje-oszkolegrupie-porownawczej" class="section level2">
+<h2>3.1. Ogólne informacje o szkole/<em>grupie porównawczej</em></h2>
+<ul>
+<li><code>SZK_kod</code> – identyfikator szkoły, jednoznacznie identyfikujący placówkę.
+<ul>
+<li>Nie dotyczy wskaźników obliczonych dla <em>grup porównawczych</em>.</li>
+</ul></li>
+<li><code>SZK_typ</code> – typ szkoły zawodowej: “Szkoła policealna”, “Technikum” lub “Zasadnicza Szkoła Zawodowa”.</li>
+<li><code>GRUPA_kod</code> – identyfikator <em>grupy porównawczej</em>.</li>
+<li><code>liczba_zbadanych</code> – liczba absolwentów danej szkoły (lub <em>grupy porównawczej</em>), którzy znaleźli się w zbiorze z obliczonymi wskaźnikami na poziomie indywidualnym.</li>
+<li><code>liczba_zbadanych_kobiet</code> – liczba kobiet wśród absolwentów danej szkoły (lub <em>grupy porównawczej</em>), którzy znaleźli się w zbiorze z obliczonymi wskaźnikami na poziomie indywidualnym.</li>
+<li><code>liczba_szkol</code> – liczba szkół w <em>grupie porównawczej</em> lub 1 w zbiorze wskaźników szkół.</li>
+<li><code>zawody</code> – ciąg znaków z (oddzielonymi przecinkami) nazwami zawodów (wartościami wskaźnika <code>UCZ_zawod</code> z poziomu indywidualnego), w których uczyli się w szkole absolwenci danej szkoły (lub <em>grupy porównawczej</em>), którzy znaleźli się w zbiorze z obliczonymi wskaźnikami na poziomie indywidualnym; zawody ułożone są w kolejności od najczęściej do najrzadziej występującego.</li>
+</ul>
+</div>
+<div id="wskazniki-statusu-edukacyjno-zawodowego-absolwentow" class="section level2">
+<h2>3.2. Wskaźniki statusu edukacyjno-zawodowego absolwentów</h2>
+<ul>
+<li><code>praca_nauka_0m</code>, <code>praca_nauka_1m</code>, <code>praca_nauka_2m</code>, <code>praca_nauka_3m</code>, <code>praca_nauka_4m</code>, <code>praca_nauka_5m</code>, <code>praca_nauka_6m</code>, <code>praca_nauka_7m</code>, <code>praca_nauka_8m</code>, <code>praca_nauka_9m</code> – wskaźniki opisujące liczbę absolwentów należących do danej grupy, o danym statusie edukacyjno-zawodowym, w kolejnych miesiącach od miesiąca ukończenia szkoły; zawierają następujące informacje:
+<ul>
+<li><code>n</code> – liczba wszystkich absolwentów w grupie;</li>
+<li><code>tylko pracują</code> – liczba absolwentów w grupie, dla których wskaźniki indywidualne odpowiednio <code>praca_nauka_0m</code>, <code>praca_nauka_1m</code>, <code>praca_nauka_2m</code>, <code>praca_nauka_3m</code>, <code>praca_nauka_4m</code>, <code>praca_nauka_5m</code>, <code>praca_nauka_6m</code>, <code>praca_nauka_7m</code>, <code>praca_nauka_8m</code>, <code>praca_nauka_9m</code> przyjmują wartość “tylko praca”;</li>
+<li><code>pracują i uczą się</code> – liczba absolwentów w grupie, dla których wskaźniki indywidualne odpowiednio <code>praca_nauka_0m</code>, <code>praca_nauka_1m</code>, <code>praca_nauka_2m</code>, <code>praca_nauka_3m</code>, <code>praca_nauka_4m</code>, <code>praca_nauka_5m</code>, <code>praca_nauka_6m</code>, <code>praca_nauka_7m</code>, <code>praca_nauka_8m</code>, <code>praca_nauka_9m</code> przyjmują wartość “praca i edukacja”;</li>
+<li><code>tylko się uczą</code> – liczba absolwentów w grupie, dla których wskaźniki indywidualne odpowiednio <code>praca_nauka_0m</code>, <code>praca_nauka_1m</code>, <code>praca_nauka_2m</code>, <code>praca_nauka_3m</code>, <code>praca_nauka_4m</code>, <code>praca_nauka_5m</code>, <code>praca_nauka_6m</code>, <code>praca_nauka_7m</code>, <code>praca_nauka_8m</code>, <code>praca_nauka_9m</code> przyjmują wartość “tylko edukacja”;</li>
+<li><code>nie pracują i nie uczą się</code> – liczba absolwentów w grupie, dla których wskaźniki indywidualnych odpowiednio <code>praca_nauka_0m</code>, <code>praca_nauka_1m</code>, <code>praca_nauka_2m</code>, <code>praca_nauka_3m</code>, <code>praca_nauka_4m</code>, <code>praca_nauka_5m</code>, <code>praca_nauka_6m</code>, <code>praca_nauka_7m</code>, <code>praca_nauka_8m</code>, <code>praca_nauka_9m</code> są brakami danych;</li>
+</ul></li>
+</ul>
+</div>
+<div id="wskazniki-zdawalnosci-egzaminow" class="section level2">
+<h2>3.3. Wskaźniki zdawalności egzaminów</h2>
+<ul>
+<li><code>egz_zaw_zdawalnosc</code> – udział absolwentów, którzy w roku ukończenia szkoły uzyskali dyplom potwierdzający kwalifikacje w zawodzie, którego uczyli się w szkole wśród absolwentów danej grupy:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>egz_zaw_zdany</code> nie jest brakiem danych;</li>
+<li><code>zdawalność</code> - średnia wartość wskaźnika indywidualnego <code>egz_zaw_zdany</code> w grupie (liczba z przedziału [0;1]).</li>
+</ul></li>
+<li><code>matura_zdawalnosc</code> udział absolwentów, którzy w roku ukończenia szkoły zdali maturę wśród absolwentów danej grupy:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>matura_zdany</code> nie jest brakiem danych (w przypadku szkół innych niż technika zawsze 0);</li>
+<li><code>zdawalność</code> - średnia wartość wskaźnika indywidualnego <code>egz_zaw_zdany</code> w grupie (liczba z przedziału [0;1], a w przypadku szkół innych niż technika brak danych).</li>
+</ul></li>
+</ul>
+</div>
+<div id="wskazniki-opisujace-warunki-zatrudnienia-absolwentow" class="section level2">
+<h2>3.4. Wskaźniki opisujące warunki zatrudnienia absolwentów</h2>
+<ul>
+<li><code>praca_przed_ukonczeniem_szkoly</code> – liczba absolwentów w grupie, którzy pracowali przed ukończeniem (badanej) szkoły:
+<ul>
+<li><code>n</code> – liczba wszystkich absolwentów w grupie;</li>
+<li><code>praca przed ukończeniem szkoły</code> - liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>praca_przed_ukonczeniem_szkoly_pierwsza</code> przyjmuje wartość TRUE.</li>
+</ul></li>
+<li><code>praca_czas_rozp</code> – parametry rozkładu wskaźnika indywidualnego <code>praca_czas_rozp_pierwsza</code>, opisującego liczbę miesięcy pomiędzy ukończeniem szkoły a podjęciem pierwsze pracy (przez absolwentów, którzy nie pracowali w momencie kończenia szkoły, ale później ją podjęli):
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>praca_czas_rozp_pierwsza</code> nie jest brakiem danych;</li>
+<li><code>średnia</code> – średnia wartość wskaźnika indywidualnego <code>praca_czas_rozp_pierwsza</code> w grupie;</li>
+<li><code>mediana</code> – mediana wartości wskaźnika indywidualnego <code>praca_czas_rozp_pierwsza</code> w grupie;</li>
+<li><code>1.kwartyl</code> – 1. kwartyl wartości wskaźnika indywidualnego <code>praca_czas_rozp_pierwsza</code> w grupie;</li>
+<li><code>3.kwartyl</code> – 3. kwartyl wartości wskaźnika indywidualnego <code>praca_czas_rozp_pierwsza</code> w grupie.</li>
+</ul></li>
+<li><code>praca_forma_pierwsza</code>, <code>praca_forma_ostatnia</code> – wskaźniki opisujące liczbę absolwentów w grupie pracujących w poszczególnych formach zatrudnienia odpowiednio w pierwszej pracy wykonywanej po ukończeniu szkoły i w ostatniej pracy wykonywanej w okresie 9 miesięcy od miesiąca ukończenia szkoły; zawierają następujące informacje:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, którzy pracowali po ukończeniu szkoły (tj. tych, dla których wskaźniki indywidualne odpowiednio <code>pg2gh.1_pierwsza</code> lub <code>pg2gh.1_ostatnia</code> nie są brakami danych);</li>
+<li><code>umowa o pracę na czas nieokreślony</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny odpowiednio <code>pg2gh.2_pierwsza</code> lub <code>pg2gh.2_ostatnia</code> przyjmuje wartość TRUE;</li>
+<li><code>umowa o pracę na czas określony</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny odpowiednio <code>pg2gh.1_pierwsza</code> lub <code>pg2gh.1_ostatnia</code> przyjmuje wartość TRUE;</li>
+<li><code>umowa zlecenia/o dzieło</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny odpowiednio <code>pg2gh.4_pierwsza</code> lub <code>pg2gh.4_ostatnia</code> przyjmuje wartość TRUE;</li>
+<li><code>samozatrudnienie</code> – liczba absolwentów w grupie, dla których wskaźniki indywidualne odpowiednio (<code>pg2gh.5_pierwsza</code> lub <code>pg2gh.6_pierwsza</code>) lub (<code>pg2gh.5_ostatnia</code> lub <code>pg2gh.6_ostatnia</code>) przyjmują wartości TRUE;</li>
+<li><code>rolnicy indywidualni</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny odpowiednio <code>pg2gh.7_pierwsza</code> lub <code>pg2gh.7_ostatnia</code> przyjmuje wartość TRUE;</li>
+<li><code>przez agencję pracy tymczasowej</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny odpowiednio <code>pg2gh.3_pierwsza</code> lub <code>pg2gh.3_ostatnia</code> przyjmuje wartość TRUE;</li>
+<li><code>staż lub praktyka</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny odpowiednio <code>pg2gh.8_pierwsza</code> lub <code>pg2gh.8_ostatnia</code> przyjmuje wartość TRUE;</li>
+<li><code>inna (lub nieznana)</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny odpowiednio <code>pg2gh.9_pierwsza</code> lub <code>pg2gh.9_ostatnia</code> przyjmuje wartość TRUE.</li>
+</ul></li>
+<li><code>praca_forma2_pierwsza</code> – wskaźnik analogiczny do <code>praca_forma_pierwsza</code>, ale wyróżniający mniejszą liczbę form zatrudnienia:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, którzy pracowali po ukończeniu szkoły (tj. tych, dla których wskaźnik indywidualny odpowiednio <code>pg2gh.1_pierwsza</code> nie jest brakiem danych);</li>
+<li><code>umowa o pracę na czas nieokreślony</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>pg2gh.2_pierwsza</code> przyjmuje wartość TRUE;</li>
+<li><code>umowa o pracę na czas określony</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>pg2gh.1_pierwsza</code> przyjmuje wartość TRUE;</li>
+<li><code>umowa zlecenia/o dzieło</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>pg2gh.4_pierwsza</code> przyjmuje wartość TRUE;</li>
+<li><code>inna (lub nieznana)</code> – liczba absolwentów w grupie, dla których przynajmniej jeden ze wskaźników indywidualnych <code>pg2gh.3_pierwsza</code>, <code>pg2gh.5_pierwsza</code>, <code>pg2gh.6_pierwsza</code>, <code>pg2gh.7_pierwsza</code>, <code>pg2gh.8_pierwsza</code>, <code>pg2gh.9_pierwsza</code> przyjmuje wartość TRUE.</li>
+</ul></li>
+<li><code>praca_forma_6m</code>, <code>praca_forma_9m</code>, <code>praca_forma2_6m</code>, <code>praca_forma2_9m</code> – wskaźniki opisują liczbę absolwentów w grupie pracujących w poszczególnych formach zatrudnienia odpowiednio w szóstym i w dziewiątym miesiącu od miesiąca ukończenia szkoły; przygotowywane analogicznie, jak wskaźniki odnoszące się do pierwszej i ostatniej pracy, z tym że obliczane na podstawie wskaźników indywidualnych odpowiednio (<code>pg2gh.1_6m</code>, <code>pg2gh.2_6m</code>, <code>pg2gh.3_6m</code>, <code>pg2gh.4_6m</code>, <code>pg2gh.5_6m</code>, <code>pg2gh.6_6m</code>, <code>pg2gh.7_6m</code>, <code>pg2gh.8_6m</code>, <code>pg2gh.9_6m</code>) i (<code>pg2gh.1_9m</code>, <code>pg2gh.2_9m</code>, <code>pg2gh.3_9m</code>, <code>pg2gh.4_9m</code>, <code>pg2gh.5_9m</code>, <code>pg2gh.6_9m</code>, <code>pg2gh.7_9m</code>, <code>pg2gh.8_9m</code>, <code>pg2gh.9_9m</code>).</li>
+<li><code>praca_forma2_bu_6m</code>, <code>praca_forma2_bu_9m</code> – wskaźniki opisują liczbę absolwentów w grupie, którzy odpowiednio w szóstym i w dziewiątym miesiącu od miesiąca ukończenia szkoły <code>nie uczyli się</code> i pracowali w poszczególnych formach zatrudnienia; przygotowywane analogicznie, jak wskaźniki <code>praca_forma2_6m</code>, <code>praca_forma2_9m</code>, ale na zawężonej podgrupie absolwentów:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, dla których wskaźniki indywidualne odpowiednio <code>praca_nauka_6m</code> lub <code>praca_nauka_9m</code> nie przyjmują wartości “tylko praca” oraz wskaźniki indywidualne odpowiedni <code>pg2gh.1_6m</code> lub <code>pg2gh.1_9m</code> nie są brakami danych;</li>
+<li>pozostałe informacje analogicznie, jak we wcześniej opisanych wskaźnikach odnoszących się do formy zatrudnienia, ale z wykluczeniem uczących się na podstawie wskaźników indywidualnych odpowiednio <code>praca_nauka_6m</code> lub <code>praca_nauka_9m</code>.</li>
+</ul></li>
+<li><code>praca_zamieszkanie_pierwsza</code>, <code>praca_zamieszkanie_ostatnia</code> – wskaźniki opisują liczbę absolwentów w badanej grupie, którzy wykonywali pracę w Polsce lub za granicą, odpowiednio w odniesieniu do pierwszej pracy wykonywanej po ukończeniu (badanej) szkoły lub ostatniej pracy wykonywanej w okresie 9 miesięcy od miesiąca ukończenia szkoły; zawierają następujące informacje:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, którzy pracowali po ukończeniu szkoły (tj. tych, dla których wskaźniki indywidualne odpowiednio <code>pg2i.1_pierwsza</code> lub <code>pg2i.1_ostatnia</code> nie są brakami danych);</li>
+<li><code>w Polsce</code> – liczba absolwentów w grupie, dla których wskaźniki indywidualne odpowiednio (<code>pg2i.1_pierwsza</code> lub <code>pg2i.2_pierwsza</code>) lub (<code>pg2i.1_ostatnia</code> lub <code>pg2i.2_ostatnia</code>) przyjmują wartości TRUE;</li>
+<li><code>za granicą</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny odpowiednio <code>pg2i.3_pierwsza</code> lub <code>pg2i.3_ostatnia</code> przyjmuje wartość TRUE;</li>
+<li><code>nieznane</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny odpowiednio <code>pg2i.9_pierwsza</code> lub <code>pg2i.9_ostatnia</code> przyjmuje wartość TRUE.</li>
+</ul></li>
+<li><code>praca_zamieszkanie_6m</code>, <code>praca_zamieszkanie_9m</code> – wskaźniki opisują liczbę absolwentów w grupie liczbę absolwentów w badanej grupie, którzy wykonywali pracę w Polsce lub za granicą odpowiednio w szóstym i w dziewiątym miesiącu od miesiąca ukończenia szkoły; przygotowywane analogicznie, jak wskaźniki odnoszące się do pierwszej i ostatniej pracy, z tym że obliczane na podstawie wskaźników indywidualnych odpowiednio (<code>pg2i.1_6m, pg2i.2_6m, pg2i.3_6m, pg2i.9_6m</code>) i (<code>pg2i.1_9m, pg2i.2_9m, pg2i.3_9m, pg2i.9_9m</code>).</li>
+<li><code>praca_zgodna_z_wyksztalceniem_pierwsza</code>, <code>praca_zgodna_z_wyksztalceniem_ostatnia</code> – wskaźniki opisujące liczbę absolwentów w grupie, którzy w dany sposób ocenili zgodność swojej pracy z zawodem, którego uczyli się w badanej szkole, odpowiednio w odniesieniu do pierwszej pracy wykonywanej po ukończeniu (badanej) szkoły lub ostatniej pracy wykonywanej w okresie 9 miesięcy od miesiąca ukończenia szkoły; zawierają następujące informacje:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, którzy dokonali oceny zgodności wykonywanej pracy z wykształceniem (tj. tych, dla których wskaźniki indywidualne odpowiednio <code>pio1_pierwsza</code> lub <code>pio1_ostatnia</code> nie są brakami danych);</li>
+<li><code>zgodna</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny odpowiednio <code>pio1_pierwsza</code> lub <code>pio1_ostatnia</code> przyjmuje wartość 1;</li>
+<li><code>niezgodna, ale wymaga podobnych kwalifikacji</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny odpowiednio <code>pio1_pierwsza</code> lub <code>pio1_ostatnia</code> przyjmuje wartość 2;</li>
+<li><code>niezgodna, wymaga innych kwalifikacji</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny odpowiednio <code>pio1_pierwsza</code> lub <code>pio1_ostatnia</code> przyjmuje wartość 3;</li>
+<li><code>praca, w której wykształcenie nie ma znaczenia</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny odpowiednio <code>pio1_pierwsza</code> lub <code>pio1_ostatnia</code> przyjmuje wartość 4.</li>
+</ul></li>
+<li><code>praca_zarobki_pierwsza</code>, <code>praca_zarobki_ostatnia</code> – wskaźniki opisują rozkład zarobków netto absolwentów w grupie odpowiednio w odniesieniu do pierwszej pracy wykonywanej po ukończeniu (badanej) szkoły lub ostatniej pracy wykonywanej w okresie 9 miesięcy od miesiąca ukończenia szkoły; zawierają następujące informacje:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny odpowiednio <code>pio4_pierwsza</code> lub <code>pio4_ostatnia</code> nie jest brakiem danych;</li>
+<li><code>średnia</code> – średnia wartość wskaźnika indywidualnego odpowiednio <code>pio4_pierwsza</code> lub <code>pio4_ostatnia</code> w grupie;</li>
+<li><code>mediana</code> – mediana wartości wskaźnika indywidualnego odpowiednio <code>pio4_pierwsza</code> lub <code>pio4_ostatnia</code> w grupie;</li>
+<li><code>1.kwartyl</code> – 1. kwartyl wartości wskaźnika indywidualnego odpowiednio <code>pio4_pierwsza</code> lub <code>pio4_ostatnia</code> w grupie;</li>
+<li><code>3.kwartyl</code> – 3. kwartyl wartości wskaźnika indywidualnego odpowiednio <code>pio4_pierwsza</code> lub <code>pio4_ostatnia</code> w grupie;</li>
+<li><code>tlo</code> - średnia wartość w grupie wskaźnika indywidualnego <code>powiat_sr_wynagrodzenia_0r</code>, opisującego przeciętne miesięczne wynagrodzenie brutto w powiecie, w którym znajduje się szkoła ukończona przez absolwenta, przemnożona przez 0,71 (przyjęte jako przybliżenie przejścia z zarobków brutto na zarobki netto).</li>
+</ul></li>
+<li><code>praca_spelnienie_oczekiwan_ostatnia</code> opisuje liczbę absolwentów w grupie, którzy w dany sposób ocenili spełnianie ich oczekiwań odnośnie do pracy przez ostatnią pracę wykonywaną przez nich w okresie 9 miesięcy od miesiąca ukończenia szkoły:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, którzy dokonali oceny spełnienia ich oczekiwań przez wykonywaną pracę (tj. tych, dla których wskaźnik indywidualny <code>po5_ostatnia</code> nie jest brakiem danych);</li>
+<li><code>niedostateczny</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>po5_ostatnia</code> przyjmuje wartość 1;</li>
+<li><code>dopuszczający</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>po5_ostatnia</code> przyjmuje wartość 2;</li>
+<li><code>dostateczny</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>po5_ostatnia</code> przyjmuje wartość 3;</li>
+<li><code>dobry</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>po5_ostatnia</code> przyjmuje wartość 4;</li>
+<li><code>bardzo dobry</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>po5_ostatnia</code> przyjmuje wartość 5;</li>
+<li><code>celujący</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>po5_ostatnia</code> przyjmuje wartość 6.</li>
+</ul></li>
+</ul>
+</div>
+<div id="wskazniki-opisujace-dugosc-okresow-pracy-ibezrobocia" class="section level2">
+<h2>3.5. Wskaźniki opisujące długość okresów pracy i bezrobocia</h2>
+<ul>
+<li><code>praca_czas_p9m_rozklad</code> – opisuje liczbę absolwentów, którzy przepracowali daną liczbę miesięcy w okresie 9 miesięcy od miesiąca ukończenia szkoły:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie;</li>
+<li><code>0 miesięcy</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_p9m</code> zawiera się w przedziale [0; 1/9);</li>
+<li><code>1 miesiąc</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_p9m</code> zawiera się w przedziale [1/9; 2/9);</li>
+<li><code>2 miesiące</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_p9m</code> zawiera się w przedziale [2/9; 3/9);</li>
+<li><code>3 miesiące</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_p9m</code> zawiera się w przedziale [3/9; 4/9);</li>
+<li><code>4 miesiące</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_p9m</code> zawiera się w przedziale [4/9; 5/9);</li>
+<li><code>5 miesięcy</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_p9m</code> zawiera się w przedziale [5/9; 6/9);</li>
+<li><code>6 miesięcy</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_p9m</code> zawiera się w przedziale [6/9; 7/9);</li>
+<li><code>7 miesięcy</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_p9m</code> zawiera się w przedziale [7/9; 8/9);</li>
+<li><code>8 miesięcy</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_p9m</code> zawiera się w przedziale [8/9; 1);</li>
+<li><code>9 miesięcy</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_p9m</code> wynosi 1.</li>
+</ul></li>
+<li><code>praca_czas_uop_p9m_rozklad</code> – opisuje liczbę absolwentów, którzy przepracowali daną liczbę miesięcy w okresie 9 miesięcy od miesiąca ukończenia szkoły, pracując w formie umowy o pracę:
+<ul>
+<li>informacje o analogicznej strukturze, jak we wcześniej opisanym wskaźniku <code>praca_czas_p9m_rozklad</code>, ale obliczane na podstawie wartości wskaźnika indywidualnego <code>praca_czas_uop_p9m</code>.</li>
+</ul></li>
+<li><code>praca_czas_gdy_bez_nauki_p9m_rozklad</code> – opisuje liczbę absolwentów, dla których w określonych przedziałach zawierają się wartości wskaźnika indywidualnego <code>praca_czas_gdy_bez_nauki_p9m</code>, opisującego udział czasu pracy nie łączonej z nauką w stosunku do łącznego czasu, w którym absolwent się nie uczył, w ramach okresu 9 miesięcy od miesiąca ukończenia szkoły:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>praca_czas_gdy_bez_nauki_p9m</code> nie jest brakiem danych;</li>
+<li><code>0% okresu</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_gdy_bez_nauki_p9m</code> zawiera się w przedziale [0; 0,2);</li>
+<li><code>20% okresu</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_gdy_bez_nauki_p9m</code> zawiera się w przedziale [0,2; 0,4);</li>
+<li><code>40% okresu</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_gdy_bez_nauki_p9m</code> zawiera się w przedziale [0,4; 0,6);</li>
+<li><code>60% okresu</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_gdy_bez_nauki_p9m</code> zawiera się w przedziale [0,6; 0,8);</li>
+<li><code>80% okresu</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_gdy_bez_nauki_p9m</code> zawiera się w przedziale [0,8; 1);</li>
+<li><code>100% okresu</code> - liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego <code>praca_czas_gdy_bez_nauki_p9m</code> wynosi 1.</li>
+</ul></li>
+<li><code>praca_czas_gdy_bez_nauki_uop_p9m_rozklad</code> – opisuje liczbę absolwentów, którzy przez daną liczbę miesięcy w okresie 9 miesięcy od miesiąca ukończenia szkoły byli zarejestrowanymi bezrobotnymi:
+<ul>
+<li>informacje o analogicznej strukturze, jak we wcześniej opisanym wskaźniku <code>praca_czas_gdy_bez_nauki_p9m_rozklad</code>, ale obliczane na podstawie wartości wskaźnika indywidualnego <code>praca_czas_gdy_bez_nauki_uop_p9m</code>.</li>
+</ul></li>
+<li><code>bezrobocie_czas_p9m_rozklad</code> – opisuje liczbę absolwentów, dla których w określonych przedziałach zawierają się wartości wskaźnika indywidualnego <code>bezrobocie_czas_p9m</code>, opisującego udział czasu bycia zarejestrowanym bezrobotnym i jednocześnie nie uczenia się w stosunku do łącznego czasu, w którym absolwent się nie uczył, w ramach okresu 9 miesięcy od miesiąca ukończenia szkoły:
+<ul>
+<li>informacje o analogicznej strukturze, jak we wcześniej opisanym wskaźniku <code>praca_czas_p9m_rozklad</code>, ale obliczane na podstawie wartości wskaźnika indywidualnego <code>bezrobocie_czas_p9m_rozklad</code>.</li>
+</ul></li>
+<li><code>bezrobocie_czas_gdy_bez_nauki_p9m_rozklad</code> – opisuje liczbę absolwentów, dla których w określonych przedziałach zawierają się wartości wskaźnika indywidualnego <code>bezrobocie_czas_gdy_bez_nauki_p9m</code>, opisującego udział czasu bycia zarejestrowanym bezrobotnym i jednocześnie nie uczenia się w stosunku do łącznego czasu, w którym absolwent się nie uczył, w ramach okresu 9 miesięcy od miesiąca ukończenia szkoły:
+<ul>
+<li>informacje o analogicznej strukturze, jak we wcześniej opisanym wskaźniku <code>praca_czas_gdy_bez_nauki_p9m_rozklad</code>, ale obliczane na podstawie wartości wskaźnika indywidualnego <code>bezrobocie_czas_gdy_bez_nauki_p9m</code>.</li>
+</ul></li>
+<li><code>praca_czas_p9m, praca_czas_gdy_bez_nauki_p9m</code>, <code>praca_czas_uop_p9m</code>, <code>praca_czas_gdy_bez_nauki_uop_p9m</code>, <code>bezrobocie_czas_p9m</code>, <code>bezrobocie_czas_gdy_bez_nauki_p9m</code> – wskaźniki opisują te same cechy grupy absolwentów, co opisane powyżej wskaźniki o analogicznych nazwach z dodanym przyrostkiem “_rozklad“, przy czym zamiast zdyskretyzowanych rozkładów liczebności zawierają informacje o wartościach parametrów poziomu wartości odpowiednich wskaźników indywidualnych (o tych samych nazwach co przygotowywane wskaźniki zagregowane); zawierają następujące informacje:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, dla których odpowiedni wskaźnik indywidualny nie jest brakiem danych;</li>
+<li><code>średnia</code> – średnia wartość odpowiedniego wskaźnika indywidualnego w grupie;</li>
+<li><code>mediana</code> – mediana wartości odpowiedniego wskaźnika indywidualnego w grupie;</li>
+<li><code>1.kwartyl</code> – 1. kwartyl wartości odpowiedniego wskaźnika indywidualnego w grupie;</li>
+<li><code>3.kwartyl</code> – 3. kwartyl wartości odpowiedniego wskaźnika indywidualnego w grupie.</li>
+</ul></li>
+<li><code>praca_czas_gdy_nauka_p9m</code>, <code>praca_czas_gdy_nauka_uop_p9m</code>, <code>bezrobocie_czas_gdy_nauka_p9m</code> – wskaźniki opisujące rozkłady udziału czasu odpowiednio: pracy (w dowolnej formie oprócz pracy bez umowy) łączonej z nauką, pracy w formie umowy o pracę łączonej z nauką, bycia zarejestrowanym bezrobotnym łączonego z nauką w czasie nauki w okresie 9 miesięcy od miesiąca ukończenia szkoły; tworzone na podstawie wskaźników indywidualnych o takich samych nazwach:
+<ul>
+<li>informacje o analogicznej strukturze, jak we wcześniej opisanym wskaźniku <code>praca_czas_p9m</code>, ale obliczane na podstawie wartości wskaźników indywidualnych odpowiednio <code>praca_czas_gdy_nauka_p9m</code>, <code>praca_czas_gdy_nauka_uop_p9m</code> i  <code>bezrobocie_czas_gdy_nauka_p9m</code>.</li>
+</ul></li>
+</ul>
+</div>
+<div id="wskazniki-opisujace-bezrobocie-absolwentow" class="section level2">
+<h2>3.6. Wskaźniki opisujące bezrobocie absolwentów</h2>
+<ul>
+<li><code>bezrobocie_1m</code>, <code>bezrobocie_2m</code>, <code>bezrobocie_3m</code>, <code>bezrobocie_4m</code>, <code>bezrobocie_5m</code>, <code>bezrobocie_6m</code>, <code>bezrobocie_7m</code>, <code>bezrobocie_8m</code>, <code>bezrobocie_9m</code> – wskaźniki opisujące liczbę absolwentów w grupie, którzy w kolejnych miesiącach od miesiąca ukończenia szkoły byli zarejestrowanymi bezrobotnymi; zawierają następujące informacje:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, którzy w danym miesiącu uczyli się, pracowali, lub byli zarejestrowanymi bezrobotnymi (tj. liczba absolwentów w grupie, dla których wskaźniki indywidualne odpowiednio <code>bezrobocie_1m</code>, <code>bezrobocie_2m</code>, <code>bezrobocie_3m</code>, <code>bezrobocie_4m</code>, <code>bezrobocie_5m</code>, <code>bezrobocie_6m</code>, <code>bezrobocie_7m</code>, <code>bezrobocie_8m</code> lub <code>bezrobocie_9m</code> nie są brakami danych);</li>
+<li><code>zarejestrowani bezrobotni</code> – liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego odpowiednio <code>bezrobocie_1m</code>, <code>bezrobocie_2m</code>, <code>bezrobocie_3m</code>, <code>bezrobocie_4m</code>, <code>bezrobocie_5m</code>, <code>bezrobocie_6m</code>, <code>bezrobocie_7m</code>, <code>bezrobocie_8m</code> lub <code>bezrobocie_9m</code> jest równa 1;</li>
+<li><code>pracujący lub kontynuujący naukę</code> – liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego odpowiednio <code>bezrobocie_1m</code>, <code>bezrobocie_2m</code>, <code>bezrobocie_3m</code>, <code>bezrobocie_4m</code>, <code>bezrobocie_5m</code>, <code>bezrobocie_6m</code>, <code>bezrobocie_7m</code>, <code>bezrobocie_8m</code> lub <code>bezrobocie_9m</code> jest równa 0.</li>
+</ul></li>
+</ul>
+</div>
+<div id="wskazniki-opisujace-kontynuacje-nauki-przez-absolwentow" class="section level2">
+<h2>3.7. Wskaźniki opisujące kontynuację nauki przez absolwentów</h2>
+<ul>
+<li><code>nauka_6m</code>, <code>nauka_9m</code> – wskaźniki opisują liczbę absolwentów w grupie, którzy odpowiednio w szóstym lub dziewiątym miesiącu, licząc od miesiąca ukończenia szkoły, uczyli się w szkołach poszczególnych typów; zawierają następujące informacje:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, którzy w odpowiednio szóstym lub dziewiątym miesiącu, licząc od miesiąca ukończenia szkoły, uczyli się w szkole jednego z niżej wymienionych typów (tj. absolwentów, dla których wskaźniki indywidualne odpowiednio <code>nauka_6m</code> lub <code>nauka_9m</code> nie są brakami danych);</li>
+<li><code>studia stacjonarne</code> – liczba absolwentów w grupie, dla których wskaźniki indywidualne odpowiednio <code>nauka_6m</code> lub <code>nauka_9m</code> przyjmują wartość “studia stacjonarne”;</li>
+<li><code>studia niestacjonarne</code> – liczba absolwentów w grupie, dla których wskaźniki indywidualne odpowiednio <code>nauka_6m</code> lub <code>nauka_9m</code> przyjmują wartość “studia niestacjonarne”;</li>
+<li><code>szkoła policealna</code> – liczba absolwentów w grupie, dla których wskaźniki indywidualne odpowiednio <code>nauka_6m</code> lub <code>nauka_9m</code> przyjmują wartość “szkoła policealna”;</li>
+<li><code>LO dla dorosłych</code> – liczba absolwentów w grupie, dla których wskaźniki indywidualne odpowiednio <code>nauka_6m</code> lub <code>nauka_9m</code> przyjmują wartość “LO dla dorosłych”.</li>
+</ul></li>
+<li><code>studia_gdzie_pierwsze</code> – opisuje uczelnie i kierunki studiów wyższych najczęściej wybierane przez absolwentów grupy jako miejsca kontynuacji kształcenia po ukończeniu szkoły; zawierają następujące informacje:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, którzy po ukończeniu szkoły rozpoczęli naukę na studiach (tj. wskaźnik indywidualny <code>studia_uczelnia_pierwsze</code> nie jest dla nich brakiem danych); dla szkół typów innych niż technikum zawsze 0;</li>
+<li><code>najczęściej wybierane kierunki</code> – ciąg znaków z (oddzielonymi przecinkami) nazwami kierunków (wartościami wskaźnika <code>studia_kierunek_pierwsze</code> z poziomu indywidualnego), na których rozpoczęli naukę absolwenci danej grupy; nazwy kierunków ułożone są w kolejności od najczęściej do najrzadziej występującego wśród absolwentów danej grupy; nazwy kierunków, które wymieniło mniej niż 20% absolwentów danej grupy, są pomijane;</li>
+<li><code>najczęściej wybierane uczelnie</code> – ciąg znaków z (oddzielonymi przecinkami) nazwami uczelni (wartościami wskaźnika <code>studia_uczelnia_pierwsze</code> z poziomu indywidualnego), na których rozpoczęli naukę absolwenci danej grupy; nazwy uczelni ułożone są w kolejności od najczęściej do najrzadziej występującej wśród absolwentów danej grupy; nazwy uczelni, które wymieniło mniej niż 20% absolwentów danej grupy, są pomijane.</li>
+</ul></li>
+<li><code>studia_odplatnosc_pierwsze</code> – opisuje liczbę absolwentów grupy, którzy po ukończeniu szkoły podjęli studia płatne i studia bezpłatne:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, którzy po ukończeniu szkoły rozpoczęli naukę na studiach i udzielili odpowiedzi na pytanie o to, czy były to studia odpłatne (tj. wskaźnik indywidualny <code>studia_bezplatne_pierwsze</code> nie jest dla nich brakiem danych); dla szkół typów innych niż technikum zawsze 0;</li>
+<li><code>studiujący na studiach bezpłatnych</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>studia_bezplatne_pierwsze</code> przyjmuje wartość 0;</li>
+<li><code>studiujący na studiach płatnych</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>studia_bezplatne_pierwsze</code> przyjmuje wartość 1.</li>
+</ul></li>
+<li><code>studia_tryb_pierwsze</code> – opisuje liczbę absolwentów grupy, którzy po ukończeniu szkoły podjęli studia w poszczególnych trybach:
+<ul>
+<li><code>n</code> – liczba absolwentów w grupie, którzy po ukończeniu szkoły rozpoczęli naukę na studiach i udzielili odpowiedzi na pytanie o tryb odbywania studiów (tj. wskaźnik indywidualny <code>studia_tryb_pierwsze</code> nie jest dla nich brakiem danych); dla szkół typów innych niż technikum zawsze 0;</li>
+<li><code>studiujący na studiach dziennych</code> <code>– liczba absolwentów w grupie, dla których wskaźnik indywidualny</code> studia_ tryb _pierwsze` przyjmuje wartość 1;</li>
+<li><code>studiujący na studiach wieczorowych</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny<code>studia_tryb_pierwsze</code> przyjmuje wartość 2;</li>
+<li><code>studiujący na studiach zaocznych</code> – liczba absolwentów w grupie, dla których wskaźnik indywidualny <code>studia_ tryb _pierwsze</code> przyjmuje wartość 3.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

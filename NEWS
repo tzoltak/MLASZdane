@@ -1,3 +1,16 @@
+# MLASZdane 0.2.0 (16.03.2019)
+
+  - Naprawiono błędy w sposobie obliczania wskaźników opisujących formę pracy:
+    - nie są już pomijani absolwenci prowadzący własne firmy lub gospodarstwa
+      rolne, którzy zadeklarowali to w pytaniu PG2G (i w związku z tym nie
+      zadano im pytania PG2H),
+    - wskaźniki indywidualne opisujące pracę w formie umowy o pracę na czas
+      określony i na czas nieokreślony nie są używane "na odwrót" przy
+      obliczaniu wskaźników na poziomie zagregowanym.
+  - Dokumentacja procedur obliczania wskaźników na podstawie wyników 1. rundy
+    monitoringu.
+  - Drobne poprawki w dokumentacji funkcji.
+
 # MLASZdane 0.1.0 (03.03.2019)
 
   - Pierwsza w pełni funkcjonalna wersja pakietu.

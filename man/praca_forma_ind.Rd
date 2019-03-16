@@ -20,6 +20,24 @@ data frame
 Funkcja oblicza zmienne-wskaźniki opisujące, czy badany
 kiedykolwiek był zatrudniony w określonej formie
 }
+\details{
+W kodowaniu wykorzystywane są zarówno odpowiedzi na pytanie PG2H, jak i na
+pytanie PG2G, z wykorzystaniem następujących reguł:
+\itemize{
+  \item{\code{pg2gh.1 = any(pg2h \%in\% 1)},}
+  \item{\code{pg2gh.2 = any(pg2h \%in\% 2)},}
+  \item{\code{pg2gh.3 = any(pg2h \%in\% 3)},}
+  \item{\code{pg2gh.4 = any(pg2h \%in\% 4)},}
+  \item{\code{pg2gh.5 = any(pg2h \%in\% 5)},}
+  \item{\code{pg2gh.6 = any(pg2g \%in\% 6)},}
+  \item{\code{pg2gh.7 = any(pg2g \%in\% 7)},}
+  \item{\code{pg2gh.8 = any(pg2h \%in\% (7:8))},}
+  \item{\code{pg2gh.9 = any(pg2h \%in\% 9 | is.na(pg2h))}.}
+}
+Dodatkowo, jeśli zmienna \code{pg2h} przyjmuje wartość 6 (praca bez umowy),
+wszystkie wynikowe zmienne są dla danego respondenta przekodowywane na brak
+danych.
+}
 \seealso{
 \code{\link{praca_pierwsza}}, \code{\link{praca_ostatnia}}
 }

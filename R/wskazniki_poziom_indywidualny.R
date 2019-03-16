@@ -5,6 +5,23 @@
 #' zwracanej przez funkcję \code{\link{imputuj_miesiac_pk_1rm}}
 #' @param idAbsolwenta nazwa zmiennej identyfikującej badanych (podana jako ciąg
 #' znaków lub wyrażenie)
+#' @details
+#' W kodowaniu wykorzystywane są zarówno odpowiedzi na pytanie PG2H, jak i na
+#' pytanie PG2G, z wykorzystaniem następujących reguł:
+#' \itemize{
+#'   \item{\code{pg2gh.1 = any(pg2h \%in\% 1)},}
+#'   \item{\code{pg2gh.2 = any(pg2h \%in\% 2)},}
+#'   \item{\code{pg2gh.3 = any(pg2h \%in\% 3)},}
+#'   \item{\code{pg2gh.4 = any(pg2h \%in\% 4)},}
+#'   \item{\code{pg2gh.5 = any(pg2h \%in\% 5)},}
+#'   \item{\code{pg2gh.6 = any(pg2g \%in\% 6)},}
+#'   \item{\code{pg2gh.7 = any(pg2g \%in\% 7)},}
+#'   \item{\code{pg2gh.8 = any(pg2h \%in\% (7:8))},}
+#'   \item{\code{pg2gh.9 = any(pg2h \%in\% 9 | is.na(pg2h))}.}
+#' }
+#' Dodatkowo, jeśli zmienna \code{pg2h} przyjmuje wartość 6 (praca bez umowy),
+#' wszystkie wynikowe zmienne są dla danego respondenta przekodowywane na brak
+#' danych.
 #' @return data frame
 #' @seealso \code{\link{praca_pierwsza}}, \code{\link{praca_ostatnia}}
 #' @export
@@ -12,21 +29,32 @@
 #' @importFrom dplyr .data %>% group_by summarise ungroup
 praca_forma_ind = function(x, idAbsolwenta = "ID_RESP") {
   stopifnot(is.data.frame(x),
+            "pg2g" %in% names(x),
             "pg2h" %in% names(x))
   idAbsolwenta = ensym(idAbsolwenta)
   stopifnot(as.character(idAbsolwenta) %in% names(x))
   x %>%
     group_by(!!idAbsolwenta) %>%
-    summarise(pg2h.1 = any(.data$pg2h %in% 1),
-              pg2h.2 = any(.data$pg2h %in% 2),
-              pg2h.3 = any(.data$pg2h %in% 3),
-              pg2h.4 = any(.data$pg2h %in% 4),
-              pg2h.5 = any(.data$pg2h %in% 5),
-              pg2h.6 = any(.data$pg2h %in% 6),
-              pg2h.7 = any(.data$pg2h %in% 7),
-              pg2h.8 = any(.data$pg2h %in% 8),
-              pg2h.9 = any(.data$pg2h %in% 9),
-              pg2h.10 = any(is.na(.data$pg2h))) %>%
+    summarise(pg2h.6 = all(.data$pg2h %in% 6),
+              pg2gh.1 = ifelse(.data$pg2h.6, NA,
+                               any(.data$pg2h %in% 1)),
+              pg2gh.2 = ifelse(.data$pg2h.6, NA,
+                               any(.data$pg2h %in% 2)),
+              pg2gh.3 = ifelse(.data$pg2h.6, NA,
+                               any(.data$pg2h %in% 3)),
+              pg2gh.4 = ifelse(.data$pg2h.6, NA,
+                               any(.data$pg2h %in% 4)),
+              pg2gh.5 = ifelse(.data$pg2h.6, NA,
+                               any(.data$pg2h %in% 5)),
+              pg2gh.6 = ifelse(.data$pg2h.6, NA,
+                               any(.data$pg2g %in% 6)),
+              pg2gh.7 = ifelse(.data$pg2h.6, NA,
+                               any(.data$pg2g %in% 7)),
+              pg2gh.8 = ifelse(.data$pg2h.6, NA,
+                               any(.data$pg2h %in% (7:8))),
+              pg2gh.9 = ifelse(.data$pg2h.6, NA,
+                               any(.data$pg2h %in% 9 | is.na(.data$pg2h)))) %>%
+    select(-"pg2h.6") %>%
     ungroup() %>%
     return()
 }
@@ -76,6 +104,7 @@ praca_zamieszkanie_ind = function(x, idAbsolwenta = "ID_RESP") {
 praca_miesiac = function(epizody, miesiac, idAbsolwenta = "ID_RESP") {
   stopifnot(is.data.frame(epizody),
             "typ_epizodu" %in% names(epizody),
+            "pg2g" %in% names(epizody),
             "pg2h" %in% names(epizody),
             "czas_rozp" %in% names(epizody),
             "czas_zakon" %in% names(epizody),
@@ -117,6 +146,7 @@ praca_miesiac = function(epizody, miesiac, idAbsolwenta = "ID_RESP") {
 praca_pierwsza = function(epizody, idAbsolwenta = "ID_RESP") {
   stopifnot(is.data.frame(epizody),
             "typ_epizodu" %in% names(epizody),
+            "pg2g" %in% names(epizody),
             "pg2h" %in% names(epizody),
             "czas_rozp" %in% names(epizody),
             "nr" %in% names(epizody),
@@ -178,6 +208,7 @@ praca_ostatnia = function(epizody, idAbsolwenta = "ID_RESP",
                           limitG  = Inf, limitD = 0) {
   stopifnot(is.data.frame(epizody),
             "typ_epizodu" %in% names(epizody),
+            "pg2g" %in% names(epizody),
             "pg2h" %in% names(epizody),
             "czas_rozp" %in% names(epizody),
             "czas_zakon" %in% names(epizody),

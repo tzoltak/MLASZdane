@@ -20,6 +20,7 @@ lista o elementach:
   \item{\code{n} - liczba badanych uwzględnionych w obliczeniach (tj.nie
         mających braku danych w zmiennej opisanej argumentem \code{zmienna}),}
   \item{\code{`średnia`} - liczba [0, ),}
+  \item{\code{`mediana`} - liczba [0, ),}
   \item{\code{`1.kwartyl`} - liczba [0, ),}
   \item{\code{`3.kwartyl`} - liczba [0, ).}
 }
