@@ -188,7 +188,7 @@ praca_czas_rozp = function(x) {
 #' @importFrom dplyr %>% one_of select
 praca_forma = function(x, sufiks) {
   x = x %>%
-    select(one_of(paste0("pg2gh.", 1:10, sufiks)))
+    select(one_of(paste0("pg2gh.", 1:9, sufiks)))
   names(x) = sub(paste0(sufiks, "$"), "", names(x))
   list(n = sum(!is.na(x$pg2gh.1)),
        `umowa o pracę na czas nieokreślony` = sum(x$pg2gh.2 %in% TRUE),
@@ -224,15 +224,15 @@ praca_forma = function(x, sufiks) {
 #' @importFrom dplyr %>% one_of select
 praca_forma2 = function(x, sufiks) {
   x = x %>%
-    select(one_of(paste0("pg2gh.", 1:10, sufiks)))
+    select(one_of(paste0("pg2gh.", 1:9, sufiks)))
   names(x) = sub(paste0(sufiks, "$"), "", names(x))
   list(n = sum(!is.na(x$pg2gh.1)),
        `umowa o pracę na czas nieokreślony` = sum(x$pg2gh.2 %in% TRUE),
        `umowa o pracę na czas określony` = sum(x$pg2gh.1 %in% TRUE),
        `umowa zlecenia/o dzieło` = sum(x$pg2gh.4 %in% TRUE),
-       `inna (lub nieznana)` = sum(x$pg2h.3 %in% TRUE | x$pg2h.5 %in% TRUE |
-                                     x$pg2h.6 %in% TRUE | x$pg2h.7 %in% TRUE |
-                                     x$pg2h.8 %in% TRUE | x$pg2h.9 %in% TRUE)) %>%
+       `inna (lub nieznana)` = sum(x$pg2gh.3 %in% TRUE | x$pg2gh.5 %in% TRUE |
+                                     x$pg2gh.6 %in% TRUE | x$pg2gh.7 %in% TRUE |
+                                     x$pg2gh.8 %in% TRUE | x$pg2gh.9 %in% TRUE)) %>%
     return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
