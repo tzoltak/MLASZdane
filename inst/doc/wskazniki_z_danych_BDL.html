@@ -85,7 +85,8 @@ wskaznik_bdl(64428, &quot;przeciętne miesięczne wynagrodzenia brutto&quot;)</c
 </ul>
 <p><strong>Przykładowe użycia:</strong></p>
 <p><strong>Uwaga!</strong> API BDL ma absurdalnie niskie limity na dopuszczalną w przedziale czasu liczbę zapytań, więc zapytanie takie jak poniżej można w praktyce wykonać tylko raz na 15 minut. w związku z tym zasadne jest zrobienie tego raz i zapisanie wyników lokalnie do wykorzystania w przyszłości (co w kodzie poniżej realizuje wywołanie funkcji <code>save()</code>).</p>
-<pre><code>library(MLASZdane)
+<pre><code>library(dplyr)
+library(MLASZdane)
 wskaznikiBdl =
   bind_rows(znajdz_wskazniki_bdl(&quot;stopa bezrobocia rejestrowanego&quot;) %&gt;%
               pobierz_dane_bdl(2017:2018, &quot;powiaty&quot;),

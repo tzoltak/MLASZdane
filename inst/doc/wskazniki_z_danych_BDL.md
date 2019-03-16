@@ -63,6 +63,7 @@ Funkcja zwraca ramkę danych o kolumnach:
 **Uwaga!** API BDL ma absurdalnie niskie limity na dopuszczalną w przedziale czasu liczbę zapytań, więc zapytanie takie jak poniżej można w praktyce wykonać tylko raz na 15 minut. w związku z tym zasadne jest zrobienie tego raz i zapisanie wyników lokalnie do wykorzystania w przyszłości (co w kodzie poniżej realizuje wywołanie funkcji `save()`).
 
 ```
+library(dplyr)
 library(MLASZdane)
 wskaznikiBdl =
   bind_rows(znajdz_wskazniki_bdl("stopa bezrobocia rejestrowanego") %>%
