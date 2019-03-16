@@ -15,7 +15,7 @@ Pakiet nie jest wypchnięty na CRAN, więc trzeba instalować go ze źródeł.
 
 Ponieważ jednak zawiera jedynie kod w R, nie ma potrzeby zaopatrywać się w kompilatory, itp.
 
-Instalację najproście przeprowadzić wykorzystując pakiet *devtools*:
+Instalację najprościej przeprowadzić wykorzystując pakiet *devtools*:
 
 ```r
 install.packages('devtools') # potrzebne tylko, gdy nie jest jeszcze zainstalowany
@@ -78,6 +78,8 @@ Zakładając, że wcześniej wykonane zostały czynności opisane w poprzedniej
 wskaznikiInd = oblicz_wskazniki_ind_1rm(dane1RM)
 ```
 
+Szczegółowy opis sposobu obliczania wskaźników zawiera [dokumentacja procedur obliczania wskaźników na podstawie danych z 1. rundy monitoringu](./inst/doc/runda_1-wskazniki.md).
+
 ## Obliczenie wskaźników na poziomie szkół i grup porównawczych na podstawie zbiorów z 1. rundy monitoringu
 
 Aby obliczyć wskaźniki na poziomie szkół oprócz zbioru danych ze wskaźnikami na poziomie indywidualnym potrzebny jest również zbiór ze wskaźnikami średnich wynagrodzeń i bezrobocia w powiatach pobranych z Banku Danych Lokalnych GUS. Sposób przygotowania takiego zbioru opisany został w specjalnej dokumentacji: [wskaźniki z danych BDL](./inst/doc/wskazniki_z_danych_BDL.md). Poniżej założymy, że zbiór danych z wartościami wskaźników z BDL (pobrany przy pomocy funkcji `pobierz_dane_bdl()`) został, tak jak w przykładzie z ww. dokumentacji, przypisany do obiektu o nazwie `wskaznikiBdl` i zapisany w pliku *wskazniki_BDL.RData*. Aby przyłączyć wskaźniki z BDL do zbioru wskaźników indywidualnych, należy w tej sytuacji wykonać kod:
@@ -102,7 +104,9 @@ wskaznikiTypSzk = agreguj_wskazniki_typ_szk(wskaznikiInd)
 save(wskaznikiSzk, wskaznikiTypSzk, file = "wskazniki_szkol.RData")
 ```
 
-Należy przy tym zwrócić uwagę, że szablon 'raport_szkoly.Rmd' zaimplementowany w pakiecie [MLASZraporty](https://github.com/tzoltak/MLASZraporty) wymaga dołączenia do zbioru wskaźników na poziomie szkół trzech dodatkowych zmiennych, których nie daje się wygenerować na podstawie zbiorów z wynikami sondaży z 1. rundy monitoringu (konieczne jest odwołanie się w tym celu do danych z operatu losowania próby do badania):
+Szczegółowy opis sposobu obliczania wskaźników zawiera [dokumentacja procedur obliczania wskaźników na podstawie danych z 1. rundy monitoringu](./inst/doc/runda_1-wskazniki.md)
+
+W perspektywie tworzenia raportów na podstawie przygotowanego w wyżej opisany sposób zbioru danych, należy jeszcze zwrócić uwagę, że szablon 'raport_szkoly.Rmd' zaimplementowany w pakiecie [MLASZraporty](https://github.com/tzoltak/MLASZraporty) wymaga dołączenia do zbioru wskaźników na poziomie szkół trzech dodatkowych zmiennych, których nie daje się wygenerować na podstawie zbiorów z wynikami sondaży z 1. rundy monitoringu (konieczne jest odwołanie się w tym celu do danych z operatu losowania próby do badania):
 
   + `SZK_nazwa` - nazwa szkoły,
   + `SZK_adres` - adres szkoły,
