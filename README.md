@@ -112,6 +112,16 @@ W perspektywie tworzenia raportów na podstawie przygotowanego w wyżej opisan
   + `SZK_adres` - adres szkoły,
   + `SZK_l_uczn_pop` - liczba uczniów w szkole należących do badanej populacji (w odróżnieniu zarówno od liczby uczniów wylosowanych do badania, jak i od liczby uczniów, których udało się zbadać).
 
+### Eksport zbiorów wskaźników na poziomie zagregowanym
+
+Przy pomocy funkcji `splaszcz_wskazniki_zagregowane()` możliwe jest też przekształcenie przygotowanych zbiorów wskaźników na poziomie zagregowanym do postaci *płaskich* ramek danych (tzn. niezawierających kolumn-list), co umożliwia zapisanie ich w formacie SPSS lub Staty:
+
+```r
+wskaznikiSzkEksport = splaszcz_wskazniki_zagregowane(wskaznikiSzk)
+library(haven)
+write_dta(wskaznikiSzkEksport, "wskazniki_szkol.dta")
+write_sav(wskaznikiSzkEksport, "wskazniki_szkol.sav")
+```
 
 ## Przygotowanie zbiorów z pilotażowej rundy monitoringu
 

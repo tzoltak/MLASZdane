@@ -125,30 +125,212 @@ if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodow
               'nauka_6m', 'nauka_9m', 'studia_gdzie_pierwsze',
               'studia_odplatnosc_pierwsze', 'studia_tryb_pierwsze', 'GRUPA_kod')
 
-    wskaznikiSzk = agreguj_wskazniki_szk(wskaznikiInd)
     test_that("agreguj_wskazniki_szk()", {
+      wskaznikiSzk = agreguj_wskazniki_szk(wskaznikiInd)
       expect_is(wskaznikiSzk, "data.frame")
       expect_named(wskaznikiSzk, c("SZK_kod", nazwy), ignore.order = TRUE)
     })
 
-    wskaznikiTypSzk = agreguj_wskazniki_typ_szk(wskaznikiInd)
     test_that("agreguj_wskazniki_typ_szk()", {
+      wskaznikiTypSzk = agreguj_wskazniki_typ_szk(wskaznikiInd)
       expect_is(wskaznikiTypSzk, "data.frame")
       expect_named(wskaznikiTypSzk, c("GRUPA_nazwa", nazwy), ignore.order = TRUE)
     })
 
-    wskaznikiSzkBranza = agreguj_wskazniki_szk_branza(wskaznikiInd)
     test_that("agreguj_wskazniki_szk_branza()", {
+      wskaznikiSzkBranza = agreguj_wskazniki_szk_branza(wskaznikiInd)
       expect_is(wskaznikiSzkBranza, "data.frame")
       expect_named(wskaznikiSzkBranza, c("SZK_kod", "UCZ_branza", nazwy),
                    ignore.order = TRUE)
     })
 
-    wskaznikiTypSzkBranza = agreguj_wskazniki_typ_szk_branza(wskaznikiInd)
     test_that("agreguj_wskazniki_typ_szk_branza()", {
+      wskaznikiTypSzkBranza = agreguj_wskazniki_typ_szk_branza(wskaznikiInd)
       expect_is(wskaznikiTypSzkBranza, "data.frame")
       expect_named(wskaznikiTypSzkBranza, c("UCZ_branza", "GRUPA_nazwa", nazwy),
                    ignore.order = TRUE)
+    })
+
+    wskaznikiSzk = agreguj_wskazniki_szk(wskaznikiInd)
+  }
+
+  if (exists("wskaznikiSzk")) {
+    context("Spłaszczanie zbioru wskaźników na poziomie zagregowanym")
+
+    nazwy = c('SZK_kod', 'SZK_typ', 'liczba_zbadanych',
+              'liczba_zbadanych_kobiet', 'liczba_szkol', 'zawody',
+              'praca_nauka_0m_n', 'praca_nauka_0m_zm1', 'praca_nauka_0m_zm2',
+              'praca_nauka_0m_zm3', 'praca_nauka_0m_zm4', 'praca_nauka_1m_n',
+              'praca_nauka_1m_zm1', 'praca_nauka_1m_zm2', 'praca_nauka_1m_zm3',
+              'praca_nauka_1m_zm4', 'praca_nauka_2m_n', 'praca_nauka_2m_zm1',
+              'praca_nauka_2m_zm2', 'praca_nauka_2m_zm3', 'praca_nauka_2m_zm4',
+              'praca_nauka_3m_n', 'praca_nauka_3m_zm1', 'praca_nauka_3m_zm2',
+              'praca_nauka_3m_zm3', 'praca_nauka_3m_zm4', 'praca_nauka_4m_n',
+              'praca_nauka_4m_zm1', 'praca_nauka_4m_zm2', 'praca_nauka_4m_zm3',
+              'praca_nauka_4m_zm4', 'praca_nauka_5m_n', 'praca_nauka_5m_zm1',
+              'praca_nauka_5m_zm2', 'praca_nauka_5m_zm3', 'praca_nauka_5m_zm4',
+              'praca_nauka_6m_n', 'praca_nauka_6m_zm1', 'praca_nauka_6m_zm2',
+              'praca_nauka_6m_zm3', 'praca_nauka_6m_zm4', 'praca_nauka_7m_n',
+              'praca_nauka_7m_zm1', 'praca_nauka_7m_zm2', 'praca_nauka_7m_zm3',
+              'praca_nauka_7m_zm4', 'praca_nauka_8m_n', 'praca_nauka_8m_zm1',
+              'praca_nauka_8m_zm2', 'praca_nauka_8m_zm3', 'praca_nauka_8m_zm4',
+              'praca_nauka_9m_n', 'praca_nauka_9m_zm1', 'praca_nauka_9m_zm2',
+              'praca_nauka_9m_zm3', 'praca_nauka_9m_zm4',
+              'egz_zaw_zdawalnosc_n', 'egz_zaw_zdawalnosc_zm1',
+              'matura_zdawalnosc_n', 'matura_zdawalnosc_zm1',
+              'praca_przed_ukonczeniem_szkoly_n', 'praca_przed_ukonczeniem_szkoly_zm1',
+              'praca_czas_rozp_n', 'praca_czas_rozp_zm1', 'praca_czas_rozp_zm2',
+              'praca_czas_rozp_zm3', 'praca_czas_rozp_zm4',
+              'praca_forma_pierwsza_n', 'praca_forma_pierwsza_zm1',
+              'praca_forma_pierwsza_zm2', 'praca_forma_pierwsza_zm3',
+              'praca_forma_pierwsza_zm4', 'praca_forma_pierwsza_zm5',
+              'praca_forma_pierwsza_zm6', 'praca_forma_pierwsza_zm7',
+              'praca_forma_pierwsza_zm8',
+              'praca_forma_ostatnia_n', 'praca_forma_ostatnia_zm1',
+              'praca_forma_ostatnia_zm2', 'praca_forma_ostatnia_zm3',
+              'praca_forma_ostatnia_zm4', 'praca_forma_ostatnia_zm5',
+              'praca_forma_ostatnia_zm6', 'praca_forma_ostatnia_zm7',
+              'praca_forma_ostatnia_zm8',
+              'praca_forma2_pierwsza_n', 'praca_forma2_pierwsza_zm1',
+              'praca_forma2_pierwsza_zm2', 'praca_forma2_pierwsza_zm3',
+              'praca_forma2_pierwsza_zm4',
+              'praca_forma_6m_n', 'praca_forma_6m_zm1', 'praca_forma_6m_zm2',
+              'praca_forma_6m_zm3', 'praca_forma_6m_zm4', 'praca_forma_6m_zm5',
+              'praca_forma_6m_zm6', 'praca_forma_6m_zm7', 'praca_forma_6m_zm8',
+              'praca_forma_9m_n', 'praca_forma_9m_zm1', 'praca_forma_9m_zm2',
+              'praca_forma_9m_zm3', 'praca_forma_9m_zm4', 'praca_forma_9m_zm5',
+              'praca_forma_9m_zm6', 'praca_forma_9m_zm7', 'praca_forma_9m_zm8',
+              'praca_forma2_6m_n', 'praca_forma2_6m_zm1', 'praca_forma2_6m_zm2',
+              'praca_forma2_6m_zm3', 'praca_forma2_6m_zm4',
+              'praca_forma2_9m_n', 'praca_forma2_9m_zm1', 'praca_forma2_9m_zm2',
+              'praca_forma2_9m_zm3', 'praca_forma2_9m_zm4',
+              'praca_forma2_bu_6m_n', 'praca_forma2_bu_6m_zm1',
+              'praca_forma2_bu_6m_zm2', 'praca_forma2_bu_6m_zm3',
+              'praca_forma2_bu_6m_zm4', 'praca_forma2_bu_9m_n',
+              'praca_forma2_bu_9m_zm1', 'praca_forma2_bu_9m_zm2',
+              'praca_forma2_bu_9m_zm3', 'praca_forma2_bu_9m_zm4',
+              'praca_zamieszkanie_pierwsza_n', 'praca_zamieszkanie_pierwsza_zm1',
+              'praca_zamieszkanie_pierwsza_zm2', 'praca_zamieszkanie_pierwsza_zm3',
+              'praca_zamieszkanie_ostatnia_n', 'praca_zamieszkanie_ostatnia_zm1',
+              'praca_zamieszkanie_ostatnia_zm2', 'praca_zamieszkanie_ostatnia_zm3',
+              'praca_zamieszkanie_6m_n', 'praca_zamieszkanie_6m_zm1',
+              'praca_zamieszkanie_6m_zm2', 'praca_zamieszkanie_6m_zm3',
+              'praca_zamieszkanie_9m_n', 'praca_zamieszkanie_9m_zm1',
+              'praca_zamieszkanie_9m_zm2', 'praca_zamieszkanie_9m_zm3',
+              'praca_zgodna_z_wyksztalceniem_pierwsza_n',
+              'praca_zgodna_z_wyksztalceniem_pierwsza_zm1',
+              'praca_zgodna_z_wyksztalceniem_pierwsza_zm2',
+              'praca_zgodna_z_wyksztalceniem_pierwsza_zm3',
+              'praca_zgodna_z_wyksztalceniem_pierwsza_zm4',
+              'praca_zgodna_z_wyksztalceniem_ostatnia_n',
+              'praca_zgodna_z_wyksztalceniem_ostatnia_zm1',
+              'praca_zgodna_z_wyksztalceniem_ostatnia_zm2',
+              'praca_zgodna_z_wyksztalceniem_ostatnia_zm3',
+              'praca_zgodna_z_wyksztalceniem_ostatnia_zm4',
+              'praca_zarobki_pierwsza_n', 'praca_zarobki_pierwsza_zm1',
+              'praca_zarobki_pierwsza_zm2', 'praca_zarobki_pierwsza_zm3',
+              'praca_zarobki_pierwsza_zm4', 'praca_zarobki_pierwsza_zm5',
+              'praca_zarobki_ostatnia_n', 'praca_zarobki_ostatnia_zm1',
+              'praca_zarobki_ostatnia_zm2', 'praca_zarobki_ostatnia_zm3',
+              'praca_zarobki_ostatnia_zm4', 'praca_zarobki_ostatnia_zm5',
+              'praca_spelnienie_oczekiwan_ostatnia_n',
+              'praca_spelnienie_oczekiwan_ostatnia_zm1',
+              'praca_spelnienie_oczekiwan_ostatnia_zm2',
+              'praca_spelnienie_oczekiwan_ostatnia_zm3',
+              'praca_spelnienie_oczekiwan_ostatnia_zm4',
+              'praca_spelnienie_oczekiwan_ostatnia_zm5',
+              'praca_spelnienie_oczekiwan_ostatnia_zm6',
+              'praca_czas_p9m_rozklad_n', 'praca_czas_p9m_rozklad_zm1',
+              'praca_czas_p9m_rozklad_zm2', 'praca_czas_p9m_rozklad_zm3',
+              'praca_czas_p9m_rozklad_zm4', 'praca_czas_p9m_rozklad_zm5',
+              'praca_czas_p9m_rozklad_zm6', 'praca_czas_p9m_rozklad_zm7',
+              'praca_czas_p9m_rozklad_zm8', 'praca_czas_p9m_rozklad_zm9',
+              'praca_czas_p9m_rozklad_zm10', 'praca_czas_uop_p9m_rozklad_n',
+              'praca_czas_uop_p9m_rozklad_zm1', 'praca_czas_uop_p9m_rozklad_zm2',
+              'praca_czas_uop_p9m_rozklad_zm3', 'praca_czas_uop_p9m_rozklad_zm4',
+              'praca_czas_uop_p9m_rozklad_zm5', 'praca_czas_uop_p9m_rozklad_zm6',
+              'praca_czas_uop_p9m_rozklad_zm7', 'praca_czas_uop_p9m_rozklad_zm8',
+              'praca_czas_uop_p9m_rozklad_zm9', 'praca_czas_uop_p9m_rozklad_zm10',
+              'praca_czas_gdy_bez_nauki_p9m_rozklad_n',
+              'praca_czas_gdy_bez_nauki_p9m_rozklad_zm1',
+              'praca_czas_gdy_bez_nauki_p9m_rozklad_zm2',
+              'praca_czas_gdy_bez_nauki_p9m_rozklad_zm3',
+              'praca_czas_gdy_bez_nauki_p9m_rozklad_zm4',
+              'praca_czas_gdy_bez_nauki_p9m_rozklad_zm5',
+              'praca_czas_gdy_bez_nauki_p9m_rozklad_zm6',
+              'praca_czas_gdy_bez_nauki_uop_p9m_rozklad_n',
+              'praca_czas_gdy_bez_nauki_uop_p9m_rozklad_zm1',
+              'praca_czas_gdy_bez_nauki_uop_p9m_rozklad_zm2',
+              'praca_czas_gdy_bez_nauki_uop_p9m_rozklad_zm3',
+              'praca_czas_gdy_bez_nauki_uop_p9m_rozklad_zm4',
+              'praca_czas_gdy_bez_nauki_uop_p9m_rozklad_zm5',
+              'praca_czas_gdy_bez_nauki_uop_p9m_rozklad_zm6',
+              'bezrobocie_czas_p9m_rozklad_n', 'bezrobocie_czas_p9m_rozklad_zm1',
+              'bezrobocie_czas_p9m_rozklad_zm2', 'bezrobocie_czas_p9m_rozklad_zm3',
+              'bezrobocie_czas_p9m_rozklad_zm4', 'bezrobocie_czas_p9m_rozklad_zm5',
+              'bezrobocie_czas_p9m_rozklad_zm6', 'bezrobocie_czas_p9m_rozklad_zm7',
+              'bezrobocie_czas_p9m_rozklad_zm8', 'bezrobocie_czas_p9m_rozklad_zm9',
+              'bezrobocie_czas_p9m_rozklad_zm10',
+              'bezrobocie_czas_gdy_bez_nauki_p9m_rozklad_n',
+              'bezrobocie_czas_gdy_bez_nauki_p9m_rozklad_zm1',
+              'bezrobocie_czas_gdy_bez_nauki_p9m_rozklad_zm2',
+              'bezrobocie_czas_gdy_bez_nauki_p9m_rozklad_zm3',
+              'bezrobocie_czas_gdy_bez_nauki_p9m_rozklad_zm4',
+              'bezrobocie_czas_gdy_bez_nauki_p9m_rozklad_zm5',
+              'bezrobocie_czas_gdy_bez_nauki_p9m_rozklad_zm6',
+              'praca_czas_p9m_n', 'praca_czas_p9m_zm1', 'praca_czas_p9m_zm2',
+              'praca_czas_p9m_zm3', 'praca_czas_p9m_zm4',
+              'praca_czas_gdy_bez_nauki_p9m_n', 'praca_czas_gdy_bez_nauki_p9m_zm1',
+              'praca_czas_gdy_bez_nauki_p9m_zm2', 'praca_czas_gdy_bez_nauki_p9m_zm3',
+              'praca_czas_gdy_bez_nauki_p9m_zm4',
+              'praca_czas_gdy_nauka_p9m_n', 'praca_czas_gdy_nauka_p9m_zm1',
+              'praca_czas_gdy_nauka_p9m_zm2', 'praca_czas_gdy_nauka_p9m_zm3',
+              'praca_czas_gdy_nauka_p9m_zm4',
+              'praca_czas_uop_p9m_n', 'praca_czas_uop_p9m_zm1',
+              'praca_czas_uop_p9m_zm2', 'praca_czas_uop_p9m_zm3',
+              'praca_czas_uop_p9m_zm4',
+              'praca_czas_gdy_bez_nauki_uop_p9m_n', 'praca_czas_gdy_bez_nauki_uop_p9m_zm1',
+              'praca_czas_gdy_bez_nauki_uop_p9m_zm2', 'praca_czas_gdy_bez_nauki_uop_p9m_zm3',
+              'praca_czas_gdy_bez_nauki_uop_p9m_zm4',
+              'praca_czas_gdy_nauka_uop_p9m_n', 'praca_czas_gdy_nauka_uop_p9m_zm1',
+              'praca_czas_gdy_nauka_uop_p9m_zm2', 'praca_czas_gdy_nauka_uop_p9m_zm3',
+              'praca_czas_gdy_nauka_uop_p9m_zm4',
+              'bezrobocie_czas_p9m_n', 'bezrobocie_czas_p9m_zm1',
+              'bezrobocie_czas_p9m_zm2', 'bezrobocie_czas_p9m_zm3',
+              'bezrobocie_czas_p9m_zm4',
+              'bezrobocie_czas_gdy_bez_nauki_p9m_n', 'bezrobocie_czas_gdy_bez_nauki_p9m_zm1',
+              'bezrobocie_czas_gdy_bez_nauki_p9m_zm2', 'bezrobocie_czas_gdy_bez_nauki_p9m_zm3',
+              'bezrobocie_czas_gdy_bez_nauki_p9m_zm4',
+              'bezrobocie_czas_gdy_nauka_p9m_n', 'bezrobocie_czas_gdy_nauka_p9m_zm1',
+              'bezrobocie_czas_gdy_nauka_p9m_zm2', 'bezrobocie_czas_gdy_nauka_p9m_zm3',
+              'bezrobocie_czas_gdy_nauka_p9m_zm4',
+              'bezrobocie_1m_n', 'bezrobocie_1m_zm1', 'bezrobocie_1m_zm2',
+              'bezrobocie_1m_zm3', 'bezrobocie_2m_n', 'bezrobocie_2m_zm1',
+              'bezrobocie_2m_zm2', 'bezrobocie_2m_zm3','bezrobocie_3m_n',
+              'bezrobocie_3m_zm1', 'bezrobocie_3m_zm2', 'bezrobocie_3m_zm3',
+              'bezrobocie_4m_n', 'bezrobocie_4m_zm1', 'bezrobocie_4m_zm2',
+              'bezrobocie_4m_zm3', 'bezrobocie_5m_n', 'bezrobocie_5m_zm1',
+              'bezrobocie_5m_zm2', 'bezrobocie_5m_zm3','bezrobocie_6m_n',
+              'bezrobocie_6m_zm1', 'bezrobocie_6m_zm2', 'bezrobocie_6m_zm3',
+              'bezrobocie_7m_n', 'bezrobocie_7m_zm1', 'bezrobocie_7m_zm2',
+              'bezrobocie_7m_zm3','bezrobocie_8m_n', 'bezrobocie_8m_zm1',
+              'bezrobocie_8m_zm2', 'bezrobocie_8m_zm3','bezrobocie_9m_n',
+              'bezrobocie_9m_zm1', 'bezrobocie_9m_zm2', 'bezrobocie_9m_zm3',
+              'nauka_6m_n', 'nauka_6m_zm1', 'nauka_6m_zm2', 'nauka_6m_zm3', 'nauka_6m_zm4',
+              'nauka_9m_n', 'nauka_9m_zm1', 'nauka_9m_zm2', 'nauka_9m_zm3', 'nauka_9m_zm4',
+              'studia_gdzie_pierwsze_n', 'studia_gdzie_pierwsze_zm1',
+              'studia_gdzie_pierwsze_zm2',
+              'studia_odplatnosc_pierwsze_n', 'studia_odplatnosc_pierwsze_zm1',
+              'studia_odplatnosc_pierwsze_zm2',
+              'studia_tryb_pierwsze_n', 'studia_tryb_pierwsze_zm1',
+              'studia_tryb_pierwsze_zm2', 'studia_tryb_pierwsze_zm3',
+              'GRUPA_kod')
+
+    test_that("splaszcz_wskazniki_zagregowane()", {
+      splaszczone = splaszcz_wskazniki_zagregowane(wskaznikiSzk)
+      expect_is(splaszczone, "data.frame")
+      expect_equal(all(unlist(lapply(splaszczone, is.list))), FALSE)
+      expect_named(splaszczone, nazwy, ignore.order = TRUE)
     })
   }
 }

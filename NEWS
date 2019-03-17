@@ -1,5 +1,11 @@
 # MLASZdane 0.2.0 (16.03.2019)
 
+  - Nowe funkcja splaszcz_wskazniki_zagregowane() pozwala przekształcić zbiór
+    wskaźników na poziomie zagregowanym do postaci płaskiej ramki danych, która
+    może zostać łatwo zapisana do pliku SPSS lub Staty.
+
+# MLASZdane 0.2.0 (16.03.2019)
+
   - Naprawiono błędy w sposobie obliczania wskaźników opisujących formę pracy:
     - nie są już pomijani absolwenci prowadzący własne firmy lub gospodarstwa
       rolne, którzy zadeklarowali to w pytaniu PG2G (i w związku z tym nie
