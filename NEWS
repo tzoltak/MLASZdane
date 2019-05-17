@@ -1,4 +1,8 @@
-# MLASZdane 0.2.0 (16.03.2019)
+# MLASZdane 0.3.1 (17.03.2019)
+
+  - Drobne poprawki w winietce dot. 1. rundy monitoringu.
+
+# MLASZdane 0.3.0 (17.03.2019)
 
   - Nowe funkcja splaszcz_wskazniki_zagregowane() pozwala przekształcić zbiór
     wskaźników na poziomie zagregowanym do postaci płaskiej ramki danych, która
