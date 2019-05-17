@@ -1,7 +1,7 @@
 ---
 title: "Przetwarzanie zbiorów z 1. rundy monitoringu"
 author: "Tomasz Żółtak"
-date: "31 stycznia 2019"
+date: "17 maja 2019"
 output: rmarkdown::html_vignette
 lang: pl
 vignette: >
@@ -325,8 +325,8 @@ W zbiorze zawarte zostały następujące zmienne opisujące statusy respondent�
     + `ABS_pg2h` równe 3 (`ABS_pg2g` równe 1, 2 lub 3) -> 3 (*zatrudniony przez agencję pracy tymczasowej*);
     + `ABS_pg2h` równe 4 (`ABS_pg2g` równe 1, 2 lub 3) -> 4 (*zatrudniony na umowie cywilnoprawnej*);
     + `ABS_pg2h` równe 5 (`ABS_pg2g` równe 1, 2 lub 3) -> 5 (*samozatrudniony (praca 'u kogoś')*);
-    + `ABS_pg2g` równe 4 -> 6 (*prowadzi własną działalność ('praca 'u siebie')*);
-    + `ABS_pg2g` równe 5 -> 7 (*prowadzi własne gosp. rolne*);
+    + `ABS_pg2g` równe 6 -> 6 (*prowadzi własną działalność ('praca 'u siebie')*);
+    + `ABS_pg2g` równe 7 -> 7 (*prowadzi własne gosp. rolne*);
     + `ABS_pg2h` równe 7 lub 8 (`ABS_pg2g` równe 1, 2 lub 3) -> 8 (*odbywa staż lub praktykę absolwencką*);
     + `ABS_pg2h` równe 6 (`ABS_pg2g` równe 1, 2 lub 3) -> 9 (*zatrudniony bez umowy (na czarno)*);
     + wszystkie pozostałe przypadki, gdy wystąpił epizod pracy -> 10;
