@@ -266,8 +266,8 @@ praca_zamieszkanie = function(x, sufiks) {
     return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
-#' @description Funkcja oblicza wskaźnik opisujący rozkład miejsca zamieszkania
-#' (w kraju czy za granicą) badanych, którzy pracowali.
+#' @description Funkcja oblicza wskaźnik opisujący rozkład subiektywnej oceny
+#' zgodności pierwszej lub ostatniej wykonywanej pracy z kierunkiem kształcenia.
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym - typowo
 #' grupa wyróżniona w ramach obiektu zwracanego przez funkcję
 #' \code{\link{oblicz_wskazniki_ind_1rm}}

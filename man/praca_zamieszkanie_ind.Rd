@@ -21,5 +21,6 @@ Funkcja oblicza zmienne-wskaźniki opisujące, czy badany
 kiedykolwiek był zatrudniony w miejscu innym, niż miejscowość zamieszkania
 }
 \seealso{
-\code{\link{praca_pierwsza}}, \code{\link{praca_ostatnia}}
+\code{\link{praca_miesiac}}, \code{\link{praca_pierwsza}},
+\code{\link{praca_ostatnia}}
 }

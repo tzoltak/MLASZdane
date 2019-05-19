@@ -17,7 +17,7 @@ ramka danych z przypisaną klasą "wskaznikiBDL"
 }
 \description{
 Funkcja pozwala przy pomocy API BDL pobrać dane dot. wskaźnika, którego nie
-do się zidentyfikować na podstawie samej jego nazwy (używając funkcji
+da się zidentyfikować na podstawie samej jego nazwy (używając funkcji
 \code{\link{znajdz_wskazniki_bdl}}).
 }
 \details{

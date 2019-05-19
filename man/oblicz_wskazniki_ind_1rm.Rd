@@ -16,10 +16,144 @@ znaków lub wyrażenie)}
 \value{
 data frame zawierający następujące kolumny:
 \itemize{
-  \item{wszystkie kolumny ramki danych pr}
+  \item{wszystkie kolumny ramki danych przekazanej argumentem \code{x},
+        których nazwy \strong{nie} zaczynają się od "ABS_"; zwykle będą to:
+        \itemize{
+          \item{\code{ID_RESP},}
+          \item{\code{SZK_typ},}
+          \item{\code{SZK_kod},}
+          \item{\code{SZK_pozycja_w_operacie},}
+          \item{\code{SZK_regon},}
+          \item{\code{SZK_id_sio},}
+          \item{\code{UCZ_kod_zawodu},}
+          \item{\code{UCZ_zawod},}
+          \item{\code{UCZ_branza},}
+          \item{\code{UCZ_obszar},}
+        }}
+  \item{\code{SZK_teryt},}
+  \item{\code{UCZ_plec},}
+  \item{\code{matura_zdana},}
+  \item{\code{egz_zaw_zdany},}
+  \item{\code{pio1_pierwsza},}
+  \item{\code{pio4_pierwsza},}
+  \item{\code{pi5_pierwsza},}
+  \item{\code{praca_czas_rozp_pierwsza},}
+  \item{\code{praca_przed_ukonczeniem_szkoly_pierwsza},}
+  \item{\code{pg2gh.1_pierwsza},}
+  \item{\code{pg2gh.2_pierwsza},}
+  \item{\code{pg2gh.3_pierwsza},}
+  \item{\code{pg2gh.4_pierwsza},}
+  \item{\code{pg2gh.5_pierwsza},}
+  \item{\code{pg2gh.6_pierwsza},}
+  \item{\code{pg2gh.7_pierwsza},}
+  \item{\code{pg2gh.8_pierwsza},}
+  \item{\code{pg2gh.9_pierwsza},}
+  \item{\code{pg2i.1_pierwsza},}
+  \item{\code{pg2i.2_pierwsza},}
+  \item{\code{pg2i.3_pierwsza},}
+  \item{\code{pg2i.9_pierwsza},}
+  \item{\code{pio1_ostatnia},}
+  \item{\code{pio4_ostatnia},}
+  \item{\code{po5_ostatnia},}
+  \item{\code{po6_1_ostatnia},}
+  \item{\code{po6_2_ostatnia},}
+  \item{\code{po6_3_ostatnia},}
+  \item{\code{po6_4_ostatnia},}
+  \item{\code{po6_5_ostatnia},}
+  \item{\code{po6_6_ostatnia},}
+  \item{\code{pg2gh.1_ostatnia},}
+  \item{\code{pg2gh.2_ostatnia},}
+  \item{\code{pg2gh.3_ostatnia},}
+  \item{\code{pg2gh.4_ostatnia},}
+  \item{\code{pg2gh.5_ostatnia},}
+  \item{\code{pg2gh.6_ostatnia},}
+  \item{\code{pg2gh.7_ostatnia},}
+  \item{\code{pg2gh.8_ostatnia},}
+  \item{\code{pg2gh.9_ostatnia},}
+  \item{\code{pg2i.1_ostatnia},}
+  \item{\code{pg2i.2_ostatnia},}
+  \item{\code{pg2i.3_ostatnia},}
+  \item{\code{pg2i.9_ostatnia},}
+  \item{\code{pg2gh.1_6m},}
+  \item{\code{pg2gh.2_6m},}
+  \item{\code{pg2gh.3_6m},}
+  \item{\code{pg2gh.4_6m},}
+  \item{\code{pg2gh.5_6m},}
+  \item{\code{pg2gh.6_6m},}
+  \item{\code{pg2gh.7_6m},}
+  \item{\code{pg2gh.8_6m},}
+  \item{\code{pg2gh.9_6m},}
+  \item{\code{pg2i.1_6m},}
+  \item{\code{pg2i.2_6m},}
+  \item{\code{pg2i.3_6m},}
+  \item{\code{pg2i.9_6m},}
+  \item{\code{pg2gh.1_9m},}
+  \item{\code{pg2gh.2_9m},}
+  \item{\code{pg2gh.3_9m},}
+  \item{\code{pg2gh.4_9m},}
+  \item{\code{pg2gh.5_9m},}
+  \item{\code{pg2gh.6_9m},}
+  \item{\code{pg2gh.7_9m},}
+  \item{\code{pg2gh.8_9m},}
+  \item{\code{pg2gh.9_9m},}
+  \item{\code{pg2i.1_9m},}
+  \item{\code{pg2i.2_9m},}
+  \item{\code{pg2i.3_9m},}
+  \item{\code{pg2i.9_9m},}
+  \item{\code{praca_czas_gdy_bez_nauki_p9m},}
+  \item{\code{praca_czas_gdy_nauka_p9m},}
+  \item{\code{praca_czas_p9m},}
+  \item{\code{praca_czas_gdy_bez_nauki_uop_p9m},}
+  \item{\code{praca_czas_gdy_nauka_uop_p9m},}
+  \item{\code{praca_czas_uop_p9m},}
+  \item{\code{bezrobocie_czas_gdy_bez_nauki_p9m},}
+  \item{\code{bezrobocie_czas_gdy_nauka_p9m},}
+  \item{\code{bezrobocie_czas_p9m},}
+  \item{\code{bezrobocie_1m},}
+  \item{\code{bezrobocie_2m},}
+  \item{\code{bezrobocie_3m},}
+  \item{\code{bezrobocie_4m},}
+  \item{\code{bezrobocie_5m},}
+  \item{\code{bezrobocie_6m},}
+  \item{\code{bezrobocie_7m},}
+  \item{\code{bezrobocie_8m},}
+  \item{\code{bezrobocie_9m},}
+  \item{\code{nauka_6m},}
+  \item{\code{nauka_platna_6m},}
+  \item{\code{nauka_9m},}
+  \item{\code{nauka_platna_9m},}
+  \item{\code{studia_kierunek_pierwsze},}
+  \item{\code{studia_uczelnia_pierwsze},}
+  \item{\code{studia_bezplatne_pierwsze},}
+  \item{\code{studia_tryb_pierwsze},}
+  \item{\code{praca_nauka_0m},}
+  \item{\code{praca_nauka_1m},}
+  \item{\code{praca_nauka_2m},}
+  \item{\code{praca_nauka_3m},}
+  \item{\code{praca_nauka_4m},}
+  \item{\code{praca_nauka_5m},}
+  \item{\code{praca_nauka_6m},}
+  \item{\code{praca_nauka_7m},}
+  \item{\code{praca_nauka_8m},}
+  \item{\code{praca_nauka_9m}.}
 }
 }
 \description{
 Funkcja oblicza zmienne-wskaźniki, które wymagają informacji
 nie ze zbioru epizodów.
+}
+\seealso{
+Funkcje używane wewnętrznie do obliczania wskaźników zagregowanych:
+\itemize{
+  \item{\code{\link{wskazniki_nie_z_epizodow}},}
+  \item{\code{\link{praca_pierwsza}},}
+  \item{\code{\link{praca_ostatnia}},}
+  \item{\code{\link{praca_miesiac}},}
+  \item{\code{\link{praca_czas}},}
+  \item{\code{\link{bezrobocie_czas}},}
+  \item{\code{\link{bezrobocie_miesiac}},}
+  \item{\code{\link{nauka_miesiac}},}
+  \item{\code{\link{studia_pierwsze}},}
+  \item{\code{\link{praca_nauka_miesiac}}.}
+}
 }

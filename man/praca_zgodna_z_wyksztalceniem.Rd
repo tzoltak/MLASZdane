@@ -27,8 +27,8 @@ lista o elementach:
 }
 }
 \description{
-Funkcja oblicza wskaźnik opisujący rozkład miejsca zamieszkania
-(w kraju czy za granicą) badanych, którzy pracowali.
+Funkcja oblicza wskaźnik opisujący rozkład subiektywnej oceny
+zgodności pierwszej lub ostatniej wykonywanej pracy z kierunkiem kształcenia.
 }
 \seealso{
 \code{\link{praca_pierwsza}}, \code{\link{praca_ostatnia}}

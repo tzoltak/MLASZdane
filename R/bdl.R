@@ -39,7 +39,7 @@ znajdz_wskazniki_bdl = function(nazwa) { # nocov start
 #' @title Pobieranie danych z Banku Danych Lokalnych GUS
 #' @description
 #' Funkcja pozwala przy pomocy API BDL pobrać dane dot. wskaźnika, którego nie
-#' do się zidentyfikować na podstawie samej jego nazwy (używając funkcji
+#' da się zidentyfikować na podstawie samej jego nazwy (używając funkcji
 #' \code{\link{znajdz_wskazniki_bdl}}).
 #' @param id liczba całkowita - id wskaźnika w API BDL
 #' @param zamienNazwe opcjonlanie ciąg znaków - nazwa, która ma zostać

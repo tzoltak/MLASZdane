@@ -39,5 +39,6 @@ wszystkie wynikowe zmienne są dla danego respondenta przekodowywane na brak
 danych.
 }
 \seealso{
-\code{\link{praca_pierwsza}}, \code{\link{praca_ostatnia}}
+\code{\link{praca_miesiac}}, \code{\link{praca_pierwsza}},
+\code{\link{praca_ostatnia}}
 }
