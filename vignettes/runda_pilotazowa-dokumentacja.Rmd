@@ -14,7 +14,7 @@ vignette: >
 
 ### 1.1. Funkcja wczytaj_wyniki_pilrm()
 
-Na podstawie zbioru z badania absolwentów (*MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodowaniem.sav*) funkcja `wczytaj_wyniki_1rm()` zwraca listę ramek danych (zbiorów) zawierającą następujące elementy:
+Na podstawie zbioru z badania absolwentów (*MLEZAMiD_absolwent_n2959_20171013.sav*) funkcja `wczytaj_wyniki_pilrm()` zwraca listę ramek danych (zbiorów) zawierającą następujące elementy:
 
   - `dane` - zawiera odpowiedzi na pytania niedotyczące *epizodów* (por. niżej);
   - `epizody` - zawiera informacje dotyczące wymienionych przez respondentów *epizodów*:

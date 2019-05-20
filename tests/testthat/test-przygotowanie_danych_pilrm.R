@@ -1,6 +1,6 @@
 if (file.exists("MLEZAMiD_absolwent_n2959_20171013.sav")) {
   context("Wczytanie danych z pilotażowej rundy monitoringu")
-  wpilrm = wczytaj_wyniki_pilrm("MLEZAMiD_absolwent_n2959_20171013.sav")
+  wpilrm = wczytaj_wyniki_pilrm("MLEZAiMD_absolwent_n2959_20171013.sav")
   test_that("wczytaj_wyniki_pilrm()", {
     expect_type(wpilrm, "list")
     expect_named(wpilrm, c("dane", "epizody", "gospDom", "czasy"))
