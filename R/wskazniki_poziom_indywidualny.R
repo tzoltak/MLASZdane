@@ -158,17 +158,20 @@ praca_pierwsza = function(epizody, idAbsolwenta = "ID_RESP") {
   idAbsolwenta = ensym(idAbsolwenta)
   stopifnot(as.character(idAbsolwenta) %in% names(epizody))
 
+  miesiaceNauki = nauka_czas(epizody, 9, 1, !!idAbsolwenta)
+
   epizody = epizody %>%
     filter(.data$typ_epizodu %in% "praca",
            !(.data$pg2h %in% 6), # wyłączamy pracę bez umowy,
            .data$nr == 1, !is.na(.data$czas_rozp)) %>%
-    mutate(praca_przed_ukonczeniem_szkoly = .data$czas_rozp < 0)
+    mutate(praca_przed_ukonczeniem_szkoly = .data$czas_rozp < 0,
+           wymiar = .data$pio3b / 40)
   if (any(duplicated(epizody[[as.character(idAbsolwenta)]]))) {
     stop("W zbiorze znajdują się badani, dla których występuje wiele epizodów pracy wyglądających na pierwsze.")
   }
   epizody = suppressMessages(
     epizody %>%
-      select(as.character(idAbsolwenta), "pio1", "pio4", "pi5",
+      select(as.character(idAbsolwenta), "pio1", "pio4", "pi5", "wymiar",
              praca_czas_rozp = .data$czas_rozp, "praca_przed_ukonczeniem_szkoly") %>%
       mutate(praca_czas_rozp = ifelse(.data$praca_czas_rozp < 0,
                                       NA, .data$praca_czas_rozp)) %>%
@@ -177,7 +180,17 @@ praca_pierwsza = function(epizody, idAbsolwenta = "ID_RESP") {
                                 !!idAbsolwenta)) %>%
       full_join(praca_zamieszkanie_ind(epizody %>%
                                          filter(!.data$praca_przed_ukonczeniem_szkoly),
-                                       !!idAbsolwenta)))
+                                       !!idAbsolwenta)) %>%
+      left_join(miesiaceNauki) %>%
+      group_by(!!idAbsolwenta) %>%
+      mutate(laczenie_praca_nauka =
+               .data$praca_czas_rozp %in% unlist(.data$nauka_czas) |
+               .data$praca_czas_rozp < 1)) %>%
+    group_by(!!idAbsolwenta) %>%
+    mutate(pio4pelen = round(as.double(.data$pio4) / as.double(.data$wymiar))) %>%
+    ungroup() %>%
+    select(-"nauka_czas")
+
   names(epizody) = ifelse(!(names(epizody) %in% as.character(idAbsolwenta)),
                          paste0(names(epizody), "_pierwsza"),
                          names(epizody))
@@ -229,6 +242,8 @@ praca_ostatnia = function(epizody, idAbsolwenta = "ID_RESP",
   idAbsolwenta = ensym(idAbsolwenta)
   stopifnot(as.character(idAbsolwenta) %in% names(epizody))
 
+  miesiaceNauki = nauka_czas(epizody, 9, 1, !!idAbsolwenta)
+
   epizody = epizody %>%
     filter(.data$typ_epizodu %in% "praca",
            !(.data$pg2h %in% 6), # wyłączamy pracę bez umowy,
@@ -236,16 +251,30 @@ praca_ostatnia = function(epizody, idAbsolwenta = "ID_RESP",
            .data$czas_zakon >= limitD | is.na(.data$czas_zakon)) %>%
     group_by(!!idAbsolwenta) %>%
     filter(.data$nr == max(.data$nr)) %>%
-    ungroup()
+    ungroup() %>%
+    mutate(wymiar = .data$pio3b / 40)
   if (any(duplicated(epizody[[as.character(idAbsolwenta)]]))) {
     stop("W zbiorze znajdują się badani, dla których występuje wiele epizodów pracy wyglądających na ostatni.")
   }
   epizody = suppressMessages(
     epizody %>%
-      select(as.character(idAbsolwenta), "pio1", "pio4", "po5",
+      select(as.character(idAbsolwenta), "pio1", "pio4", "po5", "wymiar",
+             praca_czas_rozp = .data$czas_rozp,
              matches("^po6_[123456]$")) %>%
+      mutate(praca_czas_rozp = ifelse(.data$praca_czas_rozp < 0,
+                                      NA, .data$praca_czas_rozp)) %>%
       full_join(praca_forma_ind(epizody, !!idAbsolwenta)) %>%
-      full_join(praca_zamieszkanie_ind(epizody, !!idAbsolwenta)))
+      full_join(praca_zamieszkanie_ind(epizody, !!idAbsolwenta)) %>%
+      left_join(miesiaceNauki) %>%
+      group_by(!!idAbsolwenta) %>%
+      mutate(laczenie_praca_nauka =
+               .data$praca_czas_rozp %in% unlist(.data$nauka_czas) |
+               .data$praca_czas_rozp < 1)) %>%
+    group_by(!!idAbsolwenta) %>%
+    mutate(pio4pelen = round(as.double(.data$pio4) / as.double(.data$wymiar))) %>%
+    ungroup() %>%
+    select(-"nauka_czas")
+
   names(epizody) = ifelse(!(names(epizody) %in% as.character(idAbsolwenta)),
                           paste0(names(epizody), "_ostatnia"),
                           names(epizody))
@@ -760,6 +789,7 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
 #'   \item{\code{pio1_pierwsza},}
 #'   \item{\code{pio4_pierwsza},}
 #'   \item{\code{pi5_pierwsza},}
+#'   \item{\code{wymiar_pierwsza},}
 #'   \item{\code{praca_czas_rozp_pierwsza},}
 #'   \item{\code{praca_przed_ukonczeniem_szkoly_pierwsza},}
 #'   \item{\code{pg2gh.1_pierwsza},}
@@ -775,9 +805,13 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
 #'   \item{\code{pg2i.2_pierwsza},}
 #'   \item{\code{pg2i.3_pierwsza},}
 #'   \item{\code{pg2i.9_pierwsza},}
+#'   \item{\code{laczenie_praca_nauka_pierwsza},}
+#'   \item{\code{pio4pelen_pierwsza},}
 #'   \item{\code{pio1_ostatnia},}
 #'   \item{\code{pio4_ostatnia},}
 #'   \item{\code{po5_ostatnia},}
+#'   \item{\code{wymiar_ostatnia},}
+#'   \item{\code{praca_czas_rozp_ostatnia},}
 #'   \item{\code{po6_1_ostatnia},}
 #'   \item{\code{po6_2_ostatnia},}
 #'   \item{\code{po6_3_ostatnia},}
@@ -797,6 +831,8 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
 #'   \item{\code{pg2i.2_ostatnia},}
 #'   \item{\code{pg2i.3_ostatnia},}
 #'   \item{\code{pg2i.9_ostatnia},}
+#'   \item{\code{laczenie_praca_nauka_ostatnia},}
+#'   \item{\code{pio4pelen_ostatnia},}
 #'   \item{\code{pg2gh.1_6m},}
 #'   \item{\code{pg2gh.2_6m},}
 #'   \item{\code{pg2gh.3_6m},}
