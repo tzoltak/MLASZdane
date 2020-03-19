@@ -552,6 +552,9 @@ bezrobocie_czas = function(epizody, limitG  = 9, limitD = 1, sufiks = "",
 #' a jeśli tak, to w jakiej formie.
 #' @param epizody ramka danych z epizodami - typowo element \code{epizody} listy
 #' zwracanej przez funkcję \code{\link{imputuj_miesiac_pk_1rm}}
+#' @param dane ramka danych z odpowiedziami na ankietę absolwentów - typowo
+#' element \code{dane} listy zwracanej przez funkcję
+#' \code{\link{imputuj_miesiac_pk_1rm}}
 #' @param miesiac liczba - miesiąc od terminu planowego ukończenia szkoły
 #' (porównywana z wartościami kolumn \code{czas_rozp} i \code{czas_zakon})
 #' @param idAbsolwenta nazwa zmiennej identyfikującej badanych (podana jako ciąg
@@ -562,8 +565,9 @@ bezrobocie_czas = function(epizody, limitG  = 9, limitD = 1, sufiks = "",
 #' @importFrom rlang ensym
 #' @importFrom dplyr .data %>% arrange case_when filter group_by mutate n
 #' summarise ungroup
-nauka_miesiac = function(epizody, miesiac, idAbsolwenta = "ID_RESP") {
+nauka_miesiac = function(epizody, dane, miesiac, idAbsolwenta = "ID_RESP") {
   stopifnot(is.data.frame(epizody),
+            is.data.frame(dane),
             "typ_epizodu" %in% names(epizody),
             "sp6h_3" %in% names(epizody),
             "sp6f" %in% names(epizody),
@@ -574,6 +578,9 @@ nauka_miesiac = function(epizody, miesiac, idAbsolwenta = "ID_RESP") {
             is.numeric(miesiac), length(miesiac) == 1)
   idAbsolwenta = ensym(idAbsolwenta)
   stopifnot(as.character(idAbsolwenta) %in% names(epizody))
+
+  dane = dane %>%
+    select(.data$ID_RESP, .data$ABS_f4_branzaKZSB)
 
   epizody = epizody %>%
     filter(.data$typ_epizodu %in% c("SPolic.", "studia", "LO dla dorosłych"),
@@ -586,7 +593,13 @@ nauka_miesiac = function(epizody, miesiac, idAbsolwenta = "ID_RESP") {
                        grepl("^LO ", .data$typ_epizodu) ~ "LO dla dorosłych") %>%
              factor(levels = c("studia stacjonarne", "studia niestacjonarne", "szkoła policealna",
                                "LO dla dorosłych"))) %>%
-    group_by(!!idAbsolwenta) %>%
+    left_join(dane, by = "ID_RESP") %>%
+    mutate(spolic_kontynuacja_branza =
+             case_when(.data$nauka == "szkoła policealna" &
+                         .data$ABS_f4_branzaKZSB == .data$pp3_kierunek_branzaKZSB ~ TRUE,
+                       .data$nauka == "szkoła policealna" &
+                         .data$ABS_f4_branzaKZSB != .data$pp3_kierunek_branzaKZSB ~ FALSE)) %>%
+    group_by(!!idAbsolwenta, .data$spolic_kontynuacja_branza) %>%
     arrange(!!idAbsolwenta, .data$nauka) %>%
     mutate(n = 1:n()) %>%
     filter(.data$n == 1) %>%
@@ -877,8 +890,10 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
 #'   \item{\code{bezrobocie_7m},}
 #'   \item{\code{bezrobocie_8m},}
 #'   \item{\code{bezrobocie_9m},}
+#'   \item{\code{spolic_kontynuacja_branza_6m},}
 #'   \item{\code{nauka_6m},}
 #'   \item{\code{nauka_platna_6m},}
+#'   \item{\code{spolic_kontynuacja_branza_9m},}
 #'   \item{\code{nauka_9m},}
 #'   \item{\code{nauka_platna_9m},}
 #'   \item{\code{studia_kierunek_pierwsze},}
@@ -954,8 +969,8 @@ oblicz_wskazniki_ind_1rm = function(x, idAbsolwenta = "ID_RESP") {
   message("- dotyczących nauki,")
   wskazniki = suppressWarnings(suppressMessages(
     wskazniki %>%
-      left_join(nauka_miesiac(x$epizody, 6)) %>%
-      left_join(nauka_miesiac(x$epizody, 9)) %>%
+      left_join(nauka_miesiac(x$epizody, x$dane, 6)) %>%
+      left_join(nauka_miesiac(x$epizody, x$dane, 9)) %>%
       left_join(studia_pierwsze(x$epizody))))
   message("- opisujących status edukacyjno-zawodowy.")
   wskazniki = suppressWarnings(suppressMessages(
