@@ -744,6 +744,7 @@ studia_pierwsze = function(epizody, idAbsolwenta = "ID_RESP") {
 #' @importFrom dplyr .data %>% case_when mutate select
 wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
   stopifnot(is.data.frame(x),
+            "ID_RESP" %in% names(x),
             "ABS_typ_szkoly" %in% names(x),
             "ABS_teryt_szkoly" %in% names(x),
             "ABS_m1" %in% names(x),
@@ -757,7 +758,9 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
                     sub("_szkoly", "", sub("^ABS_", "SZK_", names(x))),
                     names(x))
   x %>%
-    mutate(SZK_teryt = 100 * floor(as.numeric(.data$SZK_teryt) / 100),
+    mutate(ABS_teryt_powiat = floor(.data$SZK_teryt / 100),
+           ABS_teryt_woj = floor(.data$SZK_teryt / 10000),
+           SZK_teryt = 100 * floor(as.numeric(.data$SZK_teryt) / 100),
            UCZ_plec = case_when(.data$ABS_m1 %in% 1 ~ "K",
                                 .data$ABS_m1 %in% 2 ~ "M"),
            matura_zdana =
@@ -769,6 +772,11 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
              case_when(.data$ABS_f9 %in% 1 & .data$ABS_f10_rok <= maksRokEgz &
                          !is.na(.data$ABS_f10_rok) ~ 1,
                        TRUE ~ 0)) %>%
+    left_join(mapowanie %>% select(.data$teryt, .data$powiat_nazwa),
+              by = c("ABS_teryt_powiat" = "teryt")) %>%
+    left_join(mapowanie %>% select(.data$teryt, .data$woj_nazwa) %>%
+                mutate(teryt = floor(.data$teryt / 100)),
+              by = c("ABS_teryt_woj" = "teryt")) %>%
     select(-starts_with("ABS")) %>%
     return()
 }
@@ -799,6 +807,8 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
 #'   \item{\code{UCZ_plec},}
 #'   \item{\code{matura_zdana},}
 #'   \item{\code{egz_zaw_zdany},}
+#'   \item{\code{powiat_nazwa},}
+#'   \item{\code{woj_nazwa},}
 #'   \item{\code{pio1_pierwsza},}
 #'   \item{\code{pio4_pierwsza},}
 #'   \item{\code{pi5_pierwsza},}
@@ -940,6 +950,7 @@ oblicz_wskazniki_ind_1rm = function(x, idAbsolwenta = "ID_RESP") {
   wskazniki = suppressWarnings(suppressMessages(
     x$dane %>%
       select(as.character(idAbsolwenta), contains("_szkoly"),
+             "ABS_f4_branzaKZSB", "ABS_pi2_branzaKZSB", "ABS_po2_branzaKZSB",
              UCZ_kod_zawodu = .data$ABS_f4_id, UCZ_zawod = .data$ABS_f4,
              UCZ_branza = .data$ABS_f4_branza, UCZ_obszar = .data$ABS_f4_obszar,
              "ABS_m1", starts_with("ABS_f8"), "ABS_f9", starts_with("ABS_f10")) %>%

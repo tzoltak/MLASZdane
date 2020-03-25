@@ -241,7 +241,7 @@ wczytaj_wyniki_1rm = function(x){
            czas_rozp_imput = ifelse(is.na(.data$pp6c1), 1, 2),
            czas_zakon_imput = ifelse(is.na(.data$pp6f1), 1, 2)
            ) %>%
-      left_join(.data$branze %>% select(.data$kod_zawodu, .data$branza_2019),
+      left_join(branze %>% select(.data$kod_zawodu, .data$branza_2019),
                  by = c("pp3_kierunek_kod" = "kod_zawodu")) %>%
     rename(pp3_kierunek_branzaKZSB = .data$branza_2019) %>%
     select(-"pp6i_4") %>%
