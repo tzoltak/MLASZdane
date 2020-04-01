@@ -4,6 +4,9 @@
 #' w ramach 1. rundy monitoringu na zbiór, w którym obserwacją jest konkretny
 #' badany w konkretnym miesiącu, a zmienne opisują jego status zatrudnienia/nauki.
 #' @param x lista zwracana przez funkcję \code{\link{imputuj_miesiac_pk_1rm}}
+#' @param print wartość logiczna - czy drukować na konsolę tabele
+#' z podsumowaniami przekształcanych danych? (warto wyłączyć przy uruchamianiu
+#' w ramach testów)
 #' @return ramka danych
 #' @details Patrz dokumentacja dot. struktury i zawartości zbiorów danych
 #' z \href{../doc/runda_1-dokumentacja.html}{1. rundy monitoringu}
@@ -12,9 +15,12 @@
 #' @importFrom tidyr unnest
 #' @importFrom dplyr .data arrange case_when filter first last left_join mutate
 #' n select summarise
-przygotuj_zbior_osobo_miesiecy_1rm = function(x) {
+przygotuj_zbior_osobo_miesiecy_1rm = function(x, print = TRUE) {
   stopifnot(is.list(x),
-            all(c("dane", "epizody") %in% names(x)))
+            all(c("dane", "epizody") %in% names(x)),
+            is.logical(print),
+            length(print) == 1,
+            print %in% c(TRUE, FALSE))
   dane = x$dane
   epizody = x$epizody
   rm(x)
@@ -66,8 +72,10 @@ przygotuj_zbior_osobo_miesiecy_1rm = function(x) {
            czas_zakon_imput = .data$czas_zakon_imput == 1) %>%
     select("ID_RESP", "typ_epizodu", "czas_rozp", "czas_zakon", "czy_zakonczony",
            "czas_rozp_imput", "czas_zakon_imput", "praca", "nauka", "bezrobocie")
-  message("Moment przeprowadzenia wywiadu (w 2018 r.):")
-  table(`dzień` = factor(dane$r5s3, 1:31), `miesiąc` = dane$r5s2) %>% print()
+  if (print) {
+    message("Moment przeprowadzenia wywiadu (w 2018 r.):")
+    table(`dzień` = factor(dane$r5s3, 1:31), `miesiąc` = dane$r5s2) %>% print()
+  }
 
   # przekształcanie
   lBD = sum(is.na(epizody$czas_rozp) | is.na(epizody$czas_zakon))
@@ -125,7 +133,7 @@ przygotuj_zbior_osobo_miesiecy_1rm = function(x) {
     arrange(.data$ID_RESP, .data$czas) %>%
     group_by(.data$ID_RESP) %>%
     do(status = koryguj_statusy(.data, "ID_RESP", 9:10)) %>%
-    unnest() %>%
+    unnest(cols = "status") %>%
     mutate(status = ifelse(is.na(.data$praca) & is.na(.data$nauka) & is.na(.data$bezrobocie),
                            "999", ""),
            praca = ifelse(is.na(.data$praca), 0, .data$praca),
@@ -161,17 +169,19 @@ przygotuj_zbior_osobo_miesiecy_1rm = function(x) {
            "m1", "m2", "m3", "data", "czas",
            "status", "praca", "nauka", "bezrobocie", "praca_a_bezrobocie",
            "korekta_ciaglosc_nauki", starts_with("imput_"))
-  message("\nStatystyki korekt statusów:")
-  message("  praca a bezrobocie")
-  table(osoboMiesiace$praca_a_bezrobocie) %>%
-    as.data.frame() %>%
-    setNames(c("sytuacja", "n")) %>%
-    print(row.names = FALSE, right = FALSE)
-  message("  korekta ciągłości nauki")
-  table(osoboMiesiace$korekta_ciaglosc_nauki) %>%
-    as.data.frame() %>%
-    setNames(c("sytuacja", "n")) %>%
-    print(row.names = FALSE, right = FALSE)
+  if (print) {
+    message("\nStatystyki korekt statusów:")
+    message("  praca a bezrobocie")
+    table(osoboMiesiace$praca_a_bezrobocie) %>%
+      as.data.frame() %>%
+      setNames(c("sytuacja", "n")) %>%
+      print(row.names = FALSE, right = FALSE)
+    message("  korekta ciągłości nauki")
+    table(osoboMiesiace$korekta_ciaglosc_nauki) %>%
+      as.data.frame() %>%
+      setNames(c("sytuacja", "n")) %>%
+      print(row.names = FALSE, right = FALSE)
+  }
 
   # upiększanie (etykietowanie)
   message("Dodawanie etykiet.")

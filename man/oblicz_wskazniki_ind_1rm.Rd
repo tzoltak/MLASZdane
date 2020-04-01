@@ -34,9 +34,12 @@ data frame zawierający następujące kolumny:
   \item{\code{UCZ_plec},}
   \item{\code{matura_zdana},}
   \item{\code{egz_zaw_zdany},}
+  \item{\code{powiat_nazwa},}
+  \item{\code{woj_nazwa},}
   \item{\code{pio1_pierwsza},}
   \item{\code{pio4_pierwsza},}
   \item{\code{pi5_pierwsza},}
+  \item{\code{wymiar_pierwsza},}
   \item{\code{praca_czas_rozp_pierwsza},}
   \item{\code{praca_przed_ukonczeniem_szkoly_pierwsza},}
   \item{\code{pg2gh.1_pierwsza},}
@@ -52,9 +55,13 @@ data frame zawierający następujące kolumny:
   \item{\code{pg2i.2_pierwsza},}
   \item{\code{pg2i.3_pierwsza},}
   \item{\code{pg2i.9_pierwsza},}
+  \item{\code{laczenie_praca_nauka_pierwsza},}
+  \item{\code{pio4pelen_pierwsza},}
   \item{\code{pio1_ostatnia},}
   \item{\code{pio4_ostatnia},}
   \item{\code{po5_ostatnia},}
+  \item{\code{wymiar_ostatnia},}
+  \item{\code{praca_czas_rozp_ostatnia},}
   \item{\code{po6_1_ostatnia},}
   \item{\code{po6_2_ostatnia},}
   \item{\code{po6_3_ostatnia},}
@@ -74,6 +81,8 @@ data frame zawierający następujące kolumny:
   \item{\code{pg2i.2_ostatnia},}
   \item{\code{pg2i.3_ostatnia},}
   \item{\code{pg2i.9_ostatnia},}
+  \item{\code{laczenie_praca_nauka_ostatnia},}
+  \item{\code{pio4pelen_ostatnia},}
   \item{\code{pg2gh.1_6m},}
   \item{\code{pg2gh.2_6m},}
   \item{\code{pg2gh.3_6m},}
@@ -118,8 +127,10 @@ data frame zawierający następujące kolumny:
   \item{\code{bezrobocie_7m},}
   \item{\code{bezrobocie_8m},}
   \item{\code{bezrobocie_9m},}
+  \item{\code{spolic_kontynuacja_branza_6m},}
   \item{\code{nauka_6m},}
   \item{\code{nauka_platna_6m},}
+  \item{\code{spolic_kontynuacja_branza_9m},}
   \item{\code{nauka_9m},}
   \item{\code{nauka_platna_9m},}
   \item{\code{studia_kierunek_pierwsze},}

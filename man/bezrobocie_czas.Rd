@@ -4,8 +4,13 @@
 \alias{bezrobocie_czas}
 \title{Obliczanie wskaznikow na poziomie indywidualnym}
 \usage{
-bezrobocie_czas(epizody, limitG = 9, limitD = 1, sufiks = "",
-  idAbsolwenta = "ID_RESP")
+bezrobocie_czas(
+  epizody,
+  limitG = 9,
+  limitD = 1,
+  sufiks = "",
+  idAbsolwenta = "ID_RESP"
+)
 }
 \arguments{
 \item{epizody}{ramka danych z epizodami - typowo element \code{epizody} listy

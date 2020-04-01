@@ -5,30 +5,32 @@
 \title{laczy dane ZUS, o wynikach egzaminow, uczniach, studentach i szkolach
 oraz statystyki powiatow}
 \usage{
-polacz_dane(absolwenci, zus, zdajacyEgzaminy, uczniowie, studenci, szkoly,
-  pnaPowiaty, dataMin, dataMax)
+polacz_dane(
+  absolwenci,
+  zus,
+  zdajacyEgzaminy,
+  uczniowie,
+  studenci,
+  szkoly,
+  pnaPowiaty,
+  dataMin,
+  dataMax
+)
 }
 \arguments{
-\item{absolwenci}{dane wygenerowane za pomocą funkcji
-\code{\link{przygotuj_absolwenci}}}
+\item{absolwenci}{dane opisujące absolwentów}
 
-\item{zus}{dane wygenerowane za pomocą funkcji
-\code{\link[MLAKdane]{przygotuj_zus}}}
+\item{zus}{dane o zatrudnieniu w formacie absolwento-miesiąco-płatników}
 
-\item{zdajacyEgzaminy}{dane wygenerowane za pomocą funkcji
-\code{\link{przygotuj_zdajacy}}}
+\item{zdajacyEgzaminy}{dane o podchodzących do egzaminów}
 
-\item{uczniowie}{dane wygenerowane za pomocą funkcji
-\code{\link{przygotuj_uczniowie}}}
+\item{uczniowie}{dane o uczniach (kontynuujących naukę)}
 
-\item{studenci}{dane wygenerowane za pomocą funkcji
-\code{\link{przygotuj_studenci}}}
+\item{studenci}{dane o studentach (kontynuujących naukę)}
 
-\item{szkoly}{dane wygenerowane za pomocą funkcji
-\code{\link{przygotuj_szkoly}}}
+\item{szkoly}{dane szkół}
 
-\item{pnaPowiaty}{dane wygenerowane za pomocą funkcji
-\code{\link[MLAKdane]{polacz_pna_powiaty}}}
+\item{pnaPowiaty}{dane o powiatach}
 
 \item{dataMin}{początek okresu uwzględnionego w danych ZUS (jako łańcuch
 znaków, np. '2014-01-01')}

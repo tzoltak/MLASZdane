@@ -1,10 +1,10 @@
 # MLASZdane 0.3.3 (19.03.2020)
 
   - Dodanie mapowania nazw branż według przyporządkowania z 2019 roku dla
-  zmiennych: "ABS_pp3_kierunek_kod", "ABS_f4_id", "ABS_pi2_kod" oraz
-  "ABS_po2_kod".
+    zmiennych: "ABS_pp3_kierunek_kod", "ABS_f4_id", "ABS_pi2_kod" oraz
+    "ABS_po2_kod".
   - Dodanie obliczania wskaźników indywidualnych opisujących, czy nauka jest
-  kontynuowana w tej samej branży.
+    kontynuowana w tej samej branży.
 
 # MLASZdane 0.3.2 (19.05.2019)
 

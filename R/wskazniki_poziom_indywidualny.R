@@ -549,7 +549,18 @@ bezrobocie_czas = function(epizody, limitG  = 9, limitD = 1, sufiks = "",
 #' @title Obliczanie wskaznikow na poziomie indywidualnym
 #' @description Funkcja oblicza zmienne-wskaźniki opisujące czy badany
 #' w określonym miesiącu od terminu planowego ukończenia szkoły uczył się,
-#' a jeśli tak, to w jakiej formie.
+#' a jeśli tak, to w jakiej formie. Jeśli w danym miesiącu badany uczył się
+#' w kilku różnych formach, to wybierana jest jedna przy czym:
+#' \itemize{
+#'   \item{studia stacjonarne mają pierwszeństwo przed wszystkimi innymi formami,}
+#'   \item{studia niestacjonarne mają pierwszeństwo przed szkołami policealnymi
+#'         i LO dla dorosłych,}
+#'   \item{szkoły policealne mają pierwszeństwo przed LO dla dorosłych.}
+#' }
+#' Jeśli badany uczył się w kilku szkołac policealnych (a jednocześnie nie
+#' studiował), pierwszeństwo przyznawane jest tej, której branża była zgodna
+#' z branżą zawodu, w jakim kształcił się w szkole, jako absolwent której
+#' został objęty badaniem.
 #' @param epizody ramka danych z epizodami - typowo element \code{epizody} listy
 #' zwracanej przez funkcję \code{\link{imputuj_miesiac_pk_1rm}}
 #' @param dane ramka danych z odpowiedziami na ankietę absolwentów - typowo
@@ -564,7 +575,7 @@ bezrobocie_czas = function(epizody, limitG  = 9, limitD = 1, sufiks = "",
 #' @export
 #' @importFrom rlang ensym
 #' @importFrom dplyr .data %>% arrange case_when filter group_by mutate n
-#' summarise ungroup
+#' slice summarise ungroup
 nauka_miesiac = function(epizody, dane, miesiac, idAbsolwenta = "ID_RESP") {
   stopifnot(is.data.frame(epizody),
             is.data.frame(dane),
@@ -578,9 +589,10 @@ nauka_miesiac = function(epizody, dane, miesiac, idAbsolwenta = "ID_RESP") {
             is.numeric(miesiac), length(miesiac) == 1)
   idAbsolwenta = ensym(idAbsolwenta)
   stopifnot(as.character(idAbsolwenta) %in% names(epizody))
+  stopifnot(as.character(idAbsolwenta) %in% names(dane))
 
   dane = dane %>%
-    select(.data$ID_RESP, .data$ABS_f4_branzaKZSB)
+    select(!!idAbsolwenta, "ABS_f4_branza_kzsb")
 
   epizody = epizody %>%
     filter(.data$typ_epizodu %in% c("SPolic.", "studia", "LO dla dorosłych"),
@@ -591,23 +603,21 @@ nauka_miesiac = function(epizody, dane, miesiac, idAbsolwenta = "ID_RESP") {
                        .data$typ_epizodu %in% "studia" & .data$sp6h_3 %in% 1 ~ "studia niestacjonarne",
                        .data$typ_epizodu %in% "SPolic." ~ "szkoła policealna",
                        grepl("^LO ", .data$typ_epizodu) ~ "LO dla dorosłych") %>%
-             factor(levels = c("studia stacjonarne", "studia niestacjonarne", "szkoła policealna",
-                               "LO dla dorosłych"))) %>%
+             factor(levels = c("studia stacjonarne", "studia niestacjonarne",
+                               "szkoła policealna", "LO dla dorosłych"))) %>%
     left_join(dane, by = "ID_RESP") %>%
     mutate(spolic_kontynuacja_branza =
-             case_when(.data$nauka == "szkoła policealna" &
-                         .data$ABS_f4_branzaKZSB == .data$pp3_kierunek_branzaKZSB ~ TRUE,
-                       .data$nauka == "szkoła policealna" &
-                         .data$ABS_f4_branzaKZSB != .data$pp3_kierunek_branzaKZSB ~ FALSE)) %>%
-    group_by(!!idAbsolwenta, .data$spolic_kontynuacja_branza) %>%
-    arrange(!!idAbsolwenta, .data$nauka) %>%
-    mutate(n = 1:n()) %>%
-    filter(.data$n == 1) %>%
-    summarise(nauka = levels(.data$nauka)[.data$nauka],
-              nauka_platna =
-                case_when(.data$sp6f %in% 1 | .data$pp6g %in% 1 | .data$zp2i %in% 1 ~ 1,
-                          !is.na(.data$nauka) ~ 0)) %>%
-    ungroup()
+             .data$ABS_f4_branza_kzsb == .data$pp3_kierunek_branza_kzsb) %>%
+    group_by(!!idAbsolwenta) %>%
+    arrange(!!idAbsolwenta, .data$nauka, .data$spolic_kontynuacja_branza) %>%
+    slice(1) %>%
+    ungroup() %>%
+    mutate(nauka = levels(.data$nauka)[.data$nauka],
+           nauka_platna =
+             case_when(.data$sp6f %in% 1 | .data$pp6g %in% 1 | .data$zp2i %in% 1 ~ 1,
+                       !is.na(.data$nauka) ~ 0),
+           spolic_kontynuacja_branza = .data$spolic_kontynuacja_branza) %>%
+    select(!!idAbsolwenta, "nauka", "nauka_platna", "spolic_kontynuacja_branza")
   names(epizody) = ifelse(!(names(epizody) %in% as.character(idAbsolwenta)),
                           paste0(names(epizody), "_", miesiac, "m"),
                           names(epizody))
@@ -744,7 +754,6 @@ studia_pierwsze = function(epizody, idAbsolwenta = "ID_RESP") {
 #' @importFrom dplyr .data %>% case_when mutate select
 wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
   stopifnot(is.data.frame(x),
-            "ID_RESP" %in% names(x),
             "ABS_typ_szkoly" %in% names(x),
             "ABS_teryt_szkoly" %in% names(x),
             "ABS_m1" %in% names(x),
@@ -772,11 +781,7 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
              case_when(.data$ABS_f9 %in% 1 & .data$ABS_f10_rok <= maksRokEgz &
                          !is.na(.data$ABS_f10_rok) ~ 1,
                        TRUE ~ 0)) %>%
-    left_join(mapowanie %>% select(.data$teryt, .data$powiat_nazwa),
-              by = c("ABS_teryt_powiat" = "teryt")) %>%
-    left_join(mapowanie %>% select(.data$teryt, .data$woj_nazwa) %>%
-                mutate(teryt = floor(.data$teryt / 100)),
-              by = c("ABS_teryt_woj" = "teryt")) %>%
+    left_join(get("nazwy_jst"), by = c("ABS_teryt_powiat" = "teryt")) %>%
     select(-starts_with("ABS")) %>%
     return()
 }
@@ -950,7 +955,7 @@ oblicz_wskazniki_ind_1rm = function(x, idAbsolwenta = "ID_RESP") {
   wskazniki = suppressWarnings(suppressMessages(
     x$dane %>%
       select(as.character(idAbsolwenta), contains("_szkoly"),
-             "ABS_f4_branzaKZSB", "ABS_pi2_branzaKZSB", "ABS_po2_branzaKZSB",
+             "ABS_f4_branza_kzsb", "ABS_pi2_branza_kzsb", "ABS_po2_branza_kzsb",
              UCZ_kod_zawodu = .data$ABS_f4_id, UCZ_zawod = .data$ABS_f4,
              UCZ_branza = .data$ABS_f4_branza, UCZ_obszar = .data$ABS_f4_obszar,
              "ABS_m1", starts_with("ABS_f8"), "ABS_f9", starts_with("ABS_f10")) %>%

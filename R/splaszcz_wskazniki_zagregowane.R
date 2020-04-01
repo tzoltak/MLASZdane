@@ -30,7 +30,7 @@ splaszcz_wskazniki_zagregowane = function(wskazniki) {
       temp %>%
         do(przygotuj_wskaznik_do_splaszczenia(.data[[i]]))) %>%
       ungroup() %>%
-      unnest() %>%
+      unnest(cols = c()) %>%
       select(-"___tmpGrpVar___")
     for (j in 1:ncol(temp)) {
       if (!is.character(temp[[j]])) {

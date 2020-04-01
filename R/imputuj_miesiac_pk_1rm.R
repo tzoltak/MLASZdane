@@ -4,6 +4,8 @@
 #' i miesiąc zakończenia epizodów pracy nauki i bezrobocia w danych sondażowych
 #' z pilotażowej rundy monitringu.
 #' @param x lista zwracana przez funkcję \code{\link{wczytaj_wyniki_1rm}}
+#' @param print wartość logiczna - czy drukować na konsolę tabele z wynikami
+#' imputacji? (warto wyłączyć przy uruchamianiu w ramach testów)
 #' @return lista ramek danych o takiej samej strukturze, jak zwracana przez
 #' \code{\link{wczytaj_wyniki_1rm}}
 #' @details Patrz dokumentacja dot. struktury i zawartości zbiorów danych
@@ -13,9 +15,12 @@
 #' @importFrom stats lm model.frame predict relevel
 #' @importFrom dplyr .data bind_rows case_when do filter group_by left_join
 #' mutate rename summarise ungroup
-imputuj_miesiac_pk_1rm = function(x) {
+imputuj_miesiac_pk_1rm = function(x, print = TRUE) {
   stopifnot(is.list(x),
-            all(c("dane", "epizody") %in% names(x)))
+            all(c("dane", "epizody") %in% names(x)),
+            is.logical(print),
+            length(print) == 1,
+            print %in% c(TRUE, FALSE))
   mp = options()$max.print
   options(max.print = 99999)
   on.exit(options(max.print = mp))
@@ -102,14 +107,13 @@ imputuj_miesiac_pk_1rm = function(x) {
            rok_rozp_f = factor(.data$rok_rozp),
            rok_zakon_f = factor(ifelse(.data$czy_zakonczony %in% 2,
                                        2100, .data$rok_zakon)))
-  cat("\n")
   ## modelowanie
   message("Modelowanie:")
   epizodyImputM = epizodyImput %>%
     filter(.data$typ_epizodu %in% c("praca", "bezrobocie"))
   epizodyImputM = split(epizodyImputM, epizodyImputM$typ_epizodu)
   ### czas rozpoczęcia
-  message("  czas rozpoczęcia:")
+  message("  czas rozpoczęcia")
   modeleCzas = lapply(epizodyImputM, function(x) {
     return(lm(czas_rozp ~
                 m1 * typ_szkoly +
@@ -126,17 +130,19 @@ imputuj_miesiac_pk_1rm = function(x) {
     return(table(przewidywanie = factor(round(predict(x), 0), levels = l[1]:l[2]),
                  czas_rozp = factor(model.frame(x)[, 1], levels = l[1]:l[2])))
   })
-  cat("    statystyki dopasowania\n")
-  data.frame(zmienna = names(modeleCzas),
-             R2 = lapply(modeleCzas, function(x) {return(summary(x)$r.squared)}) %>%
-               unlist() %>%
-               round(3),
-             `odsetek poprawn. klasyf.` =
-               lapply(tabeleCzas, function(x) {return(sum(diag(x)) / sum(x))}) %>%
-               unlist() %>%
-               round(3),
-             check.names = FALSE) %>%
-    print(row.names = FALSE)
+  if (print) {
+    cat("    statystyki dopasowania\n")
+    data.frame(zmienna = names(modeleCzas),
+               R2 = lapply(modeleCzas, function(x) {return(summary(x)$r.squared)}) %>%
+                 unlist() %>%
+                 round(3),
+               `odsetek poprawn. klasyf.` =
+                 lapply(tabeleCzas, function(x) {return(sum(diag(x)) / sum(x))}) %>%
+                 unlist() %>%
+                 round(3),
+               check.names = FALSE) %>%
+      print(row.names = FALSE)
+  }
   epizodyImputM = mapply(function(x, m) {
     x = suppressWarnings(
       x %>%
@@ -157,7 +163,7 @@ imputuj_miesiac_pk_1rm = function(x) {
   }, epizodyImputM, modeleCzas, SIMPLIFY = FALSE)
   #lapply(epizodyImputM, function(x) {return(summary(x$czas_rozp))})
   ### długość trwania epizodu
-  message("  długość trwania epizodu:")
+  message("  długość trwania epizodu")
   modeleDl = lapply(epizodyImputM, function(x) {
     return(lm(I(czas_zakon - czas_rozp) ~ czas_rozp +
                 m1 * typ_szkoly +
@@ -176,17 +182,19 @@ imputuj_miesiac_pk_1rm = function(x) {
     return(table(przewidywanie = factor(round(predict(x), 0), levels = l[1]:l[2]),
                  dl = factor(model.frame(x)[, 1], levels = l[1]:l[2])))
   })
-  cat("    statystyki dopasowania\n")
-  data.frame(zmienna = names(modeleDl),
-             R2 = lapply(modeleDl, function(x) {return(summary(x)$r.squared)}) %>%
-               unlist() %>%
-               round(3),
-             `odsetek poprawn. klasyf.` =
-               lapply(tabeleDl, function(x) {return(sum(diag(x)) / sum(x))}) %>%
-               unlist() %>%
-               round(3),
-             check.names = FALSE) %>%
-    print(row.names = FALSE)
+  if (print) {
+    cat("    statystyki dopasowania\n")
+    data.frame(zmienna = names(modeleDl),
+               R2 = lapply(modeleDl, function(x) {return(summary(x)$r.squared)}) %>%
+                 unlist() %>%
+                 round(3),
+               `odsetek poprawn. klasyf.` =
+                 lapply(tabeleDl, function(x) {return(sum(diag(x)) / sum(x))}) %>%
+                 unlist() %>%
+                 round(3),
+               check.names = FALSE) %>%
+      print(row.names = FALSE)
+  }
   epizodyImputM = mapply(function(x, m) {
     x = x %>%
       mutate(rok_zakon_f =
@@ -218,13 +226,15 @@ imputuj_miesiac_pk_1rm = function(x) {
     select("ID_RESP", "typ_epizodu", "nr", "czas_rozp", "czas_zakon",
            "czy_zakonczony") %>%
     rename(imput_czas_rozp = .data$czas_rozp, imput_czas_zakon = .data$czas_zakon)
-  message("Wyniki imputacji:")
-  table(imput_czas_rozp = epizodyImput$imput_czas_rozp,
-        imput_czas_zakon = epizodyImput$imput_czas_zakon, exclude = NULL) %>%
-    print()
-  table(imput_czas_zakon = epizodyImput$imput_czas_zakon,
-        czy_zakonczony = epizodyImput$czy_zakonczony, exclude = NULL) %>%
-    print()
+  if (print) {
+    message("Wyniki imputacji:")
+    table(imput_czas_rozp = epizodyImput$imput_czas_rozp,
+          imput_czas_zakon = epizodyImput$imput_czas_zakon, exclude = NULL) %>%
+      print()
+    table(imput_czas_zakon = epizodyImput$imput_czas_zakon,
+          czy_zakonczony = epizodyImput$czy_zakonczony, exclude = NULL) %>%
+      print()
+  }
 
   labWspolne = filter(x$epizody, FALSE)
   x$epizody = suppressWarnings(suppressMessages(

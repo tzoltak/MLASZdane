@@ -4,8 +4,11 @@
 \alias{koryguj_statusy}
 \title{Tworzenie zbioru osobo-miesiecy}
 \usage{
-koryguj_statusy(x, zmiennaID, kodyPracyNaCzarno = vector(mode =
-  "numeric", length = 0))
+koryguj_statusy(
+  x,
+  zmiennaID,
+  kodyPracyNaCzarno = vector(mode = "numeric", length = 0)
+)
 }
 \arguments{
 \item{x}{ramka danych obemująca opis statusów \strong{jednego} badanego}

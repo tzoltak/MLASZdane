@@ -4,10 +4,13 @@
 \alias{imputuj_miesiac_pk_1rm}
 \title{Imputacja miesiacow rozpoczecia i zakonczenia epizodow w danych sondazowych}
 \usage{
-imputuj_miesiac_pk_1rm(x)
+imputuj_miesiac_pk_1rm(x, print = TRUE)
 }
 \arguments{
 \item{x}{lista zwracana przez funkcję \code{\link{wczytaj_wyniki_1rm}}}
+
+\item{print}{wartość logiczna - czy drukować na konsolę tabele z wynikami
+imputacji? (warto wyłączyć przy uruchamianiu w ramach testów)}
 }
 \value{
 lista ramek danych o takiej samej strukturze, jak zwracana przez

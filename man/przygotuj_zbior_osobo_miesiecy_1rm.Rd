@@ -4,10 +4,14 @@
 \alias{przygotuj_zbior_osobo_miesiecy_1rm}
 \title{Tworzenie zbioru osobo-miesiecy}
 \usage{
-przygotuj_zbior_osobo_miesiecy_1rm(x)
+przygotuj_zbior_osobo_miesiecy_1rm(x, print = TRUE)
 }
 \arguments{
 \item{x}{lista zwracana przez funkcję \code{\link{imputuj_miesiac_pk_1rm}}}
+
+\item{print}{wartość logiczna - czy drukować na konsolę tabele
+z podsumowaniami przekształcanych danych? (warto wyłączyć przy uruchamianiu
+w ramach testów)}
 }
 \value{
 ramka danych

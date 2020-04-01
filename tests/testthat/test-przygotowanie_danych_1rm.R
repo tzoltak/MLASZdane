@@ -1,5 +1,5 @@
 if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodowaniem.sav")) {
-  context("Wczytanie danych z 1. rundy monitoringu")
+  context("Wczytanie danych z 1. RM")
 
   w1rm = wczytaj_wyniki_1rm("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodowaniem.sav")
   test_that("wczytaj_wyniki_1rm()", {
@@ -10,9 +10,9 @@ if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodow
     }
   })
 
-  context("Imputacja czasów rozpoczęcia i zakończenia w danych z 1. rundy monitoringu")
+  context("Imputacja czasów rozp. i zakończ. w danych z 1. RM")
 
-  wi1rm = imputuj_miesiac_pk_1rm(w1rm)
+  wi1rm = imputuj_miesiac_pk_1rm(w1rm, FALSE)
   test_that("imputuj_miesiac_pk_pilrm()", {
     expect_type(wi1rm, "list")
     expect_named(wi1rm, c("dane", "epizody", "gospDom"))
@@ -21,9 +21,9 @@ if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodow
     }
   })
 
-  context("Tworzenie zbioru osobo-miesięcy na podstawie danych z 1. rundy monitoringu")
+  context("Tworzenie zbioru osobo-miesięcy z danych z 1. RM")
 
-  om1rm = przygotuj_zbior_osobo_miesiecy_1rm(wi1rm)
+  om1rm = przygotuj_zbior_osobo_miesiecy_1rm(wi1rm, FALSE)
   test_that("przygotuj_zbior_osobo_miesiecy_1rm()", {
     expect_is(om1rm, "data.frame")
     nazwy = c("ID", "data", "czas", "status", "praca", "nauka", "bezrobocie",
@@ -329,6 +329,7 @@ if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodow
     test_that("splaszcz_wskazniki_zagregowane()", {
       splaszczone = splaszcz_wskazniki_zagregowane(wskaznikiSzk)
       expect_is(splaszczone, "data.frame")
+      expect_equal(nrow(splaszczone), nrow(wskaznikiSzk))
       expect_equal(all(unlist(lapply(splaszczone, is.list))), FALSE)
       expect_named(splaszczone, nazwy, ignore.order = TRUE)
     })

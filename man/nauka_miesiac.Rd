@@ -4,11 +4,15 @@
 \alias{nauka_miesiac}
 \title{Obliczanie wskaznikow na poziomie indywidualnym}
 \usage{
-nauka_miesiac(epizody, miesiac, idAbsolwenta = "ID_RESP")
+nauka_miesiac(epizody, dane, miesiac, idAbsolwenta = "ID_RESP")
 }
 \arguments{
 \item{epizody}{ramka danych z epizodami - typowo element \code{epizody} listy
 zwracanej przez funkcję \code{\link{imputuj_miesiac_pk_1rm}}}
+
+\item{dane}{ramka danych z odpowiedziami na ankietę absolwentów - typowo
+element \code{dane} listy zwracanej przez funkcję
+\code{\link{imputuj_miesiac_pk_1rm}}}
 
 \item{miesiac}{liczba - miesiąc od terminu planowego ukończenia szkoły
 (porównywana z wartościami kolumn \code{czas_rozp} i \code{czas_zakon})}
@@ -22,7 +26,18 @@ data frame
 \description{
 Funkcja oblicza zmienne-wskaźniki opisujące czy badany
 w określonym miesiącu od terminu planowego ukończenia szkoły uczył się,
-a jeśli tak, to w jakiej formie.
+a jeśli tak, to w jakiej formie. Jeśli w danym miesiącu badany uczył się
+w kilku różnych formach, to wybierana jest jedna przy czym:
+\itemize{
+  \item{studia stacjonarne mają pierwszeństwo przed wszystkimi innymi formami,}
+  \item{studia niestacjonarne mają pierwszeństwo przed szkołami policealnymi
+        i LO dla dorosłych,}
+  \item{szkoły policealne mają pierwszeństwo przed LO dla dorosłych.}
+}
+Jeśli badany uczył się w kilku szkołac policealnych (a jednocześnie nie
+studiował), pierwszeństwo przyznawane jest tej, której branża była zgodna
+z branżą zawodu, w jakim kształcił się w szkole, jako absolwent której
+został objęty badaniem.
 }
 \seealso{
 \code{\link{nauka}}
