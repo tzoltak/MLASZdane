@@ -52,8 +52,8 @@ wczytaj_wyniki_1rm = function(x){
                     czas_rozp_imput = c(), czas_zakon_imput = c())
   attributes(labWspolne$typ_epizodu)$label = "Typ epizodu (nauki lub pracy)"
   attributes(labWspolne$nr)$label = "Nr epizodu danego typu (jako który został wymieniony przez respondenta)"
-  attributes(labWspolne$czas_rozp)$label = "Czas rozpoczęcia epizodu - licząc w miesiącach od czerwca 2015 r."
-  attributes(labWspolne$czas_zakon)$label = "Czas zakończenia epizodu - licząc w miesiącach od czerwca 2015 r."
+  attributes(labWspolne$czas_rozp)$label = "Czas rozpoczęcia epizodu - licząc w miesiącach od czerwca 2017 r."
+  attributes(labWspolne$czas_zakon)$label = "Czas zakończenia epizodu - licząc w miesiącach od czerwca 2017 r."
   attributes(labWspolne$czy_zakonczony)$label = "Czy epizod się zakończył?"
   attributes(labWspolne$czy_zakonczony)$labels = c("Tak" = 1, "Nie" = 2)
   attributes(labWspolne$swiadectwo)$label = "Czy uzyskał świadectwo ukończenia szkoły?"
