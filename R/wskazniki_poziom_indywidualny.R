@@ -128,6 +128,19 @@ praca_miesiac = function(epizody, miesiac, idAbsolwenta = "ID_RESP") {
   return(epizody)
 }
 #' @title Obliczanie wskaznikow na poziomie indywidualnym
+#' @description Prosta funkcja przeliczająca wysokość zarobków wyrażoną w kwocie
+#' netto na kwotę brutto. Przyjęty został przybliżony przeliczniok o wartości
+#' 0.71
+#' @param x wysokość zarobków wyrażona w kwocie netto - zmienna
+#' \strong{pio4pelen} z obiektu \code{epizody}
+#' @param przelicznik przyjęty odgórnie przelicznik kwoty netto na kwotę brutto.
+#' Posiada domyślną wartość 0.71
+#' @export
+placa_brutto = function(x, przelicznik = 0.71) {
+  brutto = x / przelicznik
+  return(brutto)
+}
+#' @title Obliczanie wskaznikow na poziomie indywidualnym
 #' @description Funkcja oblicza zmienne-wskaźniki opisujące pierwszą pracę
 #' badanego wykonywaną po ukończeniu szkoły (również jeśli zaczęła się
 #' wcześniej). Nie jest przy tym brana pod uwagę praca świadczona bez umowy.
@@ -187,7 +200,8 @@ praca_pierwsza = function(epizody, idAbsolwenta = "ID_RESP") {
                .data$praca_czas_rozp %in% unlist(.data$nauka_czas) |
                .data$praca_czas_rozp < 1)) %>%
     group_by(!!idAbsolwenta) %>%
-    mutate(pio4pelen = round(as.double(.data$pio4) / as.double(.data$wymiar))) %>%
+    mutate(pio4pelen = round(as.double(.data$pio4) / as.double(.data$wymiar)),
+           pio4pelen_brutto = placa_brutto(.data$pio4pelen)) %>%
     ungroup() %>%
     select(-"nauka_czas")
 
@@ -271,7 +285,8 @@ praca_ostatnia = function(epizody, idAbsolwenta = "ID_RESP",
                .data$praca_czas_rozp %in% unlist(.data$nauka_czas) |
                .data$praca_czas_rozp < 1)) %>%
     group_by(!!idAbsolwenta) %>%
-    mutate(pio4pelen = round(as.double(.data$pio4) / as.double(.data$wymiar))) %>%
+    mutate(pio4pelen = round(as.double(.data$pio4) / as.double(.data$wymiar)),
+           pio4pelen_brutto = placa_brutto(.data$pio4pelen)) %>%
     ungroup() %>%
     select(-"nauka_czas")
 
@@ -834,6 +849,7 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
 #'   \item{\code{pg2i.9_pierwsza},}
 #'   \item{\code{laczenie_praca_nauka_pierwsza},}
 #'   \item{\code{pio4pelen_pierwsza},}
+#'   \item{\code{pio4pelen_brutto_pierwsza},}
 #'   \item{\code{pio1_ostatnia},}
 #'   \item{\code{pio4_ostatnia},}
 #'   \item{\code{po5_ostatnia},}
@@ -860,6 +876,7 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
 #'   \item{\code{pg2i.9_ostatnia},}
 #'   \item{\code{laczenie_praca_nauka_ostatnia},}
 #'   \item{\code{pio4pelen_ostatnia},}
+#'   \item{\code{pio4pelen_brutto_ostatnia},}
 #'   \item{\code{pg2gh.1_6m},}
 #'   \item{\code{pg2gh.2_6m},}
 #'   \item{\code{pg2gh.3_6m},}
@@ -928,6 +945,7 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
 #' @seealso Funkcje używane wewnętrznie do obliczania wskaźników zagregowanych:
 #' \itemize{
 #'   \item{\code{\link{wskazniki_nie_z_epizodow}},}
+#'   \item{\code{\link{placa_brutto}},}
 #'   \item{\code{\link{praca_pierwsza}},}
 #'   \item{\code{\link{praca_ostatnia}},}
 #'   \item{\code{\link{praca_miesiac}},}
