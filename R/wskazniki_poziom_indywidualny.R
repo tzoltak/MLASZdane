@@ -574,7 +574,7 @@ bezrobocie_czas = function(epizody, limitG  = 9, limitD = 1, sufiks = "",
 #' @seealso \code{\link{nauka}}
 #' @export
 #' @importFrom rlang ensym
-#' @importFrom dplyr .data %>% arrange case_when filter group_by mutate n
+#' @importFrom dplyr .data %>% arrange case_when desc filter group_by mutate n
 #' slice summarise ungroup
 nauka_miesiac = function(epizody, dane, miesiac, idAbsolwenta = "ID_RESP") {
   stopifnot(is.data.frame(epizody),
