@@ -609,14 +609,13 @@ nauka_miesiac = function(epizody, dane, miesiac, idAbsolwenta = "ID_RESP") {
     mutate(spolic_kontynuacja_branza =
              .data$ABS_f4_branza_kzsb == .data$pp3_kierunek_branza_kzsb) %>%
     group_by(!!idAbsolwenta) %>%
-    arrange(!!idAbsolwenta, .data$nauka, .data$spolic_kontynuacja_branza) %>%
+    arrange(!!idAbsolwenta, .data$nauka, desc(.data$spolic_kontynuacja_branza)) %>%
     slice(1) %>%
     ungroup() %>%
     mutate(nauka = levels(.data$nauka)[.data$nauka],
            nauka_platna =
              case_when(.data$sp6f %in% 1 | .data$pp6g %in% 1 | .data$zp2i %in% 1 ~ 1,
-                       !is.na(.data$nauka) ~ 0),
-           spolic_kontynuacja_branza = .data$spolic_kontynuacja_branza) %>%
+                       !is.na(.data$nauka) ~ 0)) %>%
     select(!!idAbsolwenta, "nauka", "nauka_platna", "spolic_kontynuacja_branza")
   names(epizody) = ifelse(!(names(epizody) %in% as.character(idAbsolwenta)),
                           paste0(names(epizody), "_", miesiac, "m"),
