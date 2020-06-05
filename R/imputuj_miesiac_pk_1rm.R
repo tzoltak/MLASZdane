@@ -74,8 +74,8 @@ imputuj_miesiac_pk_1rm = function(x, print = TRUE) {
                                     .data$typ_epizodu == "bezrobocie" ~ 9,
                                     TRUE ~ 0),
              dlugosc_trwania =
-               case_when(.data$typ_epizodu == "praca" ~ .data$pg2x,
-                         .data$typ_epizodu == "bezrobocie" ~ .data$pb1x)) %>%
+               case_when(.data$typ_epizodu == "praca" ~ as.integer(.data$pg2x),
+                         .data$typ_epizodu == "bezrobocie" ~ as.integer(.data$pb1x))) %>%
       group_by(.data$ID_RESP) %>%
       mutate(lEpP = sum(.data$typ_epizodu %in% "praca"),
              lEpB = sum(.data$typ_epizodu %in% "bezrobocie")) %>%

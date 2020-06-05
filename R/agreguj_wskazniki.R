@@ -316,7 +316,7 @@ agreguj_wskazniki_typ_szk_branza = function(wskazniki) {
                          "uczniowie wszystkich zbadanych techników",
                        grepl("Zasadnicza", .data$SZK_typ, ignore.case = TRUE) ~
                          "uczniowie wszystkich zbadanych zasadniczych szkół zawodowowych") %>%
-             paste0(", którzy kształcili się w zawodach z branży ", .data$UCZ_branza,
+             paste0(", którzy kształcili się w zawodach z branży ", .data$UCZ_branza,
                     " (zawody: ", .data$zawody, ")"))
   return(wskazniki)
 }

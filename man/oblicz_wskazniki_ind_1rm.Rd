@@ -57,6 +57,7 @@ data frame zawierający następujące kolumny:
   \item{\code{pg2i.9_pierwsza},}
   \item{\code{laczenie_praca_nauka_pierwsza},}
   \item{\code{pio4pelen_pierwsza},}
+  \item{\code{pio4pelen_brutto_pierwsza},}
   \item{\code{pio1_ostatnia},}
   \item{\code{pio4_ostatnia},}
   \item{\code{po5_ostatnia},}
@@ -83,6 +84,7 @@ data frame zawierający następujące kolumny:
   \item{\code{pg2i.9_ostatnia},}
   \item{\code{laczenie_praca_nauka_ostatnia},}
   \item{\code{pio4pelen_ostatnia},}
+  \item{\code{pio4pelen_brutto_ostatnia},}
   \item{\code{pg2gh.1_6m},}
   \item{\code{pg2gh.2_6m},}
   \item{\code{pg2gh.3_6m},}
@@ -157,6 +159,7 @@ nie ze zbioru epizodów.
 Funkcje używane wewnętrznie do obliczania wskaźników zagregowanych:
 \itemize{
   \item{\code{\link{wskazniki_nie_z_epizodow}},}
+  \item{\code{\link{placa_brutto}},}
   \item{\code{\link{praca_pierwsza}},}
   \item{\code{\link{praca_ostatnia}},}
   \item{\code{\link{praca_miesiac}},}

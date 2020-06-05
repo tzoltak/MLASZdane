@@ -457,7 +457,7 @@ wczytaj_wyniki_1rm = function(x){
            pio1 = ifelse(.data$pio1 %in% 1:4, .data$pio1, NA),
            pio2 = ifelse(!(tolower(.data$pio2) %in% c("nie dotyczy", "odmowa")),
                          enc2native(tolower(.data$pio2)), "."),
-           pio2_kod = as.integer(.data$pio2_kod),
+           pio2_kod = as.integer(as.character(.data$pio2_kod)),
            pio3 = ifelse(!(tolower(.data$pio3) %in% c("nie dotyczy", "odmowa")),
                          enc2native(tolower(.data$pio3)), "."),
            pio3a = ifelse(.data$pio3a %in% 1:2, .data$pio3a, NA),
@@ -649,8 +649,8 @@ wczytaj_wyniki_1rm = function(x){
   ################################################################################
   #|->
   dane$f4_id = as.numeric(dane$f4_id)
-  dane$pi2_kod = as.numeric(dane$pi2_kod)
-  dane$po2_kod = as.numeric(dane$po2_kod)
+  dane$pi2_kod = as.numeric(as.character(dane$pi2_kod))
+  dane$po2_kod = as.numeric(as.character(dane$po2_kod))
   dane = dane %>%
     left_join(get("kzsb") %>% select("kod_zawodu", "branza_2019"),
               by = c("f4_id" = "kod_zawodu")) %>%

@@ -1,3 +1,7 @@
+# MLASZdane 0.3.4 (5.06.2020)
+
+- Poprawki w kodzie zapewniające kompatybilność z dplyr 1.0.0.
+
 # MLASZdane 0.3.3 (2.04.2020)
 
 - Dodanie mapowania nazw branż według przyporządkowania z 2019 roku dla
