@@ -185,32 +185,54 @@ agreguj_wskazniki_1rm = function(wskazniki, grupy) {
 #' @param progAnonimizacji liczba - wskazniki obliczone na podstawie
 #' mniejszej liczby badanych zostaną zamienione na braki danych
 #' (p. \code{\link{anonimizuj_wskazniki}})
-#' @return data frame
-#' @details Funkcja pozwala na łatwe obliczenie wskaźników zagregowanych na
-#' poziomie szkoły w sposób kompatybilny z zestawieniem wskaźników w grupach
-#' porównawczych zdefiniowanych przez typ szkoły, które tworzy funkcja
-#' \code{\link{agreguj_wskazniki_typ_szk}}.
-#' @seealso \code{\link{agreguj_wskazniki_typ_szk}}
-#' oraz \code{\link{agreguj_wskazniki_1rm}}, która wykonuje większość pracy
+#' @param wykluczGrupeZGrupyOdniesienia wartość logiczna - czy obserwacje
+#' z analizowanej grupy powinny zostać wykluczone z grupy odniesienia
+#' @return lista dwóch ramek danych:
+#' \itemize{
+#'   \item{\code{grupy} - ramka danych zawierająca wskaźniki obliczone dla
+#'         poszczególnych grup,}
+#'   \item{\code{grupyOdniesienia} - ramka danych zawierająca wskaźniki
+#'         obliczone dla odpowiadających im grup odniesienia.}
+#' }
+#' @seealso \code{\link{agreguj_wskazniki_1rm}}
+#' i code{\link{utworz_grupowanie_ze_zmiennej}}, które wykonują większość pracy
 #' @importFrom dplyr %>% .data mutate
 #' @export
-# agreguj_wskazniki_szk = function(wskazniki, progAnonimizacji = 10) {
-#   stopifnot(is.data.frame(wskazniki),
-#             is.null(progAnonimizacji) | is.numeric(progAnonimizacji))
-#   sprawdz_nazwy(names(wskazniki),
-#                 c("SZK_typ", "SZK_kod"))
-#   if (!is.null(progAnonimizacji)) {
-#     stopifnot(progAnonimizacji > 1)
-#   }
-#
-#   wskazniki = wskazniki %>%
-#     agreguj_wskazniki_1rm("SZK_typ", "SZK_kod") %>%
-#     mutate(GRUPA_kod = paste0("typ_szk_", as.numeric(factor(.data$SZK_typ))))
-#   if (!is.null(progAnonimizacji)) {
-#     wskazniki = anonimizuj_wskazniki(wskazniki, progAnonimizacji)
-#   }
-#   return(wskazniki)
-# }
+agreguj_wskazniki_1rm_szk = function(wskazniki, progAnonimizacji = 10,
+                                     wykluczGrupeZGrupyOdniesienia = FALSE) {
+  stopifnot(is.data.frame(wskazniki),
+            is.null(progAnonimizacji) | is.numeric(progAnonimizacji))
+  sprawdz_nazwy(names(wskazniki),
+                c("SZK_kod", "SZK_typ"))
+  if (!is.null(progAnonimizacji)) {
+    stopifnot(progAnonimizacji > 1)
+  }
+
+  wskazniki = wskazniki %>%
+    agreguj_wskazniki_1rm(
+      utworz_grupowanie_ze_zmiennej(wskazniki, "SZK_kod", "SZK_typ",
+                                    wykluczGrupeZGrupyOdniesienia))
+  wskazniki$grupy = wskazniki$grupy %>%
+    mutate(GRUPA_kod = paste0("typ_szk_", as.numeric(factor(.data$SZK_typ))))
+
+  wskazniki$grupyOdniesienia = wskazniki$grupyOdniesienia %>%
+    mutate(GRUPA_kod = paste0("typ_szk_", as.numeric(factor(.data$SZK_typ))),
+           GRUPA_nazwa =
+             case_when(grepl("policealna", .data$SZK_typ, ignore.case = TRUE) ~
+                         "uczniowie wszystkich zbadanych szkół policealnych (ponadgimnazjalnych)",
+                       grepl("Technikum", .data$SZK_typ, ignore.case = TRUE) ~
+                         "uczniowie wszystkich zbadanych techników",
+                       grepl("Zasadnicza", .data$SZK_typ, ignore.case = TRUE) ~
+                         "uczniowie wszystkich zbadanych zasadniczych szkół zawodowowych"))
+
+  if (!is.null(progAnonimizacji)) {
+    wskazniki$grupy = anonimizuj_wskazniki(wskazniki$grupy, progAnonimizacji)
+    wskazniki$grupyOdniesienia = anonimizuj_wskazniki(wskazniki$grupyOdniesienia,
+                                                      progAnonimizacji)
+  }
+
+  return(wskazniki)
+}
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
 #' @description Funkcja oblicza wartości wskaźników na poziomie branży
 #' w ramach szkoły na podstawie ramki danych ze wskaźnikami z poziomu
@@ -220,97 +242,57 @@ agreguj_wskazniki_1rm = function(wskazniki, grupy) {
 #' @param progAnonimizacji liczba - wskazniki obliczone na podstawie
 #' mniejszej liczby badanych zostaną zamienione na braki danych
 #' (p. \code{\link{anonimizuj_wskazniki}})
-#' @return data frame
-#' @details Funkcja pozwala na łatwe obliczenie wskaźników zagregowanych na
-#' poziomie branży w ramach szkoły w sposób kompatybilny z zestawieniem
-#' wskaźników w grupach porównawczych zdefiniowanych przez kombinację branży
-#' i typu szkoły, które tworzy funkcja \code{\link{agreguj_wskazniki_typ_szk_branza}}.
-#' @seealso \code{\link{agreguj_wskazniki_typ_szk_branza}}
-#' oraz \code{\link{agreguj_wskazniki_1rm}}, która wykonuje większość pracy
+#' @param wykluczGrupeZGrupyOdniesienia wartość logiczna - czy obserwacje
+#' z analizowanej grupy powinny zostać wykluczone z grupy odniesienia
+#' @return lista dwóch ramek danych:
+#' \itemize{
+#'   \item{\code{grupy} - ramka danych zawierająca wskaźniki obliczone dla
+#'         poszczególnych grup,}
+#'   \item{\code{grupyOdniesienia} - ramka danych zawierająca wskaźniki
+#'         obliczone dla odpowiadających im grup odniesienia.}
+#' }
+#' @seealso \code{\link{agreguj_wskazniki_1rm}}
+#' i code{\link{utworz_grupowanie_ze_zmiennej}}, które wykonują większość pracy
 #' @importFrom dplyr %>% .data mutate
 #' @export
-# agreguj_wskazniki_szk_branza = function(wskazniki, progAnonimizacji = 10) {
-#   stopifnot(is.data.frame(wskazniki),
-#             is.null(progAnonimizacji) | is.numeric(progAnonimizacji))
-#   sprawdz_nazwy(names(wskazniki),
-#                 c("SZK_typ", "SZK_kod", "UCZ_branza"))
-#   if (!is.null(progAnonimizacji)) {
-#     stopifnot(progAnonimizacji > 1)
-#   }
-#
-#   wskazniki = wskazniki %>%
-#     agreguj_wskazniki_1rm("SZK_typ", "SZK_kod", "UCZ_branza") %>%
-#     mutate(GRUPA_kod = paste0("typ_szk_", as.numeric(factor(.data$SZK_typ)),
-#                               "_b", as.numeric(factor(.data$UCZ_branza))),
-#            SZK_kod = paste0(.data$SZK_kod, "_b", as.numeric(factor(.data$UCZ_branza))))
-#   if (!is.null(progAnonimizacji)) {
-#     wskazniki = anonimizuj_wskazniki(wskazniki, progAnonimizacji)
-#   }
-#   return(wskazniki)
-# }
-#' @title Obliczanie wskaznikow na poziomie zagregowanym
-#' @description Funkcja oblicza wartości wskaźników na poziomie typu szkoły
-#' na podstawie ramki danych ze wskaźnikami z poziomu indywidualnego (zwrócnej
-#' przez funkcję \code{\link{oblicz_wskazniki_ind_1rm}}).
-#' @param wskazniki ramka danych ze wskaźnikami na poziomie idywidualnym
-#' zwracana przez funkcję \code{\link{oblicz_wskazniki_ind_1rm}}
-#' @return data frame
-#' @details Funkcja pozwala na łatwe obliczenie wskaźników zagregowanych na
-#' poziomie typu szkoły w sposób kompatybilny z zestawieniem wskaźników na
-#' poziomie szkół, które tworzy funkcja \code{\link{agreguj_wskazniki_szk}}.
-#' @seealso \code{\link{agreguj_wskazniki_szk}}
-#' oraz \code{\link{agreguj_wskazniki_1rm}}, która wykonuje większość pracy
-#' @importFrom dplyr %>% .data mutate
-#' @export
-# agreguj_wskazniki_typ_szk = function(wskazniki) {
-#   stopifnot(is.data.frame(wskazniki))
-#   sprawdz_nazwy(names(wskazniki),
-#                 c("SZK_typ"))
-#
-#   wskazniki = wskazniki %>%
-#     agreguj_wskazniki_1rm("SZK_typ") %>%
-#     mutate(GRUPA_kod = paste0("typ_szk_", as.numeric(factor(.data$SZK_typ))),
-#            GRUPA_nazwa =
-#              case_when(grepl("policealna", .data$SZK_typ, ignore.case = TRUE) ~
-#                          "uczniowie wszystkich zbadanych szkół policealnych (ponadgimnazjalnych)",
-#                        grepl("Technikum", .data$SZK_typ, ignore.case = TRUE) ~
-#                          "uczniowie wszystkich zbadanych techników",
-#                        grepl("Zasadnicza", .data$SZK_typ, ignore.case = TRUE) ~
-#                          "uczniowie wszystkich zbadanych zasadniczych szkół zawodowowych"))
-#   return(wskazniki)
-# }
-#' @title Obliczanie wskaznikow na poziomie zagregowanym
-#' @description Funkcja oblicza wartości wskaźników na poziomie branży w ramach
-#' typu szkoły na podstawie ramki danych ze wskaźnikami z poziomu indywidualnego
-#' (zwrócnej przez funkcję \code{\link{oblicz_wskazniki_ind_1rm}}).
-#' @param wskazniki ramka danych ze wskaźnikami na poziomie idywidualnym
-#' zwracana przez funkcję \code{\link{oblicz_wskazniki_ind_1rm}}
-#' @return data frame
-#' @details Funkcja pozwala na łatwe obliczenie wskaźników zagregowanych na
-#' poziomie branży w ramach typu szkoły w sposób kompatybilny z zestawieniem
-#' wskaźników na poziomie branż w ramach szkół, które tworzy funkcja
-#' \code{\link{agreguj_wskazniki_szk_branza}}.
-#' @seealso \code{\link{agreguj_wskazniki_szk_branza}}
-#' oraz \code{\link{agreguj_wskazniki_1rm}}, która wykonuje większość pracy
-#' @importFrom dplyr %>% .data mutate
-#' @export
-# agreguj_wskazniki_typ_szk_branza = function(wskazniki) {
-#   stopifnot(is.data.frame(wskazniki))
-#   sprawdz_nazwy(names(wskazniki),
-#                 c("SZK_typ", "UCZ_branza"))
-#
-#   wskazniki = wskazniki %>%
-#     agreguj_wskazniki_1rm("SZK_typ", "UCZ_branza") %>%
-#     mutate(GRUPA_kod = paste0("typ_szk_", as.numeric(factor(.data$SZK_typ)),
-#                               "_b", as.numeric(factor(.data$UCZ_branza))),
-#            GRUPA_nazwa =
-#              case_when(grepl("policealna", .data$SZK_typ, ignore.case = TRUE) ~
-#                          "uczniowie wszystkich zbadanych szkół policealnych (ponadgimnazjalnych)",
-#                        grepl("Technikum", .data$SZK_typ, ignore.case = TRUE) ~
-#                          "uczniowie wszystkich zbadanych techników",
-#                        grepl("Zasadnicza", .data$SZK_typ, ignore.case = TRUE) ~
-#                          "uczniowie wszystkich zbadanych zasadniczych szkół zawodowowych") %>%
-#              paste0(", którzy kształcili się w zawodach z branży ", .data$UCZ_branza,
-#                     " (zawody: ", .data$zawody, ")"))
-#   return(wskazniki)
-# }
+agreguj_wskazniki_1rm_szk_branza = function(wskazniki, progAnonimizacji = 10,
+                                            wykluczGrupeZGrupyOdniesienia = FALSE) {
+  stopifnot(is.data.frame(wskazniki),
+            is.null(progAnonimizacji) | is.numeric(progAnonimizacji))
+  sprawdz_nazwy(names(wskazniki),
+                c("SZK_typ", "SZK_kod", "UCZ_branza"))
+  if (!is.null(progAnonimizacji)) {
+    stopifnot(progAnonimizacji > 1)
+  }
+
+  wskazniki = wskazniki %>%
+    mutate(SZK_kod_branza = paste(.data$SZK_kod, .data$UCZ_branza),
+           SZK_typ_branza = paste(.data$SZK_typ, .data$UCZ_branza))
+  wskazniki = wskazniki %>%
+    agreguj_wskazniki_1rm(
+      utworz_grupowanie_ze_zmiennej(wskazniki, "SZK_kod_branza", "SZK_typ_branza",
+                                    wykluczGrupeZGrupyOdniesienia,
+                                    "SZK_kod", "SZK_typ", "UCZ_branza"))
+  wskazniki$grupy = wskazniki$grupy %>%
+    mutate(GRUPA_kod = paste0("typ_szk_", as.numeric(factor(.data$SZK_typ)),
+                              "_b", as.numeric(factor(.data$UCZ_branza))),
+           SZK_kod = paste0(.data$SZK_kod, "_b", as.numeric(factor(.data$UCZ_branza))))
+
+  wskazniki$grupyOdniesienia = wskazniki$grupyOdniesienia %>%
+    mutate(GRUPA_kod = paste0("typ_szk_", as.numeric(factor(.data$SZK_typ))),
+           GRUPA_nazwa =
+             case_when(grepl("policealna", .data$SZK_typ, ignore.case = TRUE) ~
+                         "uczniowie wszystkich zbadanych szkół policealnych (ponadgimnazjalnych)",
+                       grepl("Technikum", .data$SZK_typ, ignore.case = TRUE) ~
+                         "uczniowie wszystkich zbadanych techników",
+                       grepl("Zasadnicza", .data$SZK_typ, ignore.case = TRUE) ~
+                         "uczniowie wszystkich zbadanych zasadniczych szkół zawodowowych"))
+
+  if (!is.null(progAnonimizacji)) {
+    wskazniki$grupy = anonimizuj_wskazniki(wskazniki$grupy, progAnonimizacji)
+    wskazniki$grupyOdniesienia = anonimizuj_wskazniki(wskazniki$grupyOdniesienia,
+                                                      progAnonimizacji)
+  }
+
+  return(wskazniki)
+}

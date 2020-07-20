@@ -180,12 +180,17 @@ proste_wskazniki_na_wektor = function(x) {
 #' odniesienia, podana jako wyrażenie lub ciąg znaków
 #' @param wykluczGrupeZGrupyOdniesienia wartość logiczna - czy obserwacje
 #' z analizowanej grupy powinny zostać wykluczone z grupy odniesienia
+#' @param ... opcjonalnie specyfikacja dodatkowych kolumn z ramki danych
+#' podanej argumentem \code{x}, które mają zostać dołączone do zwracanej ramki
+#' danych (podane w dowolny sposób akceptowany przez funkcję
+#' \code{\link[dplyr]{select}})
 #' @return ramka danych, która może zostać użyta jako argument \code{grupy}
 #' w wywołaniu funkcji \code{\link{agreguj_wskazniki}}.
 #' @export
 #' @importFrom dplyr %>% .data count distinct mutate select
 utworz_grupowanie_ze_zmiennej = function(x, zmGrupujaca, zmGrupaOdniesienia,
-                                         wykluczGrupeZGrupyOdniesienia = TRUE) {
+                                         wykluczGrupeZGrupyOdniesienia = TRUE,
+                                         ...) {
   stopifnot(is.data.frame(x),
             is.logical(wykluczGrupeZGrupyOdniesienia),
             length(wykluczGrupeZGrupyOdniesienia) == 1)
@@ -196,14 +201,14 @@ utworz_grupowanie_ze_zmiennej = function(x, zmGrupujaca, zmGrupaOdniesienia,
             as.character(zmGrupaOdniesienia) %in% names(x))
 
   x = x %>%
-    select(!!zmGrupujaca, !!zmGrupaOdniesienia) %>%
+    select(!!zmGrupujaca, !!zmGrupaOdniesienia, ...) %>%
     distinct()
   powtorzenia = x %>%
     count(!!zmGrupujaca) %>%
     filter(n > 1) %>%
     select(!!zmGrupujaca)
   if (nrow(powtorzenia) > 0) {
-    blad = paste("W ramach niektórych grup występują różne wartości zmiennnej, która powinna definiować grupę odniesienia. Uniemożliwia to przygotowanie definicji grup odniesienia. Grupy, w których wystąpił problem:\n\n",
+    blad = paste("W ramach niektórych grup występują różne wartości zmiennnej, która powinna definiować grupę odniesienia lub innych zmiennych, które mają zostać dołączone do zwracanej ramki danych. Uniemożliwia to przygotowanie definicji grup odniesienia. Grupy, w których wystąpił problem:\n\n",
                  pokaz_ramke_danych(powtorzenia), "\n\n")
     stop(blad)
   }

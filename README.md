@@ -96,12 +96,11 @@ Teraz można przystąpić do przygotowania zestawień wskaźników zagregowanych
   + na poziomie szkół,
   + na poziomie typów szkół, które przy tworzeniu raportów posłużą jako punkt odniesienia dla ww. wskaźników na poziomie szkół.
   
-Służą do tego odpowiednio funkcje `agreguj_wskazniki_szk()` i `agreguj_wskazniki_typ_szk()`. Przygotowane przy ich pomocy zbiory można następnie zapisać, w celu późniejszego wykorzystania do przygotowania raportów szkół.
+Służy do tego funkcja `agreguj_wskazniki_1rm_szk()`. Przygotowane przy jej pomocy zbiory (funkcja zwraca listę, dwóch *ramek danych*, z których pierwsza zawiera wskaźniki na poziomie szkół, a druga na poziomie typów szkół) można następnie zapisać, w celu późniejszego wykorzystania do przygotowania raportów szkół.
 
 ```r
 wskaznikiSzk = agreguj_wskazniki_szk(wskaznikiInd)
-wskaznikiTypSzk = agreguj_wskazniki_typ_szk(wskaznikiInd)
-save(wskaznikiSzk, wskaznikiTypSzk, file = "wskazniki_szkol.RData")
+save(wskaznikiSzk, file = "wskazniki_szkol.RData")
 ```
 
 Szczegółowy opis sposobu obliczania wskaźników zawiera [dokumentacja procedur obliczania wskaźników na podstawie danych z 1. rundy monitoringu](./inst/doc/runda_1-wskazniki.md)
@@ -117,7 +116,7 @@ W perspektywie tworzenia raportów na podstawie przygotowanego w wyżej opisan
 Przy pomocy funkcji `splaszcz_wskazniki_zagregowane()` możliwe jest też przekształcenie przygotowanych zbiorów wskaźników na poziomie zagregowanym do postaci *płaskich* ramek danych (tzn. niezawierających kolumn-list), co umożliwia zapisanie ich w formacie SPSS lub Staty:
 
 ```r
-wskaznikiSzkEksport = splaszcz_wskazniki_zagregowane(wskaznikiSzk)
+wskaznikiSzkEksport = splaszcz_wskazniki_zagregowane(wskaznikiSzk$grupy)
 library(haven)
 write_dta(wskaznikiSzkEksport, "wskazniki_szkol.dta")
 write_sav(wskaznikiSzkEksport, "wskazniki_szkol.sav")

@@ -1,3 +1,39 @@
+# MLASZdane 0.4.0 (5.06.2020)
+
+- Zmieniony został sposób obliczania wskaźników na poziomie zagregowanym:
+  - definicja grupy odnienia powiązana jest bezpośrednio z analizowaną grupą,
+    co umożliwia wykorzystanie grup odniesienia tworzonych w różny sposób dla
+    poszczególnych spośród analizowanych grup (w szczególności wykluczanie
+    obserwacji należących do analizowanej grupy z odpowiadającej jej grupy
+    odniesienia);
+  - funkcje obliczające wskaźniki na poziomie zagregowanym zwracają teraz listę
+    dwóch ramek danych (poprzednio po prostu ramkę danych): jedna zawiera
+    wartości wskaźników w analizowanych grupach, druga w odpowiadających im
+    grupom odniesienia;
+  - agreguj_wskazniki() została całkowicie przepisana i ma zmienione API;
+  - utworz_grupowanie_ze_zmiennej() to nowa funkcja, która pozwala wygodnie
+    utworzyć ramkę danych opisującą podział na analizowane grupy i odpowiadające
+    im grupy odniesienia, jeśli analizowane grupy definiują wartoście jednej
+    ze zmiennych w zbiorze, a przypisanie grupy odniesienia odbywa się na
+    podstawie wartości pewnej drugiej zmiennej;
+  - zmodyfikowane zostały funkcje służące obliczaniu wskaźników na poziomie
+    zagregowanym na podstawie wyników 1. rundy monitoringu:
+    - agreguj_wskazniki_1rm() jest "koniem roboczym", w którym definiowany jest
+      zakres zwracanych wskaźników (i wywoływana jest funkcja
+      agreguj_wskazniki(), aby przeprowadzić zadane obliczenia);
+    - agreguj_wskazniki_1rm_szk() zastąpiła agreguj_wskazniki_szk()
+      i agreguj_wskazniki_typ_szk();
+    - agreguj_wskazniki_1rm_szk_branza() zastąpiła agreguj_wskazniki_szk_branza()
+      i agreguj_wskazniki_typ_szk_branza();
+    - nowe funkcje wymienione w dwóch powyższych punktach dają możliwość
+      zadania, że obserwacje należących do analizowanej grupy mają zostać
+      wykliczone z odpowiadającej jej grupy odniesienia, ale domyślnie jest
+      to wyłączone (dla zachowania wstecznej kompatybilności);
+    - format zwracanych ramek danych z wartościami wskaźników na poziomie
+      zagregowanym został zachowany poza tym, że nowe funkcje zwracają kilka
+      dodatkowych kolumn w stosunku do wcześniejszych rozwiązań (co jednak nie
+      powinno wpływać na kompatybilność);
+
 # MLASZdane 0.3.4 (5.06.2020)
 
 - Poprawki w kodzie zapewniające kompatybilność z dplyr 1.0.0.

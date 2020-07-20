@@ -8,7 +8,8 @@ utworz_grupowanie_ze_zmiennej(
   x,
   zmGrupujaca,
   zmGrupaOdniesienia,
-  wykluczGrupeZGrupyOdniesienia = TRUE
+  wykluczGrupeZGrupyOdniesienia = TRUE,
+  ...
 )
 }
 \arguments{
@@ -22,6 +23,11 @@ odniesienia, podana jako wyrażenie lub ciąg znaków}
 
 \item{wykluczGrupeZGrupyOdniesienia}{wartość logiczna - czy obserwacje
 z analizowanej grupy powinny zostać wykluczone z grupy odniesienia}
+
+\item{...}{opcjonalnie specyfikacja dodatkowych kolumn z ramki danych
+podanej argumentem \code{x}, które mają zostać dołączone do zwracanej ramki
+danych (podane w dowolny sposób akceptowany przez funkcję
+\code{\link[dplyr]{select}})}
 }
 \value{
 ramka danych, która może zostać użyta jako argument \code{grupy}

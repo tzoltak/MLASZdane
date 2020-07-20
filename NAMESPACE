@@ -2,6 +2,8 @@
 
 export(agreguj_wskazniki)
 export(agreguj_wskazniki_1rm)
+export(agreguj_wskazniki_1rm_szk)
+export(agreguj_wskazniki_1rm_szk_branza)
 export(anonimizuj_wskazniki)
 export(bezrobocie_czas)
 export(bezrobocie_miesiac)

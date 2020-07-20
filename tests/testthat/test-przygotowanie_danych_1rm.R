@@ -98,7 +98,8 @@ if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodow
     set.seed(71624681)
     wskaznikiInd = wskaznikiInd[wskaznikiInd$SZK_kod %in% sample(unique(wskaznikiInd$SZK_kod), 20), ]
 
-    nazwy = c('SZK_typ', 'liczba_zbadanych', 'liczba_zbadanych_kobiet',
+    nazwy = c('grupa', 'odniesienie',
+              'SZK_typ', 'liczba_zbadanych', 'liczba_zbadanych_kobiet',
               'liczba_szkol', 'zawody', 'praca_nauka_0m', 'praca_nauka_1m',
               'praca_nauka_2m', 'praca_nauka_3m', 'praca_nauka_4m',
               'praca_nauka_5m', 'praca_nauka_6m', 'praca_nauka_7m',
@@ -131,38 +132,35 @@ if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodow
               'studia_odplatnosc_pierwsze', 'studia_tryb_pierwsze', 'GRUPA_kod')
 
     test_that("agreguj_wskazniki_szk()", {
-      wskaznikiSzk = agreguj_wskazniki_szk(wskaznikiInd)
-      expect_is(wskaznikiSzk, "data.frame")
-      expect_named(wskaznikiSzk, c("SZK_kod", nazwy), ignore.order = TRUE)
+      wskaznikiSzk = agreguj_wskazniki_1rm_szk(wskaznikiInd)
+      expect_is(wskaznikiSzk$grupy, "data.frame")
+      expect_named(wskaznikiSzk$grupy,
+                   c("SZK_kod", nazwy), ignore.order = TRUE)
+      expect_is(wskaznikiSzk$grupyOdniesienia, "data.frame")
+      expect_named(wskaznikiSzk$grupyOdniesienia,
+                   c("SZK_kod", "GRUPA_nazwa", nazwy), ignore.order = TRUE)
     })
-
-    test_that("agreguj_wskazniki_typ_szk()", {
-      wskaznikiTypSzk = agreguj_wskazniki_typ_szk(wskaznikiInd)
-      expect_is(wskaznikiTypSzk, "data.frame")
-      expect_named(wskaznikiTypSzk, c("GRUPA_nazwa", nazwy), ignore.order = TRUE)
-    })
-
     test_that("agreguj_wskazniki_szk_branza()", {
-      wskaznikiSzkBranza = agreguj_wskazniki_szk_branza(wskaznikiInd)
-      expect_is(wskaznikiSzkBranza, "data.frame")
-      expect_named(wskaznikiSzkBranza, c("SZK_kod", "UCZ_branza", nazwy),
+      wskaznikiSzkBranza = agreguj_wskazniki_1rm_szk_branza(wskaznikiInd)
+      expect_is(wskaznikiSzkBranza$grupy, "data.frame")
+      expect_named(wskaznikiSzkBranza$grupy,
+                   c("SZK_kod", "UCZ_branza", "SZK_kod_branza",
+                     "SZK_typ_branza", nazwy),
+                   ignore.order = TRUE)
+      expect_is(wskaznikiSzkBranza$grupyOdniesienia, "data.frame")
+      expect_named(wskaznikiSzkBranza$grupyOdniesienia,
+                   c("SZK_kod", "UCZ_branza", "SZK_kod_branza",
+                     "SZK_typ_branza", "GRUPA_nazwa", nazwy),
                    ignore.order = TRUE)
     })
 
-    test_that("agreguj_wskazniki_typ_szk_branza()", {
-      wskaznikiTypSzkBranza = agreguj_wskazniki_typ_szk_branza(wskaznikiInd)
-      expect_is(wskaznikiTypSzkBranza, "data.frame")
-      expect_named(wskaznikiTypSzkBranza, c("UCZ_branza", "GRUPA_nazwa", nazwy),
-                   ignore.order = TRUE)
-    })
-
-    wskaznikiSzk = agreguj_wskazniki_szk(wskaznikiInd)
+    wskaznikiSzk = agreguj_wskazniki_1rm_szk(wskaznikiInd)$grupy
   }
 
   if (exists("wskaznikiSzk")) {
     context("Spłaszczanie zbioru wskaźników na poziomie zagregowanym")
 
-    nazwy = c('SZK_kod', 'SZK_typ', 'liczba_zbadanych',
+    nazwy = c('SZK_kod', 'SZK_typ', 'grupa', 'odniesienie', 'liczba_zbadanych',
               'liczba_zbadanych_kobiet', 'liczba_szkol', 'zawody',
               'praca_nauka_0m_n', 'praca_nauka_0m_zm1', 'praca_nauka_0m_zm2',
               'praca_nauka_0m_zm3', 'praca_nauka_0m_zm4', 'praca_nauka_1m_n',
