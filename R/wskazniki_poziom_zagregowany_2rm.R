@@ -1,0 +1,392 @@
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja oblicza wskaźnik opisujący liczbę zbadanych w grupie.
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return liczba
+liczba_zbadanych = function(x) {
+  stopifnot(is.data.frame(x))
+  return(nrow(x))
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca nazwę i adres szkoły jako listę.
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+dane_szkoly = function(x) {
+  list(
+    `nazwa szkoły` = unique(x$szk_nazwa),
+    `adres szkoły` = unique(x$szk_adres)
+  ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja oblicza wskaźnik opisujący liczbę zbadanych kobiet w
+#' grupie.
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return liczba
+liczba_kobiet = function(x) {
+  return(sum(x$M1 %in% 1))
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca informację o nazwie firmy realizującej
+#' badanie.
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+#' @importFrom dplyr mutate case_when
+firma_badawcza = function(x) {
+  x = x %>%
+    mutate(Firma_nazwa = case_when(Firma %in% 1 ~ "PBS sp. z o.o.",
+                                   Firma %in% 2 ~ "Danae sp. z o.o."))
+  list(
+    `Nazwa firmy` = unique(x$Firma_nazwa)
+    ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca listę form gramatycznych różnych słów lub
+#' wyrażeń, które pojawiają się w raporcie w zależności od typu szkoły.
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+#' @importFrom dplyr mutate case_when
+formy = function(x) {
+  x = x %>%
+    mutate(byla_lo = case_when(S1 %in% c(1, 3) ~ "była",
+                               S1 %in% 2 ~ "było"),
+           woj_nazwa_dop = paste0(tolower(woj_nazwa), "go"),
+           szkola_lm = case_when(S1 %in% 1 ~ "szkół branżowych pierwszego stopnia",
+                                 S1 %in% 2 ~ "techników",
+                                 S1 %in% 3 ~ "szkół policealnych"),
+           wybrana_ne = case_when(S1 %in% c(1, 3) ~ "zostałaby wybrana",
+                                  S1 %in% 2 ~ "zostałoby wybrane"),
+           przygotowala_o = case_when(S1 %in% c(1, 3) ~ "przygotowała",
+                                      S1 %in% 2 ~ "przygotowało"),
+           jego_jej = case_when(S1 %in% c(1, 3) ~ "jej",
+                                S1 %in% 2 ~ "jego"),
+           edukacja_plany = case_when(S1 %in% 1 ~ "w szkole branżowej drugiego stopnia, liceum dla dorosłych, na kwalifikacyjnym kursie zawodowym lub na innym kursie",
+                                      S1 %in% c(2, 3) ~ "w szkole policealnej, na studiach lub na kwalifikacyjnym kursie zawodowym lub na innym kursie"))
+  list(
+    `byla bylo` = unique(x$byla_lo),
+    `województwo dopełniacz` = unique(x$woj_nazwa_dop),
+    `szkoła - liczba mnoga` = unique(x$szkola_lm),
+    `wybrana wybrane` = unique(x$wybrana_ne),
+    `przygotowala przygotowalo` = unique(x$przygotowala_o),
+    `jego jej` = unique(x$jego_jej),
+    `edukacja plany` = unique(x$edukacja_plany)
+  ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja obliczająca liczbę absolwentów danego zawodu.
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+zawod_liczebnosc = function(x) {
+  n = list(n = sum(!is.na(x$S2_zawod)))
+
+  zawod = x$S2_zawod %>%
+    table() %>%
+    sort(decreasing = TRUE) %>%
+    names()
+
+  tabela = list()
+  for (i in zawod) {
+    tabela[[i]] = length((x$S2_zawod[x$S2_zawod == i]))
+  }
+
+  c(n, tabela) %>%
+    return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca rozkład odpowiedzi na pytanie W1 "Czy
+#' obecna szkoła jest jedną z tych, do których najbardziej chciał(a) się Pan(i)
+#' dostać?"
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+szkola_1_wyboru = function(x) {
+  list(etykieta = "Czy obecna szkoła jest jedną z tych, do których najbardziej chciał się dostać?",
+       n = sum(x$W1 %in% c(1:3, 7)),
+       `Tak, to szkoła pierwszego wyboru` = sum(x$W1 %in% 1),
+       `Tak, wolał(a)bym inną` = sum(x$W1 %in% 2),
+       `Nie miał(am)em wyboru` = sum(x$W1 %in% 3),
+       `Trudno powiedzieć` = sum(x$W1 %in% 7)) %>%
+    return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca rozkład odpowiedzi na pytanie W2 "Gdyby
+#' teraz mógł (mogła) Pani/Pan wybrać szkołę, to czy ponownie wybrał(a)by P. tę
+#' samą szkołę, w której obecnie się P. uczy?" oraz odsetek sum odpowiedzi
+#' "Raczej tak" i "Na pewno tak".
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+ponowny_wybor = function(x) {
+  list(etykieta = "[%] Czy wybrałby ponownie szkołę?",
+       n = sum(x$W2 %in% (1:7)),
+       `Na pewno nie` = round(sum(x$W2 %in% 1) / sum(x$W2 %in% (1:7)) * 100),
+       `Raczej nie` = round(sum(x$W2 %in% 2) / sum(x$W2 %in% (1:7)) * 100),
+       `Raczej tak` = round(sum(x$W2 %in% 3) / sum(x$W2 %in% (1:7)) * 100),
+       `Na pewno tak` = round(sum(x$W2 %in% 4) / sum(x$W2 %in% (1:7)) * 100),
+       `Trudno powiedzieć` = round(sum(x$W2 %in% 7) / sum(x$W2 %in% (1:7)) * 100),
+       `Raczej tak + Na pewno tak` = round(sum(x$W2 %in% c(3, 4)) / sum(x$W2 %in% (1:7)) * 100)) %>%
+    return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca rozkład odpowiedzi na pytanie W3 "Jak P.
+#' uważa, na ile szkoła przygotowała Panią/Pana do wykonywania zawodu, którego
+#' się P. w niej uczy?" oraz sumy odsetków odpowiedzi: "Przygotowała doskonale"
+#' i "Przygotowała dobrze" oraz "Nie przygotowała w ogóle" i "Przygotowała
+#' słabo".
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+przygotowanie_do_zawodu = function(x) {
+  list(etykieta = "[%] Na ile szkoła przygotowała do wykonywania zawodu?",
+       n = sum(x$W3 %in% (1:7)),
+       `Nie przygotowała w ogóle` = round(sum(x$W3 %in% 1) / sum(x$W3 %in% (1:7)) * 100),
+       `Przygotowała słabo` = round(sum(x$W3 %in% 2) / sum(x$W3 %in% (1:7)) * 100),
+       `Przygotowała średnio` = round(sum(x$W3 %in% 3) / sum(x$W3 %in% (1:7)) * 100),
+       `Przygotowała dobrze` = round(sum(x$W3 %in% 4) / sum(x$W3 %in% (1:7)) * 100),
+       `Przygotowała doskonale` = round(sum(x$W3 %in% 5) / sum(x$W3 %in% (1:7)) * 100),
+       `Trudno powiedzieć` = round(sum(x$W3 %in% 7) / sum(x$W3 %in% (1:7)) * 100),
+       `Nie przygotowała w ogóle + słabo` = round(sum(x$W3 %in% c(1, 2)) / sum(x$W3 %in% (1:7)) * 100),
+       `Przygotowała doskonale + dobrze` = round(sum(x$W3 %in% c(4, 5)) / sum(x$W3 %in% (1:7)) * 100)) %>%
+    return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca rozkład odpowiedzi na pytanie PNZ3 "Jak
+#' Pan(i) ocenia, czy praktyki przygotowały Panią/Pana do wykonywania pracy w
+#' zawodzie, którego się P. uczył(a)? - U pracodawcy w Polsce" oraz sumę
+#' odsetków wskazań odpowiedzi "Przygotowały bardzo dobrze" i "Przygotowały
+#' dobrze".
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+przyg_zawodu_prakt_PL = function(x) {
+  "[%] Praktyki u pracodawcy w Polsce" = list(
+    n = sum(x$PNZ3_1 %in% (1:5)),
+    `Nie przygotowały w ogóle` = round(sum(x$PNZ3_1 %in% 1) / sum(x$PNZ3_1 %in% (1:5)) * 100),
+    `Przygotowały słabo` = round(sum(x$PNZ3_1 %in% 2) / sum(x$PNZ3_1 %in% (1:5)) * 100),
+    `Przygotowały średnio` = round(sum(x$PNZ3_1 %in% 3) / sum(x$PNZ3_1 %in% (1:5)) * 100),
+    `Przygotowały dobrze` = round(sum(x$PNZ3_1 %in% 4) / sum(x$PNZ3_1 %in% (1:5)) * 100),
+    `Przygotowały bardzo dobrze` = round(sum(x$PNZ3_1 %in% 5) / sum(x$PNZ3_1 %in% (1:5)) * 100),
+    `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ3_1 %in% c(4, 5)) / sum(x$PNZ3_1 %in% (1:5)) * 100)
+  ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca rozkład odpowiedzi na pytanie PNZ3 "Jak
+#' Pan(i) ocenia, czy praktyki przygotowały Panią/Pana do wykonywania pracy w
+#' zawodzie, którego się P. uczył(a)? - U pracodawcy za granicą" oraz sumę
+#' odsetków wskazań odpowiedzi
+#' "Przygotowały bardzo dobrze" i "Przygotowały dobrze".
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+przyg_zawodu_prakt_niePL = function(x) {
+  "[%] Praktyki u pracodawcy za granicą" = list(
+    n = sum(x$PNZ3_2 %in% (1:5)),
+      `Nie przygotowały w ogóle` = round(sum(x$PNZ3_2 %in% 1) / sum(x$PNZ3_2 %in% (1:5)) * 100),
+      `Przygotowały słabo` = round(sum(x$PNZ3_2 %in% 2) / sum(x$PNZ3_2 %in% (1:5)) * 100),
+      `Przygotowały średnio` = round(sum(x$PNZ3_2 %in% 3) / sum(x$PNZ3_2 %in% (1:5)) * 100),
+      `Przygotowały dobrze` = round(sum(x$PNZ3_2 %in% 4) / sum(x$PNZ3_2 %in% (1:5)) * 100),
+      `Przygotowały bardzo dobrze` = round(sum(x$PNZ3_2 %in% 5) / sum(x$PNZ3_2 %in% (1:5)) * 100),
+      `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ3_2 %in% c(4, 5)) / sum(x$PNZ3_2 %in% (1:5)) * 100)
+  ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca rozkład odpowiedzi na pytanie PNZ5 "Jak P.
+#' ocenia, czy zajęcia praktyczne przygotowały P. do wykonywania pracy w
+#' zawodzie, którego się Pani/Pan uczył(a)? - U pracodawcy w Polsce" oraz sumę
+#' odsetków wskazań odpowiedzi"Przygotowały bardzo dobrze" i "Przygotowały
+#' dobrze".
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+przyg_zawodu_zaj_PL = function(x) {
+    "[%] Zajęcia u pracodawcy w Polsce" = list(
+      n = sum(x$PNZ5_1 %in% (1:5)),
+      `Nie przygotowały w ogóle` = round(sum(x$PNZ5_1 %in% 1) / sum(x$PNZ5_1 %in% (1:5)) * 100),
+      `Przygotowały słabo` = round(sum(x$PNZ5_1 %in% 2) / sum(x$PNZ5_1 %in% (1:5)) * 100),
+      `Przygotowały średnio` = round(sum(x$PNZ5_1 %in% 3) / sum(x$PNZ5_1 %in% (1:5)) * 100),
+      `Przygotowały dobrze` = round(sum(x$PNZ5_1 %in% 4) / sum(x$PNZ5_1 %in% (1:5)) * 100),
+      `Przygotowały bardzo dobrze` = round(sum(x$PNZ5_1 %in% 5) / sum(x$PNZ5_1 %in% (1:5)) * 100),
+      `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ5_1 %in% c(4, 5)) / sum(x$PNZ5_1 %in% (1:5)) * 100)
+    ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca rozkład odpowiedzi na pytanie PNZ5 "Jak P.
+#' ocenia, czy zajęcia praktyczne przygotowały P. do wykonywania pracy w
+#' zawodzie, którego się Pani/Pan uczył(a)? - U pracodawcy za granicą" oraz sumę
+#' odsetków wskazań odpowiedzi"Przygotowały bardzo dobrze" i "Przygotowały
+#' dobrze".
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+przyg_zawodu_zaj_niePL = function(x) {
+    "[%] Zajęcia u pracodawcy za granicą" = list(
+      n = sum(x$PNZ5_2 %in% (1:5)),
+      `Nie przygotowały w ogóle` = round(sum(x$PNZ5_2 %in% 1) / sum(x$PNZ5_2 %in% (1:5)) * 100),
+      `Przygotowały słabo` = round(sum(x$PNZ5_2 %in% 2) / sum(x$PNZ5_2 %in% (1:5)) * 100),
+      `Przygotowały średnio` = round(sum(x$PNZ5_2 %in% 3) / sum(x$PNZ5_2 %in% (1:5)) * 100),
+      `Przygotowały dobrze` = round(sum(x$PNZ5_2 %in% 4) / sum(x$PNZ5_2 %in% (1:5)) * 100),
+      `Przygotowały bardzo dobrze` = round(sum(x$PNZ5_2 %in% 5) / sum(x$PNZ5_2 %in% (1:5)) * 100),
+      `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ5_2 %in% c(4, 5)) / sum(x$PNZ5_2 %in% (1:5)) * 100)
+    ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca rozkład odpowiedzi na pytanie PNZ5 "Jak P.
+#' ocenia, czy zajęcia praktyczne przygotowały P. do wykonywania pracy w
+#' zawodzie, którego się Pani/Pan uczył(a)? - w szkole" oraz sumę odsetków
+#' wskazań odpowiedzi"Przygotowały bardzo dobrze" i "Przygotowały dobrze".
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+przyg_zawodu_zaj_szkola = function(x) {
+    "[%] Zajęcia w szkole" = list(
+      n = sum(x$PNZ5_3 %in% (1:5)),
+      `Nie przygotowały w ogóle` = round(sum(x$PNZ5_3 %in% 1) / sum(x$PNZ5_3 %in% (1:5)) * 100),
+      `Przygotowały słabo` = round(sum(x$PNZ5_3 %in% 2) / sum(x$PNZ5_3 %in% (1:5)) * 100),
+      `Przygotowały średnio` = round(sum(x$PNZ5_3 %in% 3) / sum(x$PNZ5_3 %in% (1:5)) * 100),
+      `Przygotowały dobrze` = round(sum(x$PNZ5_3 %in% 4) / sum(x$PNZ5_3 %in% (1:5)) * 100),
+      `Przygotowały bardzo dobrze` = round(sum(x$PNZ5_3 %in% 5) / sum(x$PNZ5_3 %in% (1:5)) * 100),
+      `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ5_3 %in% c(4, 5)) / sum(x$PNZ5_3 %in% (1:5)) * 100)
+    ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca rozkład odpowiedzi na pytanie PNZ5 "Jak P.
+#' ocenia, czy zajęcia praktyczne przygotowały P. do wykonywania pracy w
+#' zawodzie, którego się Pani/Pan uczył(a)? - W Centrum Kształcenia
+#' Praktycznego/Zawodowego" oraz sumę odsetków wskazań odpowiedzi"Przygotowały
+#' bardzo dobrze" i "Przygotowały dobrze".
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+przyg_zawodu_zaj_ckp = function(x) {
+    "[%] Zajęcia w CKP / CKZ" = list(
+      n = sum(x$PNZ5_4 %in% (1:5)),
+      `Nie przygotowały w ogóle` = round(sum(x$PNZ5_4 %in% 1) / sum(x$PNZ5_4 %in% (1:5)) * 100),
+      `Przygotowały słabo` = round(sum(x$PNZ5_4 %in% 2) / sum(x$PNZ5_4 %in% (1:5)) * 100),
+      `Przygotowały średnio` = round(sum(x$PNZ5_4 %in% 3) / sum(x$PNZ5_4 %in% (1:5)) * 100),
+      `Przygotowały dobrze` = round(sum(x$PNZ5_4 %in% 4) / sum(x$PNZ5_4 %in% (1:5)) * 100),
+      `Przygotowały bardzo dobrze` = round(sum(x$PNZ5_4 %in% 5) / sum(x$PNZ5_4 %in% (1:5)) * 100),
+      `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ5_4 %in% c(4, 5)) / sum(x$PNZ5_4 %in% (1:5)) * 100)
+    ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca rozkład odpowiedzi na pytanie PNZ9 "Jak
+#' Pani/Pan ocenia, czy nauka u tego pracodawcy przygotowała P. do wykonywania
+#' pracy w zawodzie, którego się Pan(i) uczył(a)?" oraz sumę odsetków
+#' odpowiedzi: "Przygotowała doskonale" i "Przygotowała dobrze".
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+nauka_zawod = function(x) {
+  list(etykieta = "[%] Ocena nauki w kontekście wykonywanego zawodu",
+       n = sum(x$PNZ9 %in% (1:5)),
+       `Nie przygotowała w ogóle` = round(sum(x$PNZ9 %in% 1) / sum(x$PNZ9 %in% (1:5)) * 100),
+       `Przygotowała słabo` = round(sum(x$PNZ9 %in% 2) / sum(x$PNZ9 %in% (1:5)) * 100),
+       `Przygotowała średnio` = round(sum(x$PNZ9 %in% 3) / sum(x$PNZ9 %in% (1:5)) * 100),
+       `Przygotowała dobrze` = round(sum(x$PNZ9 %in% 4) / sum(x$PNZ9 %in% (1:5)) * 100),
+       `Przygotowała doskonale` = round(sum(x$PNZ9 %in% 5) / sum(x$PNZ9 %in% (1:5)) * 100),
+       `Przygotowała doskonale + dobrze` = round(sum(x$PNZ9 %in% c(4, 5)) / sum(x$PNZ9 %in% (1:5)) * 100)) %>%
+    return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca sumę wskazań odpowiedzi "Raczej tak" oraz
+#' "Zdecydowanie tak" w pytaniu PL2 "Czy w ciągu 6 miesięcy po zakończeniu nauki
+#' w obecnej szkole planuje Pani/Pan rozpocząć naukę" dla 1., 2. i 4. pozycji w
+#' kafeterii.
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @param zmienna zmienna znajdująca się w ramce danych \code{x}. Funkcja służy
+#' do wyliczania wskaźników na zmiennych \code{PL2_1}, \code{PL2_2} oraz
+#' \code{PL2_4}.
+#' @param opis opis zwykle odnoszący się do argumentu przekazanego w
+#' \code{zmienna}
+#' @return lista
+#' @importFrom rlang ensym
+plany_6m = function(x, zmienna, opis) {
+  zmienna = ensym(zmienna)
+  lista = list(
+    list(
+      n = sum(x[[zmienna]] %in% c(1:4, 7)),
+      `Zdecydowanie tak + Raczej tak` = round(sum(x[[zmienna]] %in% c(3, 4)) / sum(x[[zmienna]] %in% c(1:4, 7)) * 100)
+    ))
+  names(lista) = opis
+  return(lista)
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja obliczająca procent absolwentów, którzy w ciągu 6
+#' miesięcy od ukończenia szkoły planują rozpocząć dalszą naukę.
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+czy_plany_eduk = function(x) {
+  "[%] Plany edukacyjne - 6 m. od ukończenia szkoły" = list(
+    `% PL2_1-6 min. 1 odp. kod 3 lub 4` = (sum(
+      x$PL2_1 %in% c(3, 4) |
+        x$PL2_2 %in% c(3, 4) |
+        x$PL2_3 %in% c(3, 4) |
+        x$PL2_4 %in% c(3, 4) |
+        x$PL2_5 %in% c(3, 4) |
+        x$PL2_6 %in% c(3, 4)
+    ) / sum(
+      x$PL2_1 %in% c(1:4, 7) |
+        x$PL2_2 %in% c(1:4, 7) |
+        x$PL2_3 %in% c(1:4, 7) |
+        x$PL2_4 %in% c(1:4, 7) |
+        x$PL2_5 %in% c(1:4, 7) |
+        x$PL2_6 %in% c(1:4, 7)
+    ) * 100) %>% round()
+  ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja obliczająca procent absolwentów, którzy albo pracują w
+#' wyuczonym zawodzie albo planują w ciągu najbliższych 12 miesięcy rozpocząć
+#' pracę w wyuczonym zawodzie.
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+plany_eduk_tak = function(x) {
+  "[%] W ciągu N12M zamierza podjąć lub podjął pracę w wyuczonym zawodzie" = list(
+    `% PL4 = 1 lub PL6 = 1` = (sum(x$PL4 == 1 | x$PL6 == 1) /
+                                 sum(x$PL4 != 97 | x$PL6 != 97) * 100) %>%
+      round()
+  ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja obliczająca procent absolwentów, którzy albo nie pracują
+#' w wyuczonym zawodzie albo nie planują w ciągu najbliższych 12 miesięcy
+#' rozpoczynać pracy w wyuczonym zawodzie.
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+plany_eduk_nie = function(x) {
+  list(
+    `% PL2_1-6 brak odp. 3 | 4 & PL3=2 & PL6=2` = (sum(
+      (!(x$PL2_1 %in% c(3, 4)) |
+         !(x$PL2_2 %in% c(3, 4)) |
+         !(x$PL2_3 %in% c(3, 4)) |
+         !(x$PL2_4 %in% c(3, 4)) |
+         !(x$PL2_5 %in% c(3, 4)) |
+         !(x$PL2_6 %in% c(3, 4))) & x$PL3 == 2 & x$PL6 == 2
+    ) / sum(
+      x$PL2_1 %in% c(1:4, 7) |
+        x$PL2_2 %in% c(1:4, 7) |
+        x$PL2_3 %in% c(1:4, 7) |
+        x$PL2_4 %in% c(1:4, 7) |
+        x$PL2_5 %in% c(1:4, 7) |
+        x$PL2_6 %in% c(1:4, 7)
+    ) * 100) %>% round()
+  ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca liczebności absolwentów ze względu na
+#' status zawowy (praca zarobkowa, brak pracy zarobkowej, praca poza wyuczonym
+#' zawodem, młodociani pracownicy).
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+praca_w_zawodzie = function(x) {
+  list(
+    "Pracujący zarobkowo" = list(
+      `Uczniowie pracujący zarobkowo w momencie badania` = sum(x$PL3 == 1),
+      `w tym: pracujący w wyuczonym zawodzie` = sum(x$PL3 == 1 & x$PL4 == 1)
+    ),
+    "Pracujący poza wyuczonym zawodem" = list(
+      `Uczniowie pracujący poza zawodem wyuczonym` = sum(x$PL3 == 1 & x$PL4 == 2),
+      `w tym zamierzający podjąć pracę w zawodzie wyuczonym w ciągu N12M` =
+        sum(x$PL3 == 1 & x$PL4 == 2 & x$PL6 == 1)
+    ),
+    "Nie pracujący zarobkowo" = list(
+      `Uczniowie nie pracujący w momencie badania` = sum(x$PL3 == 2),
+      `w tym: zamierzający podjąć pracę w ciągu N12M` = sum(x$PL5 == 1),
+      `w tym: planujący pracę w wyuczonym zawodzie` =
+        sum(x$PL3 == 2 & x$PL5 == 1 & x$PL6 == 1)
+    ),
+    "Młodociani pracownicy" = list(
+      `Uczniowie będący młodocianymi pracownikami` = sum(x$PNZ8 == 1),
+      `w tym zamierzający podjąć pracę` = sum(x$PL9 == 1),
+      `Młodociani planujący pracę w wyuczonym zawodzie` = sum(x$PL10 == 1)
+    )
+  ) %>% return()
+}
