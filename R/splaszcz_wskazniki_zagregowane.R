@@ -22,6 +22,8 @@ splaszcz_wskazniki_zagregowane = function(wskazniki) {
 
   wynik = select(wskazniki)
   for (i in names(wskazniki)) {
+    # właściwie należałoby zawartośc tej pętli przepisać tak, aby wykorzystać
+    # funkcję `rowwise()` z dplyra po ostatniej dużej zmianie API tego pakietu
     temp = wskazniki %>%
       select(i) %>%
       mutate(`___tmpGrpVar___` = 1:nrow(wskazniki)) %>%
@@ -84,7 +86,7 @@ przygotuj_wskaznik_do_splaszczenia = function(x) {
   }) %>%
     as.data.frame(stringsAsFactors = FALSE,
                   check.names = FALSE)
-  # brutalny hack na wskaźniki opisujące "tłO", tj. wartość podobnego
+  # brutalny hack na wskaźniki opisujące "tło", tj. wartość podobnego
   # wskaźnika z BDL GUS dla JST
   names(x) = sub("^(.* w )(gminie|powiecie|województwie|) .*$", "\\1\\2", names(x))
   return(x)

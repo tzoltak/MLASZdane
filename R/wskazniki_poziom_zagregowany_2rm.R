@@ -28,67 +28,57 @@ liczba_kobiet = function(x) {
 #' @description Funkcja przechowująca informację o nazwie firmy realizującej
 #' badanie.
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
-#' @return lista
-#' @importFrom dplyr mutate case_when
+#' @return ciąg znaków
+#' @importFrom dplyr %>% .data case_when summarise
 firma_badawcza = function(x) {
   x = x %>%
-    mutate(Firma_nazwa = case_when(Firma %in% 1 ~ "PBS sp. z o.o.",
-                                   Firma %in% 2 ~ "Danae sp. z o.o."))
-  list(
-    `Nazwa firmy` = unique(x$Firma_nazwa)
-    ) %>% return()
+    summarise(Firma_nazwa = case_when(n_distinct(.data$Firma) > 1 ~ "ndt.",
+                                      all(.data$Firma %in% 1) ~ "PBS sp. z o.o.",
+                                      all(.data$Firma %in% 2) ~ "Danae sp. z o.o."))
+  return(x$Firma_nazwa)
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
 #' @description Funkcja przechowująca listę form gramatycznych różnych słów lub
 #' wyrażeń, które pojawiają się w raporcie w zależności od typu szkoły.
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
-#' @importFrom dplyr mutate case_when
+#' @importFrom dplyr %>% .data case_when distinct mutate select
 formy = function(x) {
   x = x %>%
-    mutate(byla_lo = case_when(S1 %in% c(1, 3) ~ "była",
-                               S1 %in% 2 ~ "było"),
-           woj_nazwa_dop = paste0(tolower(woj_nazwa), "go"),
-           szkola_lm = case_when(S1 %in% 1 ~ "szkół branżowych pierwszego stopnia",
-                                 S1 %in% 2 ~ "techników",
-                                 S1 %in% 3 ~ "szkół policealnych"),
-           wybrana_ne = case_when(S1 %in% c(1, 3) ~ "zostałaby wybrana",
-                                  S1 %in% 2 ~ "zostałoby wybrane"),
-           przygotowala_o = case_when(S1 %in% c(1, 3) ~ "przygotowała",
-                                      S1 %in% 2 ~ "przygotowało"),
-           jego_jej = case_when(S1 %in% c(1, 3) ~ "jej",
-                                S1 %in% 2 ~ "jego"),
-           edukacja_plany = case_when(S1 %in% 1 ~ "w szkole branżowej drugiego stopnia, liceum dla dorosłych, na kwalifikacyjnym kursie zawodowym lub na innym kursie",
-                                      S1 %in% c(2, 3) ~ "w szkole policealnej, na studiach lub na kwalifikacyjnym kursie zawodowym lub na innym kursie"))
-  list(
-    `byla bylo` = unique(x$byla_lo),
-    `województwo dopełniacz` = unique(x$woj_nazwa_dop),
-    `szkoła - liczba mnoga` = unique(x$szkola_lm),
-    `wybrana wybrane` = unique(x$wybrana_ne),
-    `przygotowala przygotowalo` = unique(x$przygotowala_o),
-    `jego jej` = unique(x$jego_jej),
-    `edukacja plany` = unique(x$edukacja_plany)
-  ) %>% return()
+    select("S1", "woj_nazwa") %>%
+    distinct() %>%
+    mutate(byla_lo = case_when(.data$S1 %in% c(1, 3) ~ "była",
+                               .data$S1 %in% 2 ~ "było"),
+           woj_nazwa_dop = paste0(tolower(.data$woj_nazwa), "go"),
+           szkola_lm = case_when(.data$S1 %in% 1 ~ "szkół branżowych pierwszego stopnia",
+                                 .data$S1 %in% 2 ~ "techników",
+                                 .data$S1 %in% 3 ~ "szkół policealnych"),
+           wybrana_ne = case_when(.data$S1 %in% c(1, 3) ~ "zostałaby wybrana",
+                                  .data$S1 %in% 2 ~ "zostałoby wybrane"),
+           przygotowala_o = case_when(.data$S1 %in% c(1, 3) ~ "przygotowała",
+                                      .data$S1 %in% 2 ~ "przygotowało"),
+           jego_jej = case_when(.data$S1 %in% c(1, 3) ~ "jej",
+                                .data$S1 %in% 2 ~ "jego"),
+           edukacja_plany = case_when(.data$S1 %in% 1 ~ "w szkole branżowej drugiego stopnia, liceum dla dorosłych, na kwalifikacyjnym kursie zawodowym lub na innym kursie",
+                                      .data$S1 %in% c(2, 3) ~ "w szkole policealnej, na studiach lub na kwalifikacyjnym kursie zawodowym lub na innym kursie")
+    ) %>%
+    as.list() %>%
+    return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
 #' @description Funkcja obliczająca liczbę absolwentów danego zawodu.
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 zawod_liczebnosc = function(x) {
   n = list(n = sum(!is.na(x$S2_zawod)))
 
-  zawod = x$S2_zawod %>%
+  tabela = x$S2_zawod %>%
     table() %>%
     sort(decreasing = TRUE) %>%
-    names()
+    as.list()
 
-  tabela = list()
-  for (i in zawod) {
-    tabela[[i]] = length((x$S2_zawod[x$S2_zawod == i]))
-  }
-
-  c(n, tabela) %>%
-    return()
+  return(c(n, tabela))
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
 #' @description Funkcja przechowująca rozkład odpowiedzi na pytanie W1 "Czy
@@ -96,6 +86,7 @@ zawod_liczebnosc = function(x) {
 #' dostać?"
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 szkola_1_wyboru = function(x) {
   list(etykieta = "Czy obecna szkoła jest jedną z tych, do których najbardziej chciał się dostać?",
        n = sum(x$W1 %in% c(1:3, 7)),
@@ -112,6 +103,7 @@ szkola_1_wyboru = function(x) {
 #' "Raczej tak" i "Na pewno tak".
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 ponowny_wybor = function(x) {
   list(etykieta = "[%] Czy wybrałby ponownie szkołę?",
        n = sum(x$W2 %in% (1:7)),
@@ -120,8 +112,8 @@ ponowny_wybor = function(x) {
        `Raczej tak` = round(sum(x$W2 %in% 3) / sum(x$W2 %in% (1:7)) * 100),
        `Na pewno tak` = round(sum(x$W2 %in% 4) / sum(x$W2 %in% (1:7)) * 100),
        `Trudno powiedzieć` = round(sum(x$W2 %in% 7) / sum(x$W2 %in% (1:7)) * 100),
-       `Raczej tak + Na pewno tak` = round(sum(x$W2 %in% c(3, 4)) / sum(x$W2 %in% (1:7)) * 100)) %>%
-    return()
+       `Raczej tak + Na pewno tak` = round(sum(x$W2 %in% c(3, 4)) / sum(x$W2 %in% (1:7)) * 100)
+  ) %>% return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
 #' @description Funkcja przechowująca rozkład odpowiedzi na pytanie W3 "Jak P.
@@ -131,6 +123,7 @@ ponowny_wybor = function(x) {
 #' słabo".
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 przygotowanie_do_zawodu = function(x) {
   list(etykieta = "[%] Na ile szkoła przygotowała do wykonywania zawodu?",
        n = sum(x$W3 %in% (1:7)),
@@ -141,8 +134,8 @@ przygotowanie_do_zawodu = function(x) {
        `Przygotowała doskonale` = round(sum(x$W3 %in% 5) / sum(x$W3 %in% (1:7)) * 100),
        `Trudno powiedzieć` = round(sum(x$W3 %in% 7) / sum(x$W3 %in% (1:7)) * 100),
        `Nie przygotowała w ogóle + słabo` = round(sum(x$W3 %in% c(1, 2)) / sum(x$W3 %in% (1:7)) * 100),
-       `Przygotowała doskonale + dobrze` = round(sum(x$W3 %in% c(4, 5)) / sum(x$W3 %in% (1:7)) * 100)) %>%
-    return()
+       `Przygotowała doskonale + dobrze` = round(sum(x$W3 %in% c(4, 5)) / sum(x$W3 %in% (1:7)) * 100)
+  ) %>% return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
 #' @description Funkcja przechowująca rozkład odpowiedzi na pytanie PNZ3 "Jak
@@ -152,15 +145,16 @@ przygotowanie_do_zawodu = function(x) {
 #' dobrze".
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 przyg_zawodu_prakt_PL = function(x) {
-  "[%] Praktyki u pracodawcy w Polsce" = list(
-    n = sum(x$PNZ3_1 %in% (1:5)),
-    `Nie przygotowały w ogóle` = round(sum(x$PNZ3_1 %in% 1) / sum(x$PNZ3_1 %in% (1:5)) * 100),
-    `Przygotowały słabo` = round(sum(x$PNZ3_1 %in% 2) / sum(x$PNZ3_1 %in% (1:5)) * 100),
-    `Przygotowały średnio` = round(sum(x$PNZ3_1 %in% 3) / sum(x$PNZ3_1 %in% (1:5)) * 100),
-    `Przygotowały dobrze` = round(sum(x$PNZ3_1 %in% 4) / sum(x$PNZ3_1 %in% (1:5)) * 100),
-    `Przygotowały bardzo dobrze` = round(sum(x$PNZ3_1 %in% 5) / sum(x$PNZ3_1 %in% (1:5)) * 100),
-    `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ3_1 %in% c(4, 5)) / sum(x$PNZ3_1 %in% (1:5)) * 100)
+  list(etykieta = "[%] Praktyki u pracodawcy w Polsce",
+       n = sum(x$PNZ3_1 %in% (1:5)),
+       `Nie przygotowały w ogóle` = round(sum(x$PNZ3_1 %in% 1) / sum(x$PNZ3_1 %in% (1:5)) * 100),
+       `Przygotowały słabo` = round(sum(x$PNZ3_1 %in% 2) / sum(x$PNZ3_1 %in% (1:5)) * 100),
+       `Przygotowały średnio` = round(sum(x$PNZ3_1 %in% 3) / sum(x$PNZ3_1 %in% (1:5)) * 100),
+       `Przygotowały dobrze` = round(sum(x$PNZ3_1 %in% 4) / sum(x$PNZ3_1 %in% (1:5)) * 100),
+       `Przygotowały bardzo dobrze` = round(sum(x$PNZ3_1 %in% 5) / sum(x$PNZ3_1 %in% (1:5)) * 100),
+       `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ3_1 %in% c(4, 5)) / sum(x$PNZ3_1 %in% (1:5)) * 100)
   ) %>% return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
@@ -171,15 +165,16 @@ przyg_zawodu_prakt_PL = function(x) {
 #' "Przygotowały bardzo dobrze" i "Przygotowały dobrze".
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 przyg_zawodu_prakt_niePL = function(x) {
-  "[%] Praktyki u pracodawcy za granicą" = list(
-    n = sum(x$PNZ3_2 %in% (1:5)),
-      `Nie przygotowały w ogóle` = round(sum(x$PNZ3_2 %in% 1) / sum(x$PNZ3_2 %in% (1:5)) * 100),
-      `Przygotowały słabo` = round(sum(x$PNZ3_2 %in% 2) / sum(x$PNZ3_2 %in% (1:5)) * 100),
-      `Przygotowały średnio` = round(sum(x$PNZ3_2 %in% 3) / sum(x$PNZ3_2 %in% (1:5)) * 100),
-      `Przygotowały dobrze` = round(sum(x$PNZ3_2 %in% 4) / sum(x$PNZ3_2 %in% (1:5)) * 100),
-      `Przygotowały bardzo dobrze` = round(sum(x$PNZ3_2 %in% 5) / sum(x$PNZ3_2 %in% (1:5)) * 100),
-      `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ3_2 %in% c(4, 5)) / sum(x$PNZ3_2 %in% (1:5)) * 100)
+  list(etykieta = "[%] Praktyki u pracodawcy za granicą",
+       n = sum(x$PNZ3_2 %in% (1:5)),
+       `Nie przygotowały w ogóle` = round(sum(x$PNZ3_2 %in% 1) / sum(x$PNZ3_2 %in% (1:5)) * 100),
+       `Przygotowały słabo` = round(sum(x$PNZ3_2 %in% 2) / sum(x$PNZ3_2 %in% (1:5)) * 100),
+       `Przygotowały średnio` = round(sum(x$PNZ3_2 %in% 3) / sum(x$PNZ3_2 %in% (1:5)) * 100),
+       `Przygotowały dobrze` = round(sum(x$PNZ3_2 %in% 4) / sum(x$PNZ3_2 %in% (1:5)) * 100),
+       `Przygotowały bardzo dobrze` = round(sum(x$PNZ3_2 %in% 5) / sum(x$PNZ3_2 %in% (1:5)) * 100),
+       `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ3_2 %in% c(4, 5)) / sum(x$PNZ3_2 %in% (1:5)) * 100)
   ) %>% return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
@@ -190,16 +185,17 @@ przyg_zawodu_prakt_niePL = function(x) {
 #' dobrze".
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 przyg_zawodu_zaj_PL = function(x) {
-    "[%] Zajęcia u pracodawcy w Polsce" = list(
-      n = sum(x$PNZ5_1 %in% (1:5)),
-      `Nie przygotowały w ogóle` = round(sum(x$PNZ5_1 %in% 1) / sum(x$PNZ5_1 %in% (1:5)) * 100),
-      `Przygotowały słabo` = round(sum(x$PNZ5_1 %in% 2) / sum(x$PNZ5_1 %in% (1:5)) * 100),
-      `Przygotowały średnio` = round(sum(x$PNZ5_1 %in% 3) / sum(x$PNZ5_1 %in% (1:5)) * 100),
-      `Przygotowały dobrze` = round(sum(x$PNZ5_1 %in% 4) / sum(x$PNZ5_1 %in% (1:5)) * 100),
-      `Przygotowały bardzo dobrze` = round(sum(x$PNZ5_1 %in% 5) / sum(x$PNZ5_1 %in% (1:5)) * 100),
-      `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ5_1 %in% c(4, 5)) / sum(x$PNZ5_1 %in% (1:5)) * 100)
-    ) %>% return()
+  list(etykieta = "[%] Zajęcia u pracodawcy w Polsce",
+       n = sum(x$PNZ5_1 %in% (1:5)),
+       `Nie przygotowały w ogóle` = round(sum(x$PNZ5_1 %in% 1) / sum(x$PNZ5_1 %in% (1:5)) * 100),
+       `Przygotowały słabo` = round(sum(x$PNZ5_1 %in% 2) / sum(x$PNZ5_1 %in% (1:5)) * 100),
+       `Przygotowały średnio` = round(sum(x$PNZ5_1 %in% 3) / sum(x$PNZ5_1 %in% (1:5)) * 100),
+       `Przygotowały dobrze` = round(sum(x$PNZ5_1 %in% 4) / sum(x$PNZ5_1 %in% (1:5)) * 100),
+       `Przygotowały bardzo dobrze` = round(sum(x$PNZ5_1 %in% 5) / sum(x$PNZ5_1 %in% (1:5)) * 100),
+       `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ5_1 %in% c(4, 5)) / sum(x$PNZ5_1 %in% (1:5)) * 100)
+  ) %>% return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
 #' @description Funkcja przechowująca rozkład odpowiedzi na pytanie PNZ5 "Jak P.
@@ -209,16 +205,17 @@ przyg_zawodu_zaj_PL = function(x) {
 #' dobrze".
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 przyg_zawodu_zaj_niePL = function(x) {
-    "[%] Zajęcia u pracodawcy za granicą" = list(
-      n = sum(x$PNZ5_2 %in% (1:5)),
-      `Nie przygotowały w ogóle` = round(sum(x$PNZ5_2 %in% 1) / sum(x$PNZ5_2 %in% (1:5)) * 100),
-      `Przygotowały słabo` = round(sum(x$PNZ5_2 %in% 2) / sum(x$PNZ5_2 %in% (1:5)) * 100),
-      `Przygotowały średnio` = round(sum(x$PNZ5_2 %in% 3) / sum(x$PNZ5_2 %in% (1:5)) * 100),
-      `Przygotowały dobrze` = round(sum(x$PNZ5_2 %in% 4) / sum(x$PNZ5_2 %in% (1:5)) * 100),
-      `Przygotowały bardzo dobrze` = round(sum(x$PNZ5_2 %in% 5) / sum(x$PNZ5_2 %in% (1:5)) * 100),
-      `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ5_2 %in% c(4, 5)) / sum(x$PNZ5_2 %in% (1:5)) * 100)
-    ) %>% return()
+  list(etykieta = "[%] Zajęcia u pracodawcy za granicą",
+       n = sum(x$PNZ5_2 %in% (1:5)),
+       `Nie przygotowały w ogóle` = round(sum(x$PNZ5_2 %in% 1) / sum(x$PNZ5_2 %in% (1:5)) * 100),
+       `Przygotowały słabo` = round(sum(x$PNZ5_2 %in% 2) / sum(x$PNZ5_2 %in% (1:5)) * 100),
+       `Przygotowały średnio` = round(sum(x$PNZ5_2 %in% 3) / sum(x$PNZ5_2 %in% (1:5)) * 100),
+       `Przygotowały dobrze` = round(sum(x$PNZ5_2 %in% 4) / sum(x$PNZ5_2 %in% (1:5)) * 100),
+       `Przygotowały bardzo dobrze` = round(sum(x$PNZ5_2 %in% 5) / sum(x$PNZ5_2 %in% (1:5)) * 100),
+       `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ5_2 %in% c(4, 5)) / sum(x$PNZ5_2 %in% (1:5)) * 100)
+  ) %>% return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
 #' @description Funkcja przechowująca rozkład odpowiedzi na pytanie PNZ5 "Jak P.
@@ -227,16 +224,17 @@ przyg_zawodu_zaj_niePL = function(x) {
 #' wskazań odpowiedzi"Przygotowały bardzo dobrze" i "Przygotowały dobrze".
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 przyg_zawodu_zaj_szkola = function(x) {
-    "[%] Zajęcia w szkole" = list(
-      n = sum(x$PNZ5_3 %in% (1:5)),
-      `Nie przygotowały w ogóle` = round(sum(x$PNZ5_3 %in% 1) / sum(x$PNZ5_3 %in% (1:5)) * 100),
-      `Przygotowały słabo` = round(sum(x$PNZ5_3 %in% 2) / sum(x$PNZ5_3 %in% (1:5)) * 100),
-      `Przygotowały średnio` = round(sum(x$PNZ5_3 %in% 3) / sum(x$PNZ5_3 %in% (1:5)) * 100),
-      `Przygotowały dobrze` = round(sum(x$PNZ5_3 %in% 4) / sum(x$PNZ5_3 %in% (1:5)) * 100),
-      `Przygotowały bardzo dobrze` = round(sum(x$PNZ5_3 %in% 5) / sum(x$PNZ5_3 %in% (1:5)) * 100),
-      `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ5_3 %in% c(4, 5)) / sum(x$PNZ5_3 %in% (1:5)) * 100)
-    ) %>% return()
+  list(etykieta = "[%] Zajęcia w szkole",
+       n = sum(x$PNZ5_3 %in% (1:5)),
+       `Nie przygotowały w ogóle` = round(sum(x$PNZ5_3 %in% 1) / sum(x$PNZ5_3 %in% (1:5)) * 100),
+       `Przygotowały słabo` = round(sum(x$PNZ5_3 %in% 2) / sum(x$PNZ5_3 %in% (1:5)) * 100),
+       `Przygotowały średnio` = round(sum(x$PNZ5_3 %in% 3) / sum(x$PNZ5_3 %in% (1:5)) * 100),
+       `Przygotowały dobrze` = round(sum(x$PNZ5_3 %in% 4) / sum(x$PNZ5_3 %in% (1:5)) * 100),
+       `Przygotowały bardzo dobrze` = round(sum(x$PNZ5_3 %in% 5) / sum(x$PNZ5_3 %in% (1:5)) * 100),
+       `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ5_3 %in% c(4, 5)) / sum(x$PNZ5_3 %in% (1:5)) * 100)
+  ) %>% return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
 #' @description Funkcja przechowująca rozkład odpowiedzi na pytanie PNZ5 "Jak P.
@@ -246,16 +244,17 @@ przyg_zawodu_zaj_szkola = function(x) {
 #' bardzo dobrze" i "Przygotowały dobrze".
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 przyg_zawodu_zaj_ckp = function(x) {
-    "[%] Zajęcia w CKP / CKZ" = list(
-      n = sum(x$PNZ5_4 %in% (1:5)),
-      `Nie przygotowały w ogóle` = round(sum(x$PNZ5_4 %in% 1) / sum(x$PNZ5_4 %in% (1:5)) * 100),
-      `Przygotowały słabo` = round(sum(x$PNZ5_4 %in% 2) / sum(x$PNZ5_4 %in% (1:5)) * 100),
-      `Przygotowały średnio` = round(sum(x$PNZ5_4 %in% 3) / sum(x$PNZ5_4 %in% (1:5)) * 100),
-      `Przygotowały dobrze` = round(sum(x$PNZ5_4 %in% 4) / sum(x$PNZ5_4 %in% (1:5)) * 100),
-      `Przygotowały bardzo dobrze` = round(sum(x$PNZ5_4 %in% 5) / sum(x$PNZ5_4 %in% (1:5)) * 100),
-      `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ5_4 %in% c(4, 5)) / sum(x$PNZ5_4 %in% (1:5)) * 100)
-    ) %>% return()
+  list(etykieta = "[%] Zajęcia w CKP / CKZ",
+       n = sum(x$PNZ5_4 %in% (1:5)),
+       `Nie przygotowały w ogóle` = round(sum(x$PNZ5_4 %in% 1) / sum(x$PNZ5_4 %in% (1:5)) * 100),
+       `Przygotowały słabo` = round(sum(x$PNZ5_4 %in% 2) / sum(x$PNZ5_4 %in% (1:5)) * 100),
+       `Przygotowały średnio` = round(sum(x$PNZ5_4 %in% 3) / sum(x$PNZ5_4 %in% (1:5)) * 100),
+       `Przygotowały dobrze` = round(sum(x$PNZ5_4 %in% 4) / sum(x$PNZ5_4 %in% (1:5)) * 100),
+       `Przygotowały bardzo dobrze` = round(sum(x$PNZ5_4 %in% 5) / sum(x$PNZ5_4 %in% (1:5)) * 100),
+       `Przygotowały bardzo dobrze oraz dobrze` = round(sum(x$PNZ5_4 %in% c(4, 5)) / sum(x$PNZ5_4 %in% (1:5)) * 100)
+  ) %>% return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
 #' @description Funkcja przechowująca rozkład odpowiedzi na pytanie PNZ9 "Jak
@@ -264,6 +263,7 @@ przyg_zawodu_zaj_ckp = function(x) {
 #' odpowiedzi: "Przygotowała doskonale" i "Przygotowała dobrze".
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 nauka_zawod = function(x) {
   list(etykieta = "[%] Ocena nauki w kontekście wykonywanego zawodu",
        n = sum(x$PNZ9 %in% (1:5)),
@@ -272,8 +272,8 @@ nauka_zawod = function(x) {
        `Przygotowała średnio` = round(sum(x$PNZ9 %in% 3) / sum(x$PNZ9 %in% (1:5)) * 100),
        `Przygotowała dobrze` = round(sum(x$PNZ9 %in% 4) / sum(x$PNZ9 %in% (1:5)) * 100),
        `Przygotowała doskonale` = round(sum(x$PNZ9 %in% 5) / sum(x$PNZ9 %in% (1:5)) * 100),
-       `Przygotowała doskonale + dobrze` = round(sum(x$PNZ9 %in% c(4, 5)) / sum(x$PNZ9 %in% (1:5)) * 100)) %>%
-    return()
+       `Przygotowała doskonale + dobrze` = round(sum(x$PNZ9 %in% c(4, 5)) / sum(x$PNZ9 %in% (1:5)) * 100)
+  ) %>% return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
 #' @description Funkcja przechowująca sumę wskazań odpowiedzi "Raczej tak" oraz
@@ -287,39 +287,43 @@ nauka_zawod = function(x) {
 #' @param opis opis zwykle odnoszący się do argumentu przekazanego w
 #' \code{zmienna}
 #' @return lista
+#' @importFrom dplyr %>%
 #' @importFrom rlang ensym
 plany_6m = function(x, zmienna, opis) {
   zmienna = ensym(zmienna)
-  lista = list(
-    list(
-      n = sum(x[[zmienna]] %in% c(1:4, 7)),
+  list(etykieta = opis,
+       n = sum(x[[zmienna]] %in% c(1:4, 7)),
       `Zdecydowanie tak + Raczej tak` = round(sum(x[[zmienna]] %in% c(3, 4)) / sum(x[[zmienna]] %in% c(1:4, 7)) * 100)
-    ))
-  names(lista) = opis
-  return(lista)
+  ) %>% return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
 #' @description Funkcja obliczająca procent absolwentów, którzy w ciągu 6
 #' miesięcy od ukończenia szkoły planują rozpocząć dalszą naukę.
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 czy_plany_eduk = function(x) {
-  "[%] Plany edukacyjne - 6 m. od ukończenia szkoły" = list(
-    `% PL2_1-6 min. 1 odp. kod 3 lub 4` = (sum(
-      x$PL2_1 %in% c(3, 4) |
-        x$PL2_2 %in% c(3, 4) |
-        x$PL2_3 %in% c(3, 4) |
-        x$PL2_4 %in% c(3, 4) |
-        x$PL2_5 %in% c(3, 4) |
-        x$PL2_6 %in% c(3, 4)
-    ) / sum(
-      x$PL2_1 %in% c(1:4, 7) |
-        x$PL2_2 %in% c(1:4, 7) |
-        x$PL2_3 %in% c(1:4, 7) |
-        x$PL2_4 %in% c(1:4, 7) |
-        x$PL2_5 %in% c(1:4, 7) |
-        x$PL2_6 %in% c(1:4, 7)
-    ) * 100) %>% round()
+  list(etykieta = "[%] Plany edukacyjne - 6 m. od ukończenia szkoły",
+       n = sum(x$PL2_1 %in% c(1:4, 7) |
+                 x$PL2_2 %in% c(1:4, 7) |
+                 x$PL2_3 %in% c(1:4, 7) |
+                 x$PL2_4 %in% c(1:4, 7) |
+                 x$PL2_5 %in% c(1:4, 7) |
+                 x$PL2_6 %in% c(1:4, 7)),
+       `% PL2_1-6 min. 1 odp. kod 3 lub 4` =
+         (sum(x$PL2_1 %in% c(3, 4) |
+                x$PL2_2 %in% c(3, 4) |
+                x$PL2_3 %in% c(3, 4) |
+                x$PL2_4 %in% c(3, 4) |
+                x$PL2_5 %in% c(3, 4) |
+                x$PL2_6 %in% c(3, 4)
+         ) / sum(x$PL2_1 %in% c(1:4, 7) |
+                   x$PL2_2 %in% c(1:4, 7) |
+                   x$PL2_3 %in% c(1:4, 7) |
+                   x$PL2_4 %in% c(1:4, 7) |
+                   x$PL2_5 %in% c(1:4, 7) |
+                   x$PL2_6 %in% c(1:4, 7)
+         ) * 100) %>% round()
   ) %>% return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
@@ -328,11 +332,13 @@ czy_plany_eduk = function(x) {
 #' pracę w wyuczonym zawodzie.
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 plany_eduk_tak = function(x) {
-  "[%] W ciągu N12M zamierza podjąć lub podjął pracę w wyuczonym zawodzie" = list(
-    `% PL4 = 1 lub PL6 = 1` = (sum(x$PL4 == 1 | x$PL6 == 1) /
-                                 sum(x$PL4 != 97 | x$PL6 != 97) * 100) %>%
-      round()
+  list(etykieta = "[%] W ciągu N12M zamierza podjąć lub podjął pracę w wyuczonym zawodzie",
+       n = sum(x$PL4 != 97 | x$PL6 != 97),
+       `% PL4 = 1 lub PL6 = 1` = (sum(x$PL4 == 1 | x$PL6 == 1) /
+                                    sum(x$PL4 != 97 | x$PL6 != 97) * 100) %>%
+         round()
   ) %>% return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
@@ -341,23 +347,29 @@ plany_eduk_tak = function(x) {
 #' rozpoczynać pracy w wyuczonym zawodzie.
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 plany_eduk_nie = function(x) {
-  list(
-    `% PL2_1-6 brak odp. 3 | 4 & PL3=2 & PL6=2` = (sum(
-      (!(x$PL2_1 %in% c(3, 4)) |
-         !(x$PL2_2 %in% c(3, 4)) |
-         !(x$PL2_3 %in% c(3, 4)) |
-         !(x$PL2_4 %in% c(3, 4)) |
-         !(x$PL2_5 %in% c(3, 4)) |
-         !(x$PL2_6 %in% c(3, 4))) & x$PL3 == 2 & x$PL6 == 2
-    ) / sum(
-      x$PL2_1 %in% c(1:4, 7) |
-        x$PL2_2 %in% c(1:4, 7) |
-        x$PL2_3 %in% c(1:4, 7) |
-        x$PL2_4 %in% c(1:4, 7) |
-        x$PL2_5 %in% c(1:4, 7) |
-        x$PL2_6 %in% c(1:4, 7)
-    ) * 100) %>% round()
+  list(etykieta = "[%] Nie pracuje w wyuczonym zawodzi i w ciągu N12M nie zamierza podjąć pracy w wyuczonym zawodzie",
+       n = sum(x$PL2_1 %in% c(1:4, 7) |
+                 x$PL2_2 %in% c(1:4, 7) |
+                 x$PL2_3 %in% c(1:4, 7) |
+                 x$PL2_4 %in% c(1:4, 7) |
+                 x$PL2_5 %in% c(1:4, 7) |
+                 x$PL2_6 %in% c(1:4, 7)),
+       `% PL2_1-6 brak odp. 3 | 4 & PL3=2 & PL6=2` =
+         (sum((!(x$PL2_1 %in% c(3, 4)) |
+                 !(x$PL2_2 %in% c(3, 4)) |
+                 !(x$PL2_3 %in% c(3, 4)) |
+                 !(x$PL2_4 %in% c(3, 4)) |
+                 !(x$PL2_5 %in% c(3, 4)) |
+                 !(x$PL2_6 %in% c(3, 4))) & x$PL3 == 2 & x$PL6 == 2
+         ) / sum(x$PL2_1 %in% c(1:4, 7) |
+                   x$PL2_2 %in% c(1:4, 7) |
+                   x$PL2_3 %in% c(1:4, 7) |
+                   x$PL2_4 %in% c(1:4, 7) |
+                   x$PL2_5 %in% c(1:4, 7) |
+                   x$PL2_6 %in% c(1:4, 7)
+         ) * 100) %>% round()
   ) %>% return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
@@ -366,6 +378,7 @@ plany_eduk_nie = function(x) {
 #' zawodem, młodociani pracownicy).
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
+#' @importFrom dplyr %>%
 praca_w_zawodzie = function(x) {
   list(
     "Pracujący zarobkowo" = list(
