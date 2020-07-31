@@ -4,9 +4,7 @@
 \name{kzsb}
 \alias{kzsb}
 \title{Klasyfikacja Zawodow Szkolnictwa Branzowego.}
-\format{
-Ramka danych z 19 kolumnami i 261 wierszami.
-}
+\format{Ramka danych z 19 kolumnami i 261 wierszami.}
 \usage{
 kzsb
 }

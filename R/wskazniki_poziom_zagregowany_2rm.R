@@ -373,33 +373,63 @@ plany_eduk_nie = function(x) {
   ) %>% return()
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
-#' @description Funkcja przechowująca liczebności absolwentów ze względu na
-#' status zawowy (praca zarobkowa, brak pracy zarobkowej, praca poza wyuczonym
-#' zawodem, młodociani pracownicy).
+#' @description Funkcja przechowująca liczebności absolwentów, którzy pracowali
+#' zawodowo w momencie badania, w tym pracujących w wyuczonym zawodzie.
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
 #' @importFrom dplyr %>%
-praca_w_zawodzie = function(x) {
+praca_zarobkowa = function(x) {
   list(
-    "Pracujący zarobkowo" = list(
-      `Uczniowie pracujący zarobkowo w momencie badania` = sum(x$PL3 == 1),
-      `w tym: pracujący w wyuczonym zawodzie` = sum(x$PL3 == 1 & x$PL4 == 1)
-    ),
-    "Pracujący poza wyuczonym zawodem" = list(
-      `Uczniowie pracujący poza zawodem wyuczonym` = sum(x$PL3 == 1 & x$PL4 == 2),
-      `w tym zamierzający podjąć pracę w zawodzie wyuczonym w ciągu N12M` =
-        sum(x$PL3 == 1 & x$PL4 == 2 & x$PL6 == 1)
-    ),
-    "Nie pracujący zarobkowo" = list(
-      `Uczniowie nie pracujący w momencie badania` = sum(x$PL3 == 2),
-      `w tym: zamierzający podjąć pracę w ciągu N12M` = sum(x$PL5 == 1),
-      `w tym: planujący pracę w wyuczonym zawodzie` =
-        sum(x$PL3 == 2 & x$PL5 == 1 & x$PL6 == 1)
-    ),
-    "Młodociani pracownicy" = list(
-      `Uczniowie będący młodocianymi pracownikami` = sum(x$PNZ8 == 1),
-      `w tym zamierzający podjąć pracę` = sum(x$PL9 == 1),
-      `Młodociani planujący pracę w wyuczonym zawodzie` = sum(x$PL10 == 1)
-    )
+    etykieta = "Pracujący zarobkowo",
+    `Uczniowie pracujący zarobkowo w momencie badania` = sum(x$PL3 == 1),
+    `w tym: pracujący w wyuczonym zawodzie` = sum(x$PL3 == 1 & x$PL4 == 1)
+  ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca liczebności absolwentów, którzy pracują
+#' poza wyuczonym zawodem, w tym zamierzących podjąć pracę w wyuczonym zawodzie
+#' w ciągu następnych 12 miesięcy.
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+#' @importFrom dplyr %>%
+praca_poza_wyuczonym = function(x) {
+  list(
+    etykieta = "Pracujący poza wyuczonym zawodem",
+    `Uczniowie pracujący poza zawodem wyuczonym` = sum(x$PL3 == 1 & x$PL4 == 2),
+    `w tym zamierzający podjąć pracę w zawodzie wyuczonym w ciągu N12M` =
+      sum(x$PL3 == 1 & x$PL4 == 2 & x$PL6 == 1)
+  ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca liczebności absolwentów, którzy nie
+#' pracowali w momencie badania, w tym zamierzających podjąć pracę w ciągu
+#' następnych 12 miesięcy, w tym planujących podjęcie pracy w wyuczonym
+#' zawodzie.
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+#' @importFrom dplyr %>%
+brak_pracy = function(x) {
+  list(
+    etykieta = "Nie pracujący zarobkowo",
+    `Uczniowie nie pracujący w momencie badania` = sum(x$PL3 == 2),
+    `w tym: zamierzający podjąć pracę w ciągu N12M` = sum(x$PL5 == 1),
+    `w tym: planujący pracę w wyuczonym zawodzie` =
+      sum(x$PL3 == 2 & x$PL5 == 1 & x$PL6 == 1)
+  ) %>% return()
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym
+#' @description Funkcja przechowująca liczebności absolwentów będących
+#' młodocianymi pracownikami, w tym zamierzjącymi podjąć pracę oraz
+#' przechowująca liczbę młodocianych pracowników planujących pracę w wyuczonym
+#' zawodzie.
+#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
+#' @return lista
+#' @importFrom dplyr %>%
+mlodociani_praca = function(x) {
+  list(
+    etykieta = "Młodociani pracownicy",
+    `Uczniowie będący młodocianymi pracownikami` = sum(x$PNZ8 == 1),
+    `w tym zamierzający podjąć pracę` = sum(x$PL9 == 1),
+    `Młodociani planujący pracę w wyuczonym zawodzie` = sum(x$PL10 == 1)
   ) %>% return()
 }

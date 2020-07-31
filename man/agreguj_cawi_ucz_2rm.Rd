@@ -43,6 +43,9 @@ używane do obliczania konkretnych wskaźników zagregowanych:
   \item{\code{\link{czy_plany_eduk}},}
   \item{\code{\link{plany_eduk_tak}},}
   \item{\code{\link{plany_eduk_nie}},}
-  \item{\code{\link{praca_w_zawodzie}},}
+  \item{\code{\link{praca_zarobkowa}},}
+  \item{\code{\link{praca_poza_wyuczonym}},}
+  \item{\code{\link{brak_pracy}},}
+  \item{\code{\link{mlodociani_praca}},}
 }
 }

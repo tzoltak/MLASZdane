@@ -28,7 +28,10 @@
 #'   \item{\code{\link{czy_plany_eduk}},}
 #'   \item{\code{\link{plany_eduk_tak}},}
 #'   \item{\code{\link{plany_eduk_nie}},}
-#'   \item{\code{\link{praca_w_zawodzie}},}
+#'   \item{\code{\link{praca_zarobkowa}},}
+#'   \item{\code{\link{praca_poza_wyuczonym}},}
+#'   \item{\code{\link{brak_pracy}},}
+#'   \item{\code{\link{mlodociani_praca}},}
 #' }
 #' @export
 #' @importFrom dplyr .data
@@ -67,7 +70,10 @@ agreguj_cawi_ucz_2rm = function(wskazniki, grupy) {
     czy_plany_edu = czy_plany_eduk(.data),
     plany_edu_tak = plany_eduk_tak(.data),
     plany_edu_nie = plany_eduk_nie(.data),
-    praca_w_zawodzie = praca_w_zawodzie(.data)
+    praca_zarobkowa = praca_zarobkowa(.data),
+    praca_poza_wyuczonym = praca_poza_wyuczonym(.data),
+    brak_pracy = brak_pracy(.data),
+    mlodociani_praca = mlodociani_praca(.data)
   )
   return(wskazniki)
 }
