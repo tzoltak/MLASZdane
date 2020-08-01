@@ -1,3 +1,10 @@
+# MLASZdane 0.4.1 (31.07.2020)
+
+- Wprowadzono nowe funkcje do obliczania wskaźników na poziomie zagregowanym z
+  2. rundy monitoringu, któRe są kompatybilne ze zmianą sposobu obliczania
+  wskaźników wprowadzoną w wersji 0.4.0 pakietu.
+
+
 # MLASZdane 0.4.0 (5.06.2020)
 
 - Zmieniony został sposób obliczania wskaźników na poziomie zagregowanym:
@@ -13,7 +20,7 @@
   - agreguj_wskazniki() została całkowicie przepisana i ma zmienione API;
   - utworz_grupowanie_ze_zmiennej() to nowa funkcja, która pozwala wygodnie
     utworzyć ramkę danych opisującą podział na analizowane grupy i odpowiadające
-    im grupy odniesienia, jeśli analizowane grupy definiują wartoście jednej
+    im grupy odniesienia, jeśli analizowane grupy definiują wartości jednej
     ze zmiennych w zbiorze, a przypisanie grupy odniesienia odbywa się na
     podstawie wartości pewnej drugiej zmiennej;
   - zmodyfikowane zostały funkcje służące obliczaniu wskaźników na poziomie
@@ -27,7 +34,7 @@
       i agreguj_wskazniki_typ_szk_branza();
     - nowe funkcje wymienione w dwóch powyższych punktach dają możliwość
       zadania, że obserwacje należących do analizowanej grupy mają zostać
-      wykliczone z odpowiadającej jej grupy odniesienia, ale domyślnie jest
+      wykluczone z odpowiadającej jej grupy odniesienia, ale domyślnie jest
       to wyłączone (dla zachowania wstecznej kompatybilności);
     - format zwracanych ramek danych z wartościami wskaźników na poziomie
       zagregowanym został zachowany poza tym, że nowe funkcje zwracają kilka

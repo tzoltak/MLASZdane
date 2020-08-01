@@ -21,7 +21,7 @@ Sposób wykorzystania ww. funkcji do przygotowania zbiorów wskaźników, a nas
 
 # 2. Wskaźniki obliczane na poziomie indywidualnym
 
-Zbiór wskaźników na poziomie indywidualnym ma postać ramki danych, w której jeden wiersz odpowiada jednemu absolwentowi, a poszczególne kolumny zawierają zmienne-wskaźniku, opisujące charakterystyki badanych, które w szczególności mogą być:
+Zbiór wskaźników na poziomie indywidualnym ma postać ramki danych, w której jeden wiersz odpowiada jednemu absolwentowi, a poszczególne kolumny zawierają zmienne-wskaźniki, opisujące charakterystyki badanych, które w szczególności mogą być:
 
   + stałe w czasie - p. sekcja 2.1.;
   + odnoszące się do pierwszego lub ostatniego *epizodu* danego typu, jaki miał miejsce w okresie objętym badaniem, tj. 9 miesięcy od miesiąca planowego ukończenia szkoły zawodowej przez badanych (lipiec 2017-marzec 2018) - p. m.in. sekcja 2.3 i 2.4;
@@ -33,7 +33,9 @@ Zbiór wskaźników na poziomie indywidualnym ma postać ramki danych, w które
   + `SZK_typ` – typ szkoły zawodowej: "Szkoła policealna", "Technikum" lub "Zasadnicza Szkoła Zawodowa".
   + `SZK_powiat` – kod TERYT powiatu, na terenie którego pracuje szkoła,
   + `UCZ_zawod` – kod Klasyfikacji Zawodów Szkolnictwa Zawodowego zawodu, którego absolwent uczył się w badanej szkole,
-  + `UCZ_plec` – "K" lub "M".
+  + `UCZ_plec` – "K" lub "M",
+  + `powiat_nazwa` – nazwa powiatu, w którym znajduje się szkoła,
+  + `woj_nazwa` – nazwa województwa, w którym znajduje się szkoła.
 
 ## 2.2. Wskaźniki dotyczące wyników egzaminów
 
@@ -64,6 +66,9 @@ Przy obliczaniu wskaźników nie były brane pod uwagę prace świadczone bez um
     + 2 – "odszedłem/odeszłam z własnej inicjatywy",
     + 3 – "stanowisko pracy, firma została zlikwidowana",
     + brak danych – absolwent nie pracował po ukończeniu szkoły lub pracował po ukończeniu szkoły tylko w jednym miejscu i pracował tam wciąż w momencie badania lub nie odpowiedział na pytanie PI5.
+  + `wymiar_pierwsza` – wymiar etatu w pierwszej pracy jako wynik dzielenia
+  średniej liczby godzin przepracowanych w tygodniu przez 40 (liczba
+  przepracowanych godzin tygodniowo dla pracy na pełny etat)
   + `praca_czas_rozp_pierwsza` – liczba miesięcy, od czerwca w roku ukończenia szkoły do momentu podjęcia pierwszej pracy wykonywanej po ukończeniu szkoły; tworzona na podstawie odpowiedzi na pytania PG2C i PG2D:
     + liczba [miesiące],
     + brak danych – absolwent nie pracował po ukończeniu szkoły lub pracował, ale kontynuował pracę, którą rozpoczął przed ukończeniem szkoły lub nie odpowiedział na pytanie PG2D.
@@ -122,7 +127,14 @@ Przy obliczaniu wskaźników nie były brane pod uwagę prace świadczone bez um
   + `pg2i.9_pierwsza` – zmienna logiczna; utworzona na podstawie odpowiedzi na pytanie PG2I:
     + TRUE – absolwent pracował po ukończeniu szkoły, ale nie udzielił odpowiedzi na pytanie PG2I dotyczące miejsca pracy w pierwszej pracy wykonywanej po ukończeniu szkoły,
     + FALSE – absolwent pracował po ukończeniu szkoły i udzielił odpowiedzi na pytanie PG2I dotyczące miejsca pracy w pierwszej pracy wykonywanej po ukończeniu szkoły,
-    + brak danych – absolwent nie pracował po ukończeniu szkoły.
+    + brak danych – absolwent nie pracował po ukończeniu szkoły,
+  + `laczenie_praca_nauka_pierwsza` – zmienna logiczna opisująca czy absolwent
+  uczył się równolegle będąc zatrudnionym w pierwszej pracy,
+  + `pio4pelen_pierwsza` – zarobki netto w pierwszej pracy przeliczone na pełny
+  wymiar pracy (kwota podzielona przez wartość zmiennej określającej wymiar
+  pracy),
+  + `pio4pelen_brutto_pierwsza` – zarobki w pierwszej pracy przeliczone na pełny
+  wymiar pracy przeliczone na kwotę brutto.
 
 ## 2.4. Wskaźniki opisujące ostatnią pracę wykonywaną przez absolwenta w ciągu 9 miesięcy od miesiąca ukończenia szkoły
 
@@ -132,6 +144,9 @@ Przy obliczaniu wskaźników nie były brane pod uwagę prace świadczone bez um
   + `po5_ostatnia` – ocena, w jakim stopniu ostatnia praca wykonywana w ciągu 9 miesięcy od miesiąca ukończenia szkoły odpowiada oczekiwaniom absolwenta (ogólnie rzecz biorąc); tworzona na podstawie odpowiedzi na pytanie PO5:
     + liczba całkowita od 1 do 6 (skala ocen szkolnych: wyższa wartość wskazuje na lepszą ocenę);
     + brak danych - absolwent nie pracował po ukończeniu szkoły lub nie odpowiedział na pytanie PO5.
+  + `wymiar_ostatnia` – wymiar etatu w ostatniej pracy jako wynik dzielenia
+  średniej liczby godzin przepracowanych w tygodniu przez 40 (liczba
+  przepracowanych godzin tygodniowo dla pracy na pełny etat)
   + `po6_1_ostatnia` –  ocena, w jakim stopniu ostatnia praca wykonywana w ciągu 9 miesięcy od miesiąca ukończenia szkoły odpowiada oczekiwaniom absolwenta pod względem poziomu zarobków; tworzona na podstawie odpowiedzi na pytanie PO6.a):
     + liczba całkowita od 1 do 6 (skala ocen szkolnych: wyższa wartość wskazuje na lepszą ocenę);
     + brak danych - absolwent nie pracował po ukończeniu szkoły lub nie odpowiedział na pytanie PO6.a).
@@ -151,7 +166,10 @@ Przy obliczaniu wskaźników nie były brane pod uwagę prace świadczone bez um
     + liczba całkowita od 1 do 6 (skala ocen szkolnych: wyższa wartość wskazuje na lepszą ocenę);
     + brak danych - absolwent nie pracował po ukończeniu szkoły lub nie odpowiedział na pytanie PO6.f).
   + `pg2gh.1_ostatnia`, `pg2gh.2_ostatnia`, `pg2gh.3_ostatnia`, `pg2gh.4_ostatnia`, `pg2gh.5_ostatnia`, `pg2gh.6_ostatnia`, `pg2gh.7_ostatnia`, `pg2gh.8_ostatnia`, `pg2gh.9_ostatnia` – przygotowywane analogicznie, jak wskaźniki odnoszące się do pierwszej pracy.
-  + `pg2i.1_ostatnia`, `pg2i.2_ostatnia`, `pg2i.3_ostatnia`, `pg2i.9_ostatnia` – przygotowywane analogicznie, jak wskaźniki odnoszące się do pierwszej pracy.
+  + `pg2i.1_ostatnia`, `pg2i.2_ostatnia`, `pg2i.3_ostatnia`, `pg2i.9_ostatnia` – przygotowywane analogicznie, jak wskaźniki odnoszące się do pierwszej pracy,
+  + `laczenie_praca_nauka_ostatnia`, `pio4pelen_ostatnia`,
+  `pio4pelen_brutto_ostatnia` – przygotowywane analogicznie, jak wskaźniki
+  odnoszące się do pierwszej pracy.
 
 ## 2.5. Wskaźniki opisujące sytuację zawodową absolwenta w szóstym miesiącu od miesiąca ukończenia szkoły
 
@@ -223,7 +241,7 @@ Przy obliczaniu wskaźników nie były brane pod uwagę prace świadczone bez um
     + 0 – absolwent w danym miesiącu (licząc od miesiąca ukończenia szkoły) pracował lub uczył się (i nie był zarejestrowany jako bezrobotny w urzędzie pracy);
     + brak danych – absolwent w danym miesiącu (licząc od miesiąca ukończenia szkoły) nie był zarejestrowany jako bezrobotny w urzędzie pracy, nie pracował, ani się nie uczył.
 
-## 2.9. Wskaźniki opisujące, czy w danych miesiącach po ukończeniu szkoły  absolwent uczył się
+## 2.9. Wskaźniki opisujące, czy w danych miesiącach po ukończeniu szkoły absolwent uczył się
 
 Przy obliczaniu wskaźników brano pod uwagę tylko naukę formalną (w dowolnym trybie).
 
@@ -237,6 +255,9 @@ Przy obliczaniu wskaźników brano pod uwagę tylko naukę formalną (w dowolnym
     + 1 – nauka była odpłatna;
     + 0 – nauka była darmowa;
     + brak danych  – absolwent w danym miesiącu (licząc od miesiąca ukończenia szkoły) nie był uczniem żadnej szkoły spośród typów wymienionych w opisie wskaźników `nauka_6m` i  `nauka_9m`.
+  + `spolic_kontynuacja_branza_6m`, `spolic_kontynuacja_branza_9m` – zmienna
+  logiczna opisująca kontynuowanie nauki w szkole policealnej w tej samej branży
+  co wcześniej w technikum lub szkole policealnej.
 
 ## 2.10. Wskaźniki opisujące studia wybierane przez absolwentów
 
@@ -277,7 +298,7 @@ Przy obliczaniu wskaźników nie były brane pod uwagę prace świadczone bez um
   + `powiat_sr_wynagrodzenia_0r` – oszacowanie przeciętnego miesięcznego wynagrodzenia brutto w roku ukończenia szkoły w powiecie, w którym znajduje się szkoła (którą ukończył absolwent):
     +  liczba [PLN].
 
-## 3. Wskaźniki obliczane na poziomie zagregowanym
+# 3. Wskaźniki obliczane na poziomie zagregowanym
 
 Zbiory danych na poziomie zagregowanym mają postać ramek danych, w których jeden wiersz opisuje jedną grupę (w szczególności jedną szkołę), a poszczególne kolumny zawierają zmienne-wskaźniki charakteryzujące te grupy. W odróżnieniu od wskaźników obliczanych na poziomie indywidualnym, wskaźniki obliczane na poziomie zagregowanym (z wyjątkiem tych opisanych w sekcji 3.1) nie są typowymi kolumnami w formie wektorów, ale kolumnami-listami. Dla każdego wiersza element takiej kolumny-listy sam jest listą: jej struktura (taka sama dla każdego elementu) dla poszczególnych wskaźników opisana została w dalszej części tej sekcji. Takie rozwiązanie umożliwia zawarcie w zbiorze danych zagregowanych znacznej części informacji o znaczeniu zapisywanych w nim wartości i logicznych powiązaniach pomiędzy różnymi wartościami opisującymi różne aspekty tej samej charakterystyki grupy. Umożliwia to uzyskanie względnie dobrej orientacji co do znaczenia i sposobu rozsądnej interpretacji wskaźników zawartych w zbiorze zagregowanym nawet bez odwoływania się do tej dokumentacji (choć dokumentacja ta jest niezbędna, by wyjaśnić wiele bardziej szczegółowych rozstrzygnięć dotyczących obliczania wskaźników).
 
