@@ -434,7 +434,8 @@ Zbiory danych na poziomie zagregowanym mają postać ramek danych, w których j
   + `bezrobocie_1m`, `bezrobocie_2m`, `bezrobocie_3m`, `bezrobocie_4m`, `bezrobocie_5m`, `bezrobocie_6m`, `bezrobocie_7m`, `bezrobocie_8m`, `bezrobocie_9m` – wskaźniki opisujące liczbę absolwentów w grupie, którzy w kolejnych miesiącach od miesiąca ukończenia szkoły byli zarejestrowanymi bezrobotnymi; zawierają następujące informacje:
     + `n` – liczba absolwentów w grupie, którzy w danym miesiącu uczyli się, pracowali, lub byli zarejestrowanymi bezrobotnymi (tj. liczba absolwentów w grupie, dla których wskaźniki indywidualne odpowiednio `bezrobocie_1m`, `bezrobocie_2m`, `bezrobocie_3m`, `bezrobocie_4m`, `bezrobocie_5m`, `bezrobocie_6m`, `bezrobocie_7m`, `bezrobocie_8m` lub `bezrobocie_9m` nie są brakami danych);
     + `zarejestrowani bezrobotni` – liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego odpowiednio `bezrobocie_1m`, `bezrobocie_2m`, `bezrobocie_3m`, `bezrobocie_4m`, `bezrobocie_5m`, `bezrobocie_6m`, `bezrobocie_7m`, `bezrobocie_8m` lub `bezrobocie_9m` jest równa 1;
-    + `pracujący lub kontynuujący naukę` – liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego odpowiednio `bezrobocie_1m`, `bezrobocie_2m`, `bezrobocie_3m`, `bezrobocie_4m`, `bezrobocie_5m`, `bezrobocie_6m`, `bezrobocie_7m`, `bezrobocie_8m` lub `bezrobocie_9m` jest równa 0.
+    + `pracujący lub kontynuujący naukę` – liczba absolwentów w grupie, dla których wartość wskaźnika indywidualnego odpowiednio `bezrobocie_1m`, `bezrobocie_2m`, `bezrobocie_3m`, `bezrobocie_4m`, `bezrobocie_5m`, `bezrobocie_6m`, `bezrobocie_7m`, `bezrobocie_8m` lub `bezrobocie_9m` jest równa 0;
+    + `tlo` – średnia stopa bezrobocia w powiecie, w którym znajduje się szkoła
 
 ## 3.7. Wskaźniki opisujące kontynuację nauki przez absolwentów
 
