@@ -29,15 +29,19 @@ używane do obliczania konkretnych wskaźników zagregowanych:
   \item{\code{\link{firma_badawcza}},}
   \item{\code{\link{formy}},}
   \item{\code{\link{zawod_liczebnosc}},}
+  \item{\code{\link{zawod_przygotowanie_szkola}},}
+  \item{\code{\link{uczestnictwo_pnz}},}
   \item{\code{\link{szkola_1_wyboru}},}
   \item{\code{\link{ponowny_wybor}},}
   \item{\code{\link{przygotowanie_do_zawodu}},}
   \item{\code{\link{przyg_zawodu_prakt_PL}},}
   \item{\code{\link{przyg_zawodu_prakt_niePL}},}
+  \item{\code{\link{przyg_zaw_prakt_ANY}},}
   \item{\code{\link{przyg_zawodu_zaj_PL}},}
   \item{\code{\link{przyg_zawodu_zaj_niePL}},}
   \item{\code{\link{przyg_zawodu_zaj_szkola}},}
   \item{\code{\link{przyg_zawodu_zaj_ckp}},}
+  \item{\code{\link{przyg_zaw_zaj_ANY}},}
   \item{\code{\link{nauka_zawod}},}
   \item{\code{\link{plany_6m}},}
   \item{\code{\link{czy_plany_eduk}},}
