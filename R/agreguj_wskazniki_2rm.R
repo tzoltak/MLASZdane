@@ -14,15 +14,19 @@
 #'   \item{\code{\link{firma_badawcza}},}
 #'   \item{\code{\link{formy}},}
 #'   \item{\code{\link{zawod_liczebnosc}},}
+#'   \item{\code{\link{zawod_przygotowanie_szkola}},}
+#'   \item{\code{\link{uczestnictwo_pnz}},}
 #'   \item{\code{\link{szkola_1_wyboru}},}
 #'   \item{\code{\link{ponowny_wybor}},}
 #'   \item{\code{\link{przygotowanie_do_zawodu}},}
 #'   \item{\code{\link{przyg_zawodu_prakt_PL}},}
 #'   \item{\code{\link{przyg_zawodu_prakt_niePL}},}
+#'   \item{\code{\link{przyg_zaw_prakt_ANY}},}
 #'   \item{\code{\link{przyg_zawodu_zaj_PL}},}
 #'   \item{\code{\link{przyg_zawodu_zaj_niePL}},}
 #'   \item{\code{\link{przyg_zawodu_zaj_szkola}},}
 #'   \item{\code{\link{przyg_zawodu_zaj_ckp}},}
+#'   \item{\code{\link{przyg_zaw_zaj_ANY}},}
 #'   \item{\code{\link{nauka_zawod}},}
 #'   \item{\code{\link{plany_6m}},}
 #'   \item{\code{\link{czy_plany_eduk}},}
@@ -53,16 +57,21 @@ agreguj_cawi_ucz_2rm = function(wskazniki, grupy) {
     firma = firma_badawcza(.data),
     formy_gramatyczne = formy(.data),
     l_zawod = zawod_liczebnosc(.data),
+    l_zawod_przyg = zawod_przygotowanie_szkola(.data),
+    uczestnictwo_pnz = uczestnictwo_pnz(.data),
     szk_1_wyb = szkola_1_wyboru(.data),
     ponowny_wybor = ponowny_wybor(.data),
     przyg_do_zaw = przygotowanie_do_zawodu(.data),
     przyg_zawodu_prakt_PL = przyg_zawodu_prakt_PL(.data),
     przyg_zawodu_prakt_niePL = przyg_zawodu_prakt_niePL(.data),
+    przyg_zaw_prakt_ANY = przyg_zaw_prakt_ANY(.data),
     przyg_zawodu_zaj_PL = przyg_zawodu_zaj_PL(.data),
     przyg_zawodu_zaj_niePL = przyg_zawodu_zaj_niePL(.data),
     przyg_zawodu_zaj_szkola = przyg_zawodu_zaj_szkola(.data),
     przyg_zawodu_zaj_ckp = przyg_zawodu_zaj_ckp(.data),
+    przyg_zaw_zaj_ANY = przyg_zaw_zaj_ANY(.data),
     nauka_zawod = nauka_zawod(.data),
+    ocena_pnz = ocena_pnz(.data),
     plany_6m_bs1 = plany_6m(.data, "PL2_1",
                             "[%] W szkole branżowej drugiego stopnia"),
     plany_6m_licd = plany_6m(.data, "PL2_2", "[%] W liceum dla dorosłych"),
