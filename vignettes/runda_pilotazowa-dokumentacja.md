@@ -5,8 +5,7 @@ date: "27 października 2017"
 lang: pl
 ---
 
-1. Wprowadzenie
-===============
+# 1. Wprowadzenie
 
 1.1. Funkcja wczytaj\_wyniki\_pilrm()
 -------------------------------------
@@ -65,8 +64,7 @@ Identyfikatorem respondenta w zbiorach jest zmienna `ID` (W oryginalnym
 zbiorze danych z wynikami badania absolwentów zmienna ta nazywa się
 `ID_IBE`).
 
-2. Struktura zbioru danych *epizodów*
-=====================================
+# 2. Struktura zbioru danych *epizodów*
 
 2.1. Zmienne specjalne w zbiorze *epizodów*
 -------------------------------------------
@@ -248,8 +246,7 @@ w analizie *epizodów*, w zbiorze utworzone zostały specjalne zmienne
     -   Nazwę zmiennej opisującej odpowiedzi na pytanie PI5 zmieniono na
         \`pio7’.
 
-3. Imputacja wartości zmiennych czas\_rozp i czas\_kon
-======================================================
+# 3. Imputacja wartości zmiennych czas\_rozp i czas\_kon
 
 Imputacji brakujących wartości zmiennych `czas_rozp` i `czas_kon` dla
 *epizodów* typu ‘praca’ i ‘bezrobocie’ dokonano przy użyciu modeli
@@ -402,8 +399,7 @@ regresji liniowej.
         warunków, zmieniano zaimputowaną wartość zmiennej `czas_kon` na
         najbliższą mającą sens.
 
-4. Zbiór z informacjami o członkach gospodarstw domowych
-========================================================
+# 4. Zbiór z informacjami o członkach gospodarstw domowych
 
 -   Informacje zawarte w zmiennej `m10d_in` zostały domknięte
     i zespolone z *typowymi* odpowiedziami na pytanie M10 w ramach
@@ -411,8 +407,7 @@ regresji liniowej.
 -   Do zbioru dołączona została zmienna `m10c_wiek`, zawierająca wiek
     przeliczony z daty urodzenia.
 
-5. Uwagi o analizie zbioru *epizodów*
-=====================================
+# 5. Uwagi o analizie zbioru *epizodów*
 
 Typowo zbiór *epizodów* wykorzystywane będzie w analizie w ten sposób,
 że:
@@ -461,8 +456,7 @@ oznacza to, że:
     zbioru, w kontekście podstaw procentowania należy mieć na uwadze, że
     zawiera on typowo tylko podzbiór spośród wszystkich badanych.
 
-6. Zbiór z danymi w postaci osobo-miesięcy
-==========================================
+# 6. Zbiór z danymi w postaci osobo-miesięcy
 
 6.1. Struktura zbioru
 ---------------------

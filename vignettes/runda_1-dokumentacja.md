@@ -5,8 +5,7 @@ date: "17 maja 2019"
 lang: pl
 ---
 
-1. Wprowadzenie
-===============
+# 1. Wprowadzenie
 
 1.1. Funkcja wczytaj\_wyniki\_1rm()
 -----------------------------------
@@ -61,8 +60,7 @@ w sekcji 6. tego dokumentu.
 
 Identyfikatorem respondenta w zbiorach jest zmienna `ID_RESP`.
 
-2. Struktura zbioru danych *epizodów*
-=====================================
+# 2. Struktura zbioru danych *epizodów*
 
 2.1. Zmienne specjalne w zbiorze *epizodów*
 -------------------------------------------
@@ -325,8 +323,7 @@ podstawie zmiennej `typ_epizodu`.
     wymienianą w części “inne” przekodowano na “opiekę nad dzieckiem”
     (zmiennej `pb1g` przypisano wartość 2).
 
-3. Imputacja wartości zmiennych czas\_rozp i czas\_zakon
-========================================================
+# 3. Imputacja wartości zmiennych czas\_rozp i czas\_zakon
 
 3.1. Arbitralne przypisanie wartości
 ------------------------------------
@@ -544,14 +541,12 @@ z precyzyjnym podaniem daty ich zakończenia. Warto jednak odnotować, że
 o ponad połowę udało się zmniejszyć liczbę braków danych czasu
 rozpoczęcia w przypadku epizodów pracy.
 
-4. Zbiory z informacjami o członkach gospodarstw domowych
-=========================================================
+# 4. Zbiory z informacjami o członkach gospodarstw domowych
 
 -   Do zbioru dołączono zmienną `m10c_wiek`, zawierająca wiek
     przeliczony z daty urodzenia.
 
-5. Uwagi o analizie zbioru *epizodów*
-=====================================
+# 5. Uwagi o analizie zbioru *epizodów*
 
 Typowo zbiór *epizodów* wykorzystywane będzie w analizie w ten sposób,
 że:
@@ -600,8 +595,7 @@ oznacza to, że:
     podstaw procentowania należy mieć na uwadze, że zawiera on typowo
     tylko podzbiór spośród wszystkich badanych.
 
-6. Zbiór z danymi w postaci osobo-miesięcy
-==========================================
+# 6. Zbiór z danymi w postaci osobo-miesięcy
 
 6.1. Struktura zbioru
 ---------------------

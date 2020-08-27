@@ -2,7 +2,8 @@ Package: MLASZdane
 Type: Package
 Title: Pakiet do zlaczania danych na potrzeby projektu MLEZAiMD
 Version: 0.4.1
-Authors@R: person("Tomasz", "Żółtak", email = "t.zoltak@ibe.edu.pl", role = c("aut", "cre"))
+Authors@R: c(person("Tomasz", "Żółtak", email = "t.zoltak@ibe.edu.pl", role = c("aut", "cre")),
+             person("Bartłomiej", "Płatkowski", email = "b.platkowski@ibe.edu.pl", role = c("aut")))
 Description: Pakiet do złączania danych z rejestrów, baz danych administracyjnych,
     baz danych wyników egzaminów i wyników badań sondażowych na potrzeby projektu
     MLEZAiMD.
