@@ -1,5 +1,5 @@
 if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodowaniem.sav")) {
-  context("Wczytanie danych z 1. rundy monitoringu")
+  context("Wczytanie danych z 1. RM")
 
   w1rm = wczytaj_wyniki_1rm("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodowaniem.sav")
   test_that("wczytaj_wyniki_1rm()", {
@@ -10,9 +10,9 @@ if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodow
     }
   })
 
-  context("Imputacja czasów rozpoczęcia i zakończenia w danych z 1. rundy monitoringu")
+  context("Imputacja czasów rozp. i zakończ. w danych z 1. RM")
 
-  wi1rm = imputuj_miesiac_pk_1rm(w1rm)
+  wi1rm = imputuj_miesiac_pk_1rm(w1rm, FALSE)
   test_that("imputuj_miesiac_pk_pilrm()", {
     expect_type(wi1rm, "list")
     expect_named(wi1rm, c("dane", "epizody", "gospDom"))
@@ -21,9 +21,9 @@ if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodow
     }
   })
 
-  context("Tworzenie zbioru osobo-miesięcy na podstawie danych z 1. rundy monitoringu")
+  context("Tworzenie zbioru osobo-miesięcy z danych z 1. RM")
 
-  om1rm = przygotuj_zbior_osobo_miesiecy_1rm(wi1rm)
+  om1rm = przygotuj_zbior_osobo_miesiecy_1rm(wi1rm, FALSE)
   test_that("przygotuj_zbior_osobo_miesiecy_1rm()", {
     expect_is(om1rm, "data.frame")
     nazwy = c("ID", "data", "czas", "status", "praca", "nauka", "bezrobocie",
@@ -44,21 +44,24 @@ if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodow
               'UCZ_plec',
               'matura_zdana', 'egz_zaw_zdany',
               'pio1_pierwsza', 'pio4_pierwsza', 'pi5_pierwsza',
-              'praca_czas_rozp_pierwsza',
+              'wymiar_pierwsza', 'praca_czas_rozp_pierwsza',
               'praca_przed_ukonczeniem_szkoly_pierwsza',
               'pg2gh.1_pierwsza', 'pg2gh.2_pierwsza', 'pg2gh.3_pierwsza',
               'pg2gh.4_pierwsza', 'pg2gh.5_pierwsza', 'pg2gh.6_pierwsza',
               'pg2gh.7_pierwsza', 'pg2gh.8_pierwsza', 'pg2gh.9_pierwsza',
               'pg2i.1_pierwsza', 'pg2i.2_pierwsza', 'pg2i.3_pierwsza',
-              'pg2i.9_pierwsza',
+              'pg2i.9_pierwsza', 'laczenie_praca_nauka_pierwsza',
+              'pio4pelen_pierwsza', 'pio4pelen_brutto_pierwsza',
               'pio1_ostatnia', 'pio4_ostatnia', 'po5_ostatnia',
+              'wymiar_ostatnia', 'praca_czas_rozp_ostatnia',
               'po6_1_ostatnia', 'po6_2_ostatnia', 'po6_3_ostatnia',
               'po6_4_ostatnia', 'po6_5_ostatnia', 'po6_6_ostatnia',
               'pg2gh.1_ostatnia', 'pg2gh.2_ostatnia', 'pg2gh.3_ostatnia',
               'pg2gh.4_ostatnia', 'pg2gh.5_ostatnia', 'pg2gh.6_ostatnia',
               'pg2gh.7_ostatnia', 'pg2gh.8_ostatnia', 'pg2gh.9_ostatnia',
               'pg2i.1_ostatnia', 'pg2i.2_ostatnia', 'pg2i.3_ostatnia',
-              'pg2i.9_ostatnia',
+              'pg2i.9_ostatnia', 'laczenie_praca_nauka_ostatnia',
+              'pio4pelen_ostatnia', 'pio4pelen_brutto_ostatnia',
               'pg2gh.1_6m', 'pg2gh.2_6m', 'pg2gh.3_6m', 'pg2gh.4_6m', 'pg2gh.5_6m',
               'pg2gh.6_6m', 'pg2gh.7_6m', 'pg2gh.8_6m', 'pg2gh.9_6m',
               'pg2i.1_6m', 'pg2i.2_6m', 'pg2i.3_6m', 'pg2i.9_6m',
@@ -74,7 +77,9 @@ if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodow
               'bezrobocie_1m', 'bezrobocie_2m', 'bezrobocie_3m',
               'bezrobocie_4m', 'bezrobocie_5m', 'bezrobocie_6m',
               'bezrobocie_7m', 'bezrobocie_8m', 'bezrobocie_9m',
-              'nauka_6m', 'nauka_platna_6m', 'nauka_9m', 'nauka_platna_9m',
+              'spolic_kontynuacja_branza_6m',
+              'nauka_6m', 'nauka_platna_6m',
+              'spolic_kontynuacja_branza_9m', 'nauka_9m', 'nauka_platna_9m',
               'studia_kierunek_pierwsze', 'studia_uczelnia_pierwsze',
               'studia_bezplatne_pierwsze', 'studia_tryb_pierwsze',
               'praca_nauka_0m', 'praca_nauka_1m', 'praca_nauka_2m',
@@ -93,7 +98,8 @@ if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodow
     set.seed(71624681)
     wskaznikiInd = wskaznikiInd[wskaznikiInd$SZK_kod %in% sample(unique(wskaznikiInd$SZK_kod), 20), ]
 
-    nazwy = c('SZK_typ', 'liczba_zbadanych', 'liczba_zbadanych_kobiet',
+    nazwy = c('grupa', 'odniesienie',
+              'SZK_typ', 'liczba_zbadanych', 'liczba_zbadanych_kobiet',
               'liczba_szkol', 'zawody', 'praca_nauka_0m', 'praca_nauka_1m',
               'praca_nauka_2m', 'praca_nauka_3m', 'praca_nauka_4m',
               'praca_nauka_5m', 'praca_nauka_6m', 'praca_nauka_7m',
@@ -126,38 +132,35 @@ if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodow
               'studia_odplatnosc_pierwsze', 'studia_tryb_pierwsze', 'GRUPA_kod')
 
     test_that("agreguj_wskazniki_szk()", {
-      wskaznikiSzk = agreguj_wskazniki_szk(wskaznikiInd)
-      expect_is(wskaznikiSzk, "data.frame")
-      expect_named(wskaznikiSzk, c("SZK_kod", nazwy), ignore.order = TRUE)
+      wskaznikiSzk = agreguj_wskazniki_1rm_szk(wskaznikiInd)
+      expect_is(wskaznikiSzk$grupy, "data.frame")
+      expect_named(wskaznikiSzk$grupy,
+                   c("SZK_kod", nazwy), ignore.order = TRUE)
+      expect_is(wskaznikiSzk$grupyOdniesienia, "data.frame")
+      expect_named(wskaznikiSzk$grupyOdniesienia,
+                   c("SZK_kod", "GRUPA_nazwa", nazwy), ignore.order = TRUE)
     })
-
-    test_that("agreguj_wskazniki_typ_szk()", {
-      wskaznikiTypSzk = agreguj_wskazniki_typ_szk(wskaznikiInd)
-      expect_is(wskaznikiTypSzk, "data.frame")
-      expect_named(wskaznikiTypSzk, c("GRUPA_nazwa", nazwy), ignore.order = TRUE)
-    })
-
     test_that("agreguj_wskazniki_szk_branza()", {
-      wskaznikiSzkBranza = agreguj_wskazniki_szk_branza(wskaznikiInd)
-      expect_is(wskaznikiSzkBranza, "data.frame")
-      expect_named(wskaznikiSzkBranza, c("SZK_kod", "UCZ_branza", nazwy),
+      wskaznikiSzkBranza = agreguj_wskazniki_1rm_szk_branza(wskaznikiInd)
+      expect_is(wskaznikiSzkBranza$grupy, "data.frame")
+      expect_named(wskaznikiSzkBranza$grupy,
+                   c("SZK_kod", "UCZ_branza", "SZK_kod_branza",
+                     "SZK_typ_branza", nazwy),
+                   ignore.order = TRUE)
+      expect_is(wskaznikiSzkBranza$grupyOdniesienia, "data.frame")
+      expect_named(wskaznikiSzkBranza$grupyOdniesienia,
+                   c("SZK_kod", "UCZ_branza", "SZK_kod_branza",
+                     "SZK_typ_branza", "GRUPA_nazwa", nazwy),
                    ignore.order = TRUE)
     })
 
-    test_that("agreguj_wskazniki_typ_szk_branza()", {
-      wskaznikiTypSzkBranza = agreguj_wskazniki_typ_szk_branza(wskaznikiInd)
-      expect_is(wskaznikiTypSzkBranza, "data.frame")
-      expect_named(wskaznikiTypSzkBranza, c("UCZ_branza", "GRUPA_nazwa", nazwy),
-                   ignore.order = TRUE)
-    })
-
-    wskaznikiSzk = agreguj_wskazniki_szk(wskaznikiInd)
+    wskaznikiSzk = agreguj_wskazniki_1rm_szk(wskaznikiInd)$grupy
   }
 
   if (exists("wskaznikiSzk")) {
     context("Spłaszczanie zbioru wskaźników na poziomie zagregowanym")
 
-    nazwy = c('SZK_kod', 'SZK_typ', 'liczba_zbadanych',
+    nazwy = c('SZK_kod', 'SZK_typ', 'grupa', 'odniesienie', 'liczba_zbadanych',
               'liczba_zbadanych_kobiet', 'liczba_szkol', 'zawody',
               'praca_nauka_0m_n', 'praca_nauka_0m_zm1', 'praca_nauka_0m_zm2',
               'praca_nauka_0m_zm3', 'praca_nauka_0m_zm4', 'praca_nauka_1m_n',
@@ -329,6 +332,7 @@ if (file.exists("MLEZAiMD_I_runda_CAPI_absolwent_n7713_20180924_z_wagami_z_kodow
     test_that("splaszcz_wskazniki_zagregowane()", {
       splaszczone = splaszcz_wskazniki_zagregowane(wskaznikiSzk)
       expect_is(splaszczone, "data.frame")
+      expect_equal(nrow(splaszczone), nrow(wskaznikiSzk))
       expect_equal(all(unlist(lapply(splaszczone, is.list))), FALSE)
       expect_named(splaszczone, nazwy, ignore.order = TRUE)
     })

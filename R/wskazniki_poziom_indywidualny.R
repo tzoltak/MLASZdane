@@ -128,6 +128,19 @@ praca_miesiac = function(epizody, miesiac, idAbsolwenta = "ID_RESP") {
   return(epizody)
 }
 #' @title Obliczanie wskaznikow na poziomie indywidualnym
+#' @description Prosta funkcja przeliczająca wysokość zarobków wyrażoną w kwocie
+#' netto na kwotę brutto. Przyjęty został przybliżony przeliczniok o wartości
+#' 0.71
+#' @param x wysokość zarobków wyrażona w kwocie netto - zmienna
+#' \strong{pio4pelen} z obiektu \code{epizody}
+#' @param przelicznik przyjęty odgórnie przelicznik kwoty netto na kwotę brutto.
+#' Posiada domyślną wartość 0.71
+#' @export
+placa_brutto = function(x, przelicznik = 0.71) {
+  brutto = x / przelicznik
+  return(brutto)
+}
+#' @title Obliczanie wskaznikow na poziomie indywidualnym
 #' @description Funkcja oblicza zmienne-wskaźniki opisujące pierwszą pracę
 #' badanego wykonywaną po ukończeniu szkoły (również jeśli zaczęła się
 #' wcześniej). Nie jest przy tym brana pod uwagę praca świadczona bez umowy.
@@ -158,17 +171,20 @@ praca_pierwsza = function(epizody, idAbsolwenta = "ID_RESP") {
   idAbsolwenta = ensym(idAbsolwenta)
   stopifnot(as.character(idAbsolwenta) %in% names(epizody))
 
+  miesiaceNauki = nauka_czas(epizody, 9, 1, !!idAbsolwenta)
+
   epizody = epizody %>%
     filter(.data$typ_epizodu %in% "praca",
            !(.data$pg2h %in% 6), # wyłączamy pracę bez umowy,
            .data$nr == 1, !is.na(.data$czas_rozp)) %>%
-    mutate(praca_przed_ukonczeniem_szkoly = .data$czas_rozp < 0)
+    mutate(praca_przed_ukonczeniem_szkoly = .data$czas_rozp < 0,
+           wymiar = .data$pio3b / 40)
   if (any(duplicated(epizody[[as.character(idAbsolwenta)]]))) {
     stop("W zbiorze znajdują się badani, dla których występuje wiele epizodów pracy wyglądających na pierwsze.")
   }
   epizody = suppressMessages(
     epizody %>%
-      select(as.character(idAbsolwenta), "pio1", "pio4", "pi5",
+      select(as.character(idAbsolwenta), "pio1", "pio4", "pi5", "wymiar",
              praca_czas_rozp = .data$czas_rozp, "praca_przed_ukonczeniem_szkoly") %>%
       mutate(praca_czas_rozp = ifelse(.data$praca_czas_rozp < 0,
                                       NA, .data$praca_czas_rozp)) %>%
@@ -177,7 +193,18 @@ praca_pierwsza = function(epizody, idAbsolwenta = "ID_RESP") {
                                 !!idAbsolwenta)) %>%
       full_join(praca_zamieszkanie_ind(epizody %>%
                                          filter(!.data$praca_przed_ukonczeniem_szkoly),
-                                       !!idAbsolwenta)))
+                                       !!idAbsolwenta)) %>%
+      left_join(miesiaceNauki) %>%
+      group_by(!!idAbsolwenta) %>%
+      mutate(laczenie_praca_nauka =
+               .data$praca_czas_rozp %in% unlist(.data$nauka_czas) |
+               .data$praca_czas_rozp < 1)) %>%
+    group_by(!!idAbsolwenta) %>%
+    mutate(pio4pelen = round(as.double(.data$pio4) / as.double(.data$wymiar)),
+           pio4pelen_brutto = placa_brutto(.data$pio4pelen)) %>%
+    ungroup() %>%
+    select(-"nauka_czas")
+
   names(epizody) = ifelse(!(names(epizody) %in% as.character(idAbsolwenta)),
                          paste0(names(epizody), "_pierwsza"),
                          names(epizody))
@@ -229,6 +256,8 @@ praca_ostatnia = function(epizody, idAbsolwenta = "ID_RESP",
   idAbsolwenta = ensym(idAbsolwenta)
   stopifnot(as.character(idAbsolwenta) %in% names(epizody))
 
+  miesiaceNauki = nauka_czas(epizody, 9, 1, !!idAbsolwenta)
+
   epizody = epizody %>%
     filter(.data$typ_epizodu %in% "praca",
            !(.data$pg2h %in% 6), # wyłączamy pracę bez umowy,
@@ -236,16 +265,31 @@ praca_ostatnia = function(epizody, idAbsolwenta = "ID_RESP",
            .data$czas_zakon >= limitD | is.na(.data$czas_zakon)) %>%
     group_by(!!idAbsolwenta) %>%
     filter(.data$nr == max(.data$nr)) %>%
-    ungroup()
+    ungroup() %>%
+    mutate(wymiar = .data$pio3b / 40)
   if (any(duplicated(epizody[[as.character(idAbsolwenta)]]))) {
     stop("W zbiorze znajdują się badani, dla których występuje wiele epizodów pracy wyglądających na ostatni.")
   }
   epizody = suppressMessages(
     epizody %>%
-      select(as.character(idAbsolwenta), "pio1", "pio4", "po5",
+      select(as.character(idAbsolwenta), "pio1", "pio4", "po5", "wymiar",
+             praca_czas_rozp = .data$czas_rozp,
              matches("^po6_[123456]$")) %>%
+      mutate(praca_czas_rozp = ifelse(.data$praca_czas_rozp < 0,
+                                      NA, .data$praca_czas_rozp)) %>%
       full_join(praca_forma_ind(epizody, !!idAbsolwenta)) %>%
-      full_join(praca_zamieszkanie_ind(epizody, !!idAbsolwenta)))
+      full_join(praca_zamieszkanie_ind(epizody, !!idAbsolwenta)) %>%
+      left_join(miesiaceNauki) %>%
+      group_by(!!idAbsolwenta) %>%
+      mutate(laczenie_praca_nauka =
+               .data$praca_czas_rozp %in% unlist(.data$nauka_czas) |
+               .data$praca_czas_rozp < 1)) %>%
+    group_by(!!idAbsolwenta) %>%
+    mutate(pio4pelen = round(as.double(.data$pio4) / as.double(.data$wymiar)),
+           pio4pelen_brutto = placa_brutto(.data$pio4pelen)) %>%
+    ungroup() %>%
+    select(-"nauka_czas")
+
   names(epizody) = ifelse(!(names(epizody) %in% as.character(idAbsolwenta)),
                           paste0(names(epizody), "_ostatnia"),
                           names(epizody))
@@ -520,9 +564,23 @@ bezrobocie_czas = function(epizody, limitG  = 9, limitD = 1, sufiks = "",
 #' @title Obliczanie wskaznikow na poziomie indywidualnym
 #' @description Funkcja oblicza zmienne-wskaźniki opisujące czy badany
 #' w określonym miesiącu od terminu planowego ukończenia szkoły uczył się,
-#' a jeśli tak, to w jakiej formie.
+#' a jeśli tak, to w jakiej formie. Jeśli w danym miesiącu badany uczył się
+#' w kilku różnych formach, to wybierana jest jedna przy czym:
+#' \itemize{
+#'   \item{studia stacjonarne mają pierwszeństwo przed wszystkimi innymi formami,}
+#'   \item{studia niestacjonarne mają pierwszeństwo przed szkołami policealnymi
+#'         i LO dla dorosłych,}
+#'   \item{szkoły policealne mają pierwszeństwo przed LO dla dorosłych.}
+#' }
+#' Jeśli badany uczył się w kilku szkołac policealnych (a jednocześnie nie
+#' studiował), pierwszeństwo przyznawane jest tej, której branża była zgodna
+#' z branżą zawodu, w jakim kształcił się w szkole, jako absolwent której
+#' został objęty badaniem.
 #' @param epizody ramka danych z epizodami - typowo element \code{epizody} listy
 #' zwracanej przez funkcję \code{\link{imputuj_miesiac_pk_1rm}}
+#' @param dane ramka danych z odpowiedziami na ankietę absolwentów - typowo
+#' element \code{dane} listy zwracanej przez funkcję
+#' \code{\link{imputuj_miesiac_pk_1rm}}
 #' @param miesiac liczba - miesiąc od terminu planowego ukończenia szkoły
 #' (porównywana z wartościami kolumn \code{czas_rozp} i \code{czas_zakon})
 #' @param idAbsolwenta nazwa zmiennej identyfikującej badanych (podana jako ciąg
@@ -531,10 +589,11 @@ bezrobocie_czas = function(epizody, limitG  = 9, limitD = 1, sufiks = "",
 #' @seealso \code{\link{nauka}}
 #' @export
 #' @importFrom rlang ensym
-#' @importFrom dplyr .data %>% arrange case_when filter group_by mutate n
-#' summarise ungroup
-nauka_miesiac = function(epizody, miesiac, idAbsolwenta = "ID_RESP") {
+#' @importFrom dplyr .data %>% arrange case_when desc filter group_by mutate n
+#' slice summarise ungroup
+nauka_miesiac = function(epizody, dane, miesiac, idAbsolwenta = "ID_RESP") {
   stopifnot(is.data.frame(epizody),
+            is.data.frame(dane),
             "typ_epizodu" %in% names(epizody),
             "sp6h_3" %in% names(epizody),
             "sp6f" %in% names(epizody),
@@ -545,6 +604,10 @@ nauka_miesiac = function(epizody, miesiac, idAbsolwenta = "ID_RESP") {
             is.numeric(miesiac), length(miesiac) == 1)
   idAbsolwenta = ensym(idAbsolwenta)
   stopifnot(as.character(idAbsolwenta) %in% names(epizody))
+  stopifnot(as.character(idAbsolwenta) %in% names(dane))
+
+  dane = dane %>%
+    select(!!idAbsolwenta, "ABS_f4_branza_kzsb")
 
   epizody = epizody %>%
     filter(.data$typ_epizodu %in% c("SPolic.", "studia", "LO dla dorosłych"),
@@ -555,17 +618,20 @@ nauka_miesiac = function(epizody, miesiac, idAbsolwenta = "ID_RESP") {
                        .data$typ_epizodu %in% "studia" & .data$sp6h_3 %in% 1 ~ "studia niestacjonarne",
                        .data$typ_epizodu %in% "SPolic." ~ "szkoła policealna",
                        grepl("^LO ", .data$typ_epizodu) ~ "LO dla dorosłych") %>%
-             factor(levels = c("studia stacjonarne", "studia niestacjonarne", "szkoła policealna",
-                               "LO dla dorosłych"))) %>%
+             factor(levels = c("studia stacjonarne", "studia niestacjonarne",
+                               "szkoła policealna", "LO dla dorosłych"))) %>%
+    left_join(dane, by = "ID_RESP") %>%
+    mutate(spolic_kontynuacja_branza =
+             .data$ABS_f4_branza_kzsb == .data$pp3_kierunek_branza_kzsb) %>%
     group_by(!!idAbsolwenta) %>%
-    arrange(!!idAbsolwenta, .data$nauka) %>%
-    mutate(n = 1:n()) %>%
-    filter(.data$n == 1) %>%
-    summarise(nauka = levels(.data$nauka)[.data$nauka],
-              nauka_platna =
-                case_when(.data$sp6f %in% 1 | .data$pp6g %in% 1 | .data$zp2i %in% 1 ~ 1,
-                          !is.na(.data$nauka) ~ 0)) %>%
-    ungroup()
+    arrange(!!idAbsolwenta, .data$nauka, desc(.data$spolic_kontynuacja_branza)) %>%
+    slice(1) %>%
+    ungroup() %>%
+    mutate(nauka = levels(.data$nauka)[.data$nauka],
+           nauka_platna =
+             case_when(.data$sp6f %in% 1 | .data$pp6g %in% 1 | .data$zp2i %in% 1 ~ 1,
+                       !is.na(.data$nauka) ~ 0)) %>%
+    select(!!idAbsolwenta, "nauka", "nauka_platna", "spolic_kontynuacja_branza")
   names(epizody) = ifelse(!(names(epizody) %in% as.character(idAbsolwenta)),
                           paste0(names(epizody), "_", miesiac, "m"),
                           names(epizody))
@@ -715,7 +781,9 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
                     sub("_szkoly", "", sub("^ABS_", "SZK_", names(x))),
                     names(x))
   x %>%
-    mutate(SZK_teryt = 100 * floor(as.numeric(.data$SZK_teryt) / 100),
+    mutate(ABS_teryt_powiat = floor(.data$SZK_teryt / 100),
+           ABS_teryt_woj = floor(.data$SZK_teryt / 10000),
+           SZK_teryt = 100 * floor(as.numeric(.data$SZK_teryt) / 100),
            UCZ_plec = case_when(.data$ABS_m1 %in% 1 ~ "K",
                                 .data$ABS_m1 %in% 2 ~ "M"),
            matura_zdana =
@@ -727,6 +795,7 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
              case_when(.data$ABS_f9 %in% 1 & .data$ABS_f10_rok <= maksRokEgz &
                          !is.na(.data$ABS_f10_rok) ~ 1,
                        TRUE ~ 0)) %>%
+    left_join(get("nazwy_jst"), by = c("ABS_teryt_powiat" = "teryt")) %>%
     select(-starts_with("ABS")) %>%
     return()
 }
@@ -757,9 +826,12 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
 #'   \item{\code{UCZ_plec},}
 #'   \item{\code{matura_zdana},}
 #'   \item{\code{egz_zaw_zdany},}
+#'   \item{\code{powiat_nazwa},}
+#'   \item{\code{woj_nazwa},}
 #'   \item{\code{pio1_pierwsza},}
 #'   \item{\code{pio4_pierwsza},}
 #'   \item{\code{pi5_pierwsza},}
+#'   \item{\code{wymiar_pierwsza},}
 #'   \item{\code{praca_czas_rozp_pierwsza},}
 #'   \item{\code{praca_przed_ukonczeniem_szkoly_pierwsza},}
 #'   \item{\code{pg2gh.1_pierwsza},}
@@ -775,9 +847,14 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
 #'   \item{\code{pg2i.2_pierwsza},}
 #'   \item{\code{pg2i.3_pierwsza},}
 #'   \item{\code{pg2i.9_pierwsza},}
+#'   \item{\code{laczenie_praca_nauka_pierwsza},}
+#'   \item{\code{pio4pelen_pierwsza},}
+#'   \item{\code{pio4pelen_brutto_pierwsza},}
 #'   \item{\code{pio1_ostatnia},}
 #'   \item{\code{pio4_ostatnia},}
 #'   \item{\code{po5_ostatnia},}
+#'   \item{\code{wymiar_ostatnia},}
+#'   \item{\code{praca_czas_rozp_ostatnia},}
 #'   \item{\code{po6_1_ostatnia},}
 #'   \item{\code{po6_2_ostatnia},}
 #'   \item{\code{po6_3_ostatnia},}
@@ -797,6 +874,9 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
 #'   \item{\code{pg2i.2_ostatnia},}
 #'   \item{\code{pg2i.3_ostatnia},}
 #'   \item{\code{pg2i.9_ostatnia},}
+#'   \item{\code{laczenie_praca_nauka_ostatnia},}
+#'   \item{\code{pio4pelen_ostatnia},}
+#'   \item{\code{pio4pelen_brutto_ostatnia},}
 #'   \item{\code{pg2gh.1_6m},}
 #'   \item{\code{pg2gh.2_6m},}
 #'   \item{\code{pg2gh.3_6m},}
@@ -841,8 +921,10 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
 #'   \item{\code{bezrobocie_7m},}
 #'   \item{\code{bezrobocie_8m},}
 #'   \item{\code{bezrobocie_9m},}
+#'   \item{\code{spolic_kontynuacja_branza_6m},}
 #'   \item{\code{nauka_6m},}
 #'   \item{\code{nauka_platna_6m},}
+#'   \item{\code{spolic_kontynuacja_branza_9m},}
 #'   \item{\code{nauka_9m},}
 #'   \item{\code{nauka_platna_9m},}
 #'   \item{\code{studia_kierunek_pierwsze},}
@@ -863,6 +945,7 @@ wskazniki_nie_z_epizodow = function(x, maksRokEgz) {
 #' @seealso Funkcje używane wewnętrznie do obliczania wskaźników zagregowanych:
 #' \itemize{
 #'   \item{\code{\link{wskazniki_nie_z_epizodow}},}
+#'   \item{\code{\link{placa_brutto}},}
 #'   \item{\code{\link{praca_pierwsza}},}
 #'   \item{\code{\link{praca_ostatnia}},}
 #'   \item{\code{\link{praca_miesiac}},}
@@ -889,6 +972,7 @@ oblicz_wskazniki_ind_1rm = function(x, idAbsolwenta = "ID_RESP") {
   wskazniki = suppressWarnings(suppressMessages(
     x$dane %>%
       select(as.character(idAbsolwenta), contains("_szkoly"),
+             "ABS_f4_branza_kzsb", "ABS_pi2_branza_kzsb", "ABS_po2_branza_kzsb",
              UCZ_kod_zawodu = .data$ABS_f4_id, UCZ_zawod = .data$ABS_f4,
              UCZ_branza = .data$ABS_f4_branza, UCZ_obszar = .data$ABS_f4_obszar,
              "ABS_m1", starts_with("ABS_f8"), "ABS_f9", starts_with("ABS_f10")) %>%
@@ -918,8 +1002,8 @@ oblicz_wskazniki_ind_1rm = function(x, idAbsolwenta = "ID_RESP") {
   message("- dotyczących nauki,")
   wskazniki = suppressWarnings(suppressMessages(
     wskazniki %>%
-      left_join(nauka_miesiac(x$epizody, 6)) %>%
-      left_join(nauka_miesiac(x$epizody, 9)) %>%
+      left_join(nauka_miesiac(x$epizody, x$dane, 6)) %>%
+      left_join(nauka_miesiac(x$epizody, x$dane, 9)) %>%
       left_join(studia_pierwsze(x$epizody))))
   message("- opisujących status edukacyjno-zawodowy.")
   wskazniki = suppressWarnings(suppressMessages(

@@ -2,8 +2,8 @@
 title: "Przetwarzanie zbiorów z pilotażowej rundy monitoringu"
 author: "Tomasz Żółtak"
 date: "27 października 2017"
-output: rmarkdown::html_vignette
 lang: pl
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Przetwarzanie zbiorów z pilotażowej rundy monitoringu}
   %\VignetteEngine{knitr::rmarkdown}
@@ -12,7 +12,7 @@ vignette: >
 
 # 1. Wprowadzenie
 
-### 1.1. Funkcja wczytaj_wyniki_pilrm()
+## 1.1. Funkcja wczytaj_wyniki_pilrm()
 
 Na podstawie zbioru z badania absolwentów (*MLEZAMiD_absolwent_n2959_20171013.sav*) funkcja `wczytaj_wyniki_pilrm()` zwraca listę ramek danych (zbiorów) zawierającą następujące elementy:
 
@@ -28,13 +28,13 @@ Na podstawie zbioru z badania absolwentów (*MLEZAMiD_absolwent_n2959_20171013.
   - `gospDom` - zawiera informacje o członkach gospodarstw domowych respondentów;
   - `czasy` - zawiera informacje o czasach udzielania odpowiedzi na pytania.
 
-### 1.2. Funkcja imputuj_miesiac_pk_pilrm()
+## 1.2. Funkcja imputuj_miesiac_pk_pilrm()
 
 Funkcja `imputuj_miesiac_pk_pilrm()` przetwarza listę zbiorów danych, zwróconą przez `wczytaj_wyniki_pilrm()` i zwraca listę zbiorów danych o dokładnie takiej samej strukturze (p. wyżej).
 
 Metody imputacji wartości zmiennych opisujących moment rozpoczęcia i moment zakończenia *epizodów* opisane zostały szczegółowo w sekcji 3. tego dokumentu.
 
-### 1.3. Funkcja przygotuj_zbior_osobo_miesiecy_pilrm()
+## 1.3. Funkcja przygotuj_zbior_osobo_miesiecy_pilrm()
 
 Funkcja `przygotuj_zbior_osobo_miesiecy_pilrm()` przetwarza listę zbiorów danych, zwróconą przez `imputuj_miesiac_pk_pilrm()` i zwraca ramkę danych (zbiór) zawierający dane o *epizodach* nauki, pracy i bezrobocia przekształcone do postaci osobo-miesięcy (obserwacją jest osoba w danym miesiącu).
 

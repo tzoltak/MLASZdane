@@ -6,20 +6,13 @@
 #' obserwacji w ZUS" (zakładając zamieszkanie absolwenta w uzupełnianych
 #' okresach "w Polsce", kodowane jako pna = -1, oraz wszelkie cechy tytułu
 #' ubezpieczenia ZUS równe 0, w szczególności także bezrob = 0).
-#' @param absolwenci dane wygenerowane za pomocą funkcji
-#'   \code{\link{przygotuj_absolwenci}}
-#' @param zus dane wygenerowane za pomocą funkcji
-#'   \code{\link[MLAKdane]{przygotuj_zus}}
-#' @param zdajacyEgzaminy dane wygenerowane za pomocą funkcji
-#'   \code{\link{przygotuj_zdajacy}}
-#' @param uczniowie dane wygenerowane za pomocą funkcji
-#'   \code{\link{przygotuj_uczniowie}}
-#' @param studenci dane wygenerowane za pomocą funkcji
-#'   \code{\link{przygotuj_studenci}}
-#' @param szkoly dane wygenerowane za pomocą funkcji
-#'   \code{\link{przygotuj_szkoly}}
-#' @param pnaPowiaty dane wygenerowane za pomocą funkcji
-#'   \code{\link[MLAKdane]{polacz_pna_powiaty}}
+#' @param absolwenci dane opisujące absolwentów
+#' @param zus dane o zatrudnieniu w formacie absolwento-miesiąco-płatników
+#' @param zdajacyEgzaminy dane o podchodzących do egzaminów
+#' @param uczniowie dane o uczniach (kontynuujących naukę)
+#' @param studenci dane o studentach (kontynuujących naukę)
+#' @param szkoly dane szkół
+#' @param pnaPowiaty dane o powiatach
 #' @param dataMin początek okresu uwzględnionego w danych ZUS (jako łańcuch
 #'   znaków, np. '2014-01-01')
 #' @param dataMax koniec okresu uwzględnionego w danych ZUS (jako łańcuch

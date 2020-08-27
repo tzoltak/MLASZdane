@@ -10,3 +10,7 @@ coverage:
       default:
         target: auto
         threshold: 1%
+
+#library(covr)
+#codecov(token = "4aac9536-5f8b-4f71-8783-1175ce96c5c7",
+#        function_exclusions = c(".*pilrm$"))

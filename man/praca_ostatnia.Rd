@@ -4,8 +4,7 @@
 \alias{praca_ostatnia}
 \title{Obliczanie wskaznikow na poziomie indywidualnym}
 \usage{
-praca_ostatnia(epizody, idAbsolwenta = "ID_RESP", limitG = Inf,
-  limitD = 0)
+praca_ostatnia(epizody, idAbsolwenta = "ID_RESP", limitG = Inf, limitD = 0)
 }
 \arguments{
 \item{epizody}{ramka danych z epizodami - typowo element \code{epizody} listy

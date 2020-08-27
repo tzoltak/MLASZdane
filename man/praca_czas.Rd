@@ -4,8 +4,14 @@
 \alias{praca_czas}
 \title{Obliczanie wskaznikow na poziomie indywidualnym}
 \usage{
-praca_czas(epizody, pg2hWartosci = NULL, limitG = 9, limitD = 1,
-  sufiks = "", idAbsolwenta = "ID_RESP")
+praca_czas(
+  epizody,
+  pg2hWartosci = NULL,
+  limitG = 9,
+  limitD = 1,
+  sufiks = "",
+  idAbsolwenta = "ID_RESP"
+)
 }
 \arguments{
 \item{epizody}{ramka danych z epizodami - typowo element \code{epizody} listy

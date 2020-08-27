@@ -52,8 +52,8 @@ wczytaj_wyniki_1rm = function(x){
                     czas_rozp_imput = c(), czas_zakon_imput = c())
   attributes(labWspolne$typ_epizodu)$label = "Typ epizodu (nauki lub pracy)"
   attributes(labWspolne$nr)$label = "Nr epizodu danego typu (jako który został wymieniony przez respondenta)"
-  attributes(labWspolne$czas_rozp)$label = "Czas rozpoczęcia epizodu - licząc w miesiącach od czerwca 2015 r."
-  attributes(labWspolne$czas_zakon)$label = "Czas zakończenia epizodu - licząc w miesiącach od czerwca 2015 r."
+  attributes(labWspolne$czas_rozp)$label = "Czas rozpoczęcia epizodu - licząc w miesiącach od czerwca 2017 r."
+  attributes(labWspolne$czas_zakon)$label = "Czas zakończenia epizodu - licząc w miesiącach od czerwca 2017 r."
   attributes(labWspolne$czy_zakonczony)$label = "Czy epizod się zakończył?"
   attributes(labWspolne$czy_zakonczony)$labels = c("Tak" = 1, "Nie" = 2)
   attributes(labWspolne$swiadectwo)$label = "Czy uzyskał świadectwo ukończenia szkoły?"
@@ -240,17 +240,22 @@ wczytaj_wyniki_1rm = function(x){
            swiadectwo = ifelse(.data$pp6d %in% 1, 1, 2),
            czas_rozp_imput = ifelse(is.na(.data$pp6c1), 1, 2),
            czas_zakon_imput = ifelse(is.na(.data$pp6f1), 1, 2)) %>%
+      left_join(get("kzsb") %>% select("kod_zawodu", "branza_2019"),
+                by = c("pp3_kierunek_kod" = "kod_zawodu")) %>%
+    rename(pp3_kierunek_branza_kzsb = .data$branza_2019) %>%
     select(-"pp6i_4") %>%
     select("ID_RESP", "typ_epizodu", "nr", "czas_rozp", "czas_zakon",
            "czy_zakonczony", "swiadectwo", "czas_rozp_imput", "czas_zakon_imput",
            "czy_preferowany", starts_with("pp"))
   spolic = przywroc_etykiety(spolic, labWspolne)
   attributes(spolic$czy_preferowany)$label = "Czy był to kierunek/zawód, na który najbardziej chciał(a) się Pan(i) dostać?"
+  attributes(spolic$pp3_kierunek_branza_kzsb)$label = "Branża, do której należy nauczany zawód"
   spolic = przywroc_etykiety(spolic, labTemp)
   for (i in c("czy_preferowany", "pp6i_1", "pp6i_2", "pp6i_3")) {
     attributes(spolic[[i]])$labels = c("Tak" = 1, "Nie" = 2)
   }
-  for (i in c("pp3a", "pp6c1", "pp6c2", "pp6f1", "pp6f2")) {
+  for (i in c("pp3a", "pp6c1", "pp6c2", "pp6f1", "pp6f2",
+              "pp3_kierunek_branza_kzsb")) {
     attributes(spolic[[i]])$labels = NULL
   }
   #|<-
@@ -452,7 +457,7 @@ wczytaj_wyniki_1rm = function(x){
            pio1 = ifelse(.data$pio1 %in% 1:4, .data$pio1, NA),
            pio2 = ifelse(!(tolower(.data$pio2) %in% c("nie dotyczy", "odmowa")),
                          enc2native(tolower(.data$pio2)), "."),
-           pio2_kod = as.integer(.data$pio2_kod),
+           pio2_kod = as.integer(as.character(.data$pio2_kod)),
            pio3 = ifelse(!(tolower(.data$pio3) %in% c("nie dotyczy", "odmowa")),
                          enc2native(tolower(.data$pio3)), "."),
            pio3a = ifelse(.data$pio3a %in% 1:2, .data$pio3a, NA),
@@ -483,8 +488,9 @@ wczytaj_wyniki_1rm = function(x){
            po11_9 = ifelse(.data$po11_9 %in% 1:2, .data$po11_9, NA),
            po11_9_in = ifelse(!(tolower(.data$po11_9_in) %in% c("nie dotyczy", "odmowa")),
                               enc2native(tolower(.data$po11_9_in)), "."))
-  prace = suppressMessages(prace %>%
-                             left_join(pracePO)) %>%
+  prace = suppressWarnings(suppressMessages(
+    prace %>%
+      left_join(pracePO))) %>%
     select("ID_RESP", "typ_epizodu", "nr", "czas_rozp", "czas_zakon",
            "czy_zakonczony", "swiadectwo", "czas_rozp_imput", "czas_zakon_imput",
            starts_with("pg"), starts_with("pi"), starts_with("pio"),
@@ -642,7 +648,19 @@ wczytaj_wyniki_1rm = function(x){
   # zasadniczy zbiór
   ################################################################################
   #|->
+  dane$f4_id = as.numeric(dane$f4_id)
+  dane$pi2_kod = as.numeric(as.character(dane$pi2_kod))
+  dane$po2_kod = as.numeric(as.character(dane$po2_kod))
   dane = dane %>%
+    left_join(get("kzsb") %>% select("kod_zawodu", "branza_2019"),
+              by = c("f4_id" = "kod_zawodu")) %>%
+    rename(f4_branza_kzsb = "branza_2019") %>%
+    left_join(get("kzsb") %>% select("kod_zawodu", "branza_2019"),
+              by = c("pi2_kod" = "kod_zawodu")) %>%
+    rename(pi2_branza_kzsb = "branza_2019") %>%
+    left_join(get("kzsb") %>% select("kod_zawodu", "branza_2019"),
+              by = c("po2_kod" = "kod_zawodu")) %>%
+    rename(po2_branza_kzsb = "branza_2019") %>%
     select(-matches("^zp2")) %>%
     select(-matches("^sp[23456]")) %>%
     select(-matches("^pp[23456]")) %>%
