@@ -7,8 +7,7 @@ date: "1 sierpnia 2020"
 lang: pl
 ---
 
-1. Wprowadzenie
-===============
+# 1. Wprowadzenie
 
 W dokumencie tym opisane zostały wyczerpująco procedury obliczania
 wartości wskaźników charakteryzujących losy edukacyjno-zawodowe
@@ -31,8 +30,7 @@ a następnie utworzenia raportów dla szkół opisany został w plikach
 README pakietów [MLASZdane](https://github.com/tzoltak/MLASZdane)
 i [MLASZraporty](https://github.com/tzoltak/MLASZraporty).
 
-2. Wskaźniki obliczane na poziomie indywidualnym
-================================================
+# 2. Wskaźniki obliczane na poziomie indywidualnym
 
 Zbiór wskaźników na poziomie indywidualnym ma postać ramki danych,
 w której jeden wiersz odpowiada jednemu absolwentowi, a poszczególne
@@ -613,8 +611,7 @@ umowy.
     znajduje się szkoła (którą ukończył absolwent):
     -   liczba \[PLN\].
 
-3. Wskaźniki obliczane na poziomie zagregowanym
-===============================================
+# 3. Wskaźniki obliczane na poziomie zagregowanym
 
 Zbiory danych na poziomie zagregowanym mają postać ramek danych,
 w których jeden wiersz opisuje jedną grupę (w szczególności jedną

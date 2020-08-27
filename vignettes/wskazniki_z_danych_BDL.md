@@ -5,8 +5,7 @@ date: "28 lutego 2019"
 lang: pl
 ---
 
-1. Pobieranie wskaźników z API BDL
-==================================
+# 1. Pobieranie wskaźników z API BDL
 
 Pobieranie wskaźników z API BDL z wykorzystaniem funkcji pakietu
 MLASZdane przebiega w dwóch krokach:
@@ -113,8 +112,7 @@ w przyszłości (co w kodzie poniżej realizuje wywołanie funkcji
                   pobierz_dane_bdl(2017, "powiaty"))
     save(wskaznikiBdl, file = "wskazniki_BDL.RData")
 
-2. Przekształcanie zestawień pobranych z API BDL na zestawienia wskaźników wykorzystywanych w monitorowaniu losów absolwentów
-=============================================================================================================================
+# 2. Przekształcanie zestawień pobranych z API BDL na zestawienia wskaźników wykorzystywanych w monitorowaniu losów absolwentów
 
 Przekształcenie zestawień wskaźników pobranych z API BDL na zestawienia
 wskaźników wykorzystywanych w monitorowaniu losów absolwentów polega na
