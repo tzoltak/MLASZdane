@@ -1,9 +1,9 @@
-# MLASZdane 0.4.1 (31.07.2020)
+# MLASZdane 0.4.1 (27.08.2020)
 
-- Wprowadzono nowe funkcje do obliczania wskaźników na poziomie zagregowanym z
-  2. rundy monitoringu, któRe są kompatybilne ze zmianą sposobu obliczania
+- Wprowadzono nowe funkcje do obliczania wskaźników na poziomie zagregowanym
+  z 2. rundy monitoringu, które są kompatybilne ze zmianą sposobu obliczania
   wskaźników wprowadzoną w wersji 0.4.0 pakietu.
-
+  - Patrz funkcja agreguj_cawi_ucz_2rm().
 
 # MLASZdane 0.4.0 (5.06.2020)
 

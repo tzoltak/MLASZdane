@@ -39,7 +39,7 @@ Do przetwarzania wyników badań sondażowych przeprowadzonych w projekcie MLEZ
 
 Wszystkie ww. funkcje przygotowują zbiory danych w taki sposób, że możliwe jest łatwe zapisanie ich do plików w formacie .sav, korzystając z funkcji pakietu [*haven*](https://haven.tidyverse.org).
 
-Więcej informacji na temat struktury i zawartości tworzonych zbiorów danych zawiera [dokumentacja dot. 1. rundy monitoringu](./inst/doc/runda_1-dokumentacja.md).
+Więcej informacji na temat struktury i zawartości tworzonych zbiorów danych zawiera [dokumentacja dot. 1. rundy monitoringu](./vignettes/runda_1-dokumentacja.md).
 
 Schemat wykorzystania ww. funkcji wygląda następująco:
 
@@ -78,11 +78,11 @@ Zakładając, że wcześniej wykonane zostały czynności opisane w poprzedniej
 wskaznikiInd = oblicz_wskazniki_ind_1rm(dane1RM)
 ```
 
-Szczegółowy opis sposobu obliczania wskaźników zawiera [dokumentacja procedur obliczania wskaźników na podstawie danych z 1. rundy monitoringu](./inst/doc/runda_1-wskazniki.md).
+Szczegółowy opis sposobu obliczania wskaźników zawiera [dokumentacja procedur obliczania wskaźników na podstawie danych z 1. rundy monitoringu](./vignettes/runda_1-wskazniki.md).
 
 ## Obliczenie wskaźników na poziomie szkół i grup porównawczych na podstawie zbiorów z 1. rundy monitoringu
 
-Aby obliczyć wskaźniki na poziomie szkół oprócz zbioru danych ze wskaźnikami na poziomie indywidualnym potrzebny jest również zbiór ze wskaźnikami średnich wynagrodzeń i bezrobocia w powiatach pobranych z Banku Danych Lokalnych GUS. Sposób przygotowania takiego zbioru opisany został w specjalnej dokumentacji: [wskaźniki z danych BDL](./inst/doc/wskazniki_z_danych_BDL.md). Poniżej założymy, że zbiór danych z wartościami wskaźników z BDL (pobrany przy pomocy funkcji `pobierz_dane_bdl()`) został, tak jak w przykładzie z ww. dokumentacji, przypisany do obiektu o nazwie `wskaznikiBdl` i zapisany w pliku *wskazniki_BDL.RData*. Aby przyłączyć wskaźniki z BDL do zbioru wskaźników indywidualnych, należy w tej sytuacji wykonać kod:
+Aby obliczyć wskaźniki na poziomie szkół oprócz zbioru danych ze wskaźnikami na poziomie indywidualnym potrzebny jest również zbiór ze wskaźnikami średnich wynagrodzeń i bezrobocia w powiatach pobranych z Banku Danych Lokalnych GUS. Sposób przygotowania takiego zbioru opisany został w specjalnej dokumentacji: [wskaźniki z danych BDL](./vignettes/wskazniki_z_danych_BDL.md). Poniżej założymy, że zbiór danych z wartościami wskaźników z BDL (pobrany przy pomocy funkcji `pobierz_dane_bdl()`) został, tak jak w przykładzie z ww. dokumentacji, przypisany do obiektu o nazwie `wskaznikiBdl` i zapisany w pliku *wskazniki_BDL.RData*. Aby przyłączyć wskaźniki z BDL do zbioru wskaźników indywidualnych, należy w tej sytuacji wykonać kod:
 
 ```r
 load("wskazniki_BDL.RData")
@@ -103,7 +103,7 @@ wskaznikiSzk = agreguj_wskazniki_szk(wskaznikiInd)
 save(wskaznikiSzk, file = "wskazniki_szkol.RData")
 ```
 
-Szczegółowy opis sposobu obliczania wskaźników zawiera [dokumentacja procedur obliczania wskaźników na podstawie danych z 1. rundy monitoringu](./inst/doc/runda_1-wskazniki.md)
+Szczegółowy opis sposobu obliczania wskaźników zawiera [dokumentacja procedur obliczania wskaźników na podstawie danych z 1. rundy monitoringu](./vignettes/runda_1-wskazniki.md)
 
 W perspektywie tworzenia raportów na podstawie przygotowanego w wyżej opisany sposób zbioru danych, należy jeszcze zwrócić uwagę, że szablon 'raport_szkoly.Rmd' zaimplementowany w pakiecie [MLASZraporty](https://github.com/tzoltak/MLASZraporty) wymaga dołączenia do zbioru wskaźników na poziomie szkół trzech dodatkowych zmiennych, których nie daje się wygenerować na podstawie zbiorów z wynikami sondaży z 1. rundy monitoringu (konieczne jest odwołanie się w tym celu do danych z operatu losowania próby do badania):
 
@@ -136,7 +136,7 @@ Do przetwarzania wyników badań sondażowych przeprowadzonych w projekcie MLEZ
 
 Wszystkie ww. funkcje przygotowują zbiory danych w taki sposób, że możliwe jest łatwe zapisanie ich do plików w formacie .sav, korzystając z funkcji pakietu [*haven*](https://haven.tidyverse.org).
 
-Więcej informacji na temat struktury i zawartości tworzonych zbiorów danych zawiera [dokumentacja dot. pilotażowej rundy monitoringu](./inst/doc/runda_pilotazowa-dokumentacja.md).
+Więcej informacji na temat struktury i zawartości tworzonych zbiorów danych zawiera [dokumentacja dot. pilotażowej rundy monitoringu](./vignettes/runda_pilotazowa-dokumentacja.md).
 
 Schemat wykorzystania ww. funkcji wygląda następująco:
 

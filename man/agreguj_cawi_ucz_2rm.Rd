@@ -25,7 +25,7 @@ używane do obliczania konkretnych wskaźników zagregowanych:
 \itemize{
   \item{\code{\link{liczba_zbadanych}},}
   \item{\code{\link{dane_szkoly}},}
-  \item{\code{\link{liczba_kobiet}},}
+  \item{\code{\link{liczba_kobiet_2rm}},}
   \item{\code{\link{firma_badawcza}},}
   \item{\code{\link{formy}},}
   \item{\code{\link{zawod_liczebnosc}},}

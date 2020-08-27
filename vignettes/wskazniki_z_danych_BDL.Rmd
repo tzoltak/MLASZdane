@@ -2,8 +2,8 @@
 title: "Przygotowywanie wskaźników na podstawie Banku Danych Lokalnych GUS"
 author: "Tomasz Żółtak"
 date: "28 lutego 2019"
-output: rmarkdown::html_vignette
 lang: pl
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Przygotowywanie wskaźników na podstawie BDL GUS}
   %\VignetteEngine{knitr::rmarkdown}

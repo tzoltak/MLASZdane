@@ -10,7 +10,7 @@
 #' \itemize{
 #'   \item{\code{\link{liczba_zbadanych}},}
 #'   \item{\code{\link{dane_szkoly}},}
-#'   \item{\code{\link{liczba_kobiet}},}
+#'   \item{\code{\link{liczba_kobiet_2rm}},}
 #'   \item{\code{\link{firma_badawcza}},}
 #'   \item{\code{\link{formy}},}
 #'   \item{\code{\link{zawod_liczebnosc}},}
@@ -53,7 +53,7 @@ agreguj_cawi_ucz_2rm = function(wskazniki, grupy) {
     wskazniki, grupy,
     l_zbadanych = liczba_zbadanych(.data),
     dane_szkoly = dane_szkoly(.data),
-    l_kobiet = liczba_kobiet(.data),
+    l_kobiet = liczba_kobiet_2rm(.data),
     firma = firma_badawcza(.data),
     formy_gramatyczne = formy(.data),
     l_zawod = zawod_liczebnosc(.data),

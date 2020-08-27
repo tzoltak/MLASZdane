@@ -1,12 +1,4 @@
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
-#' @description Funkcja oblicza wskaźnik opisujący liczbę zbadanych w grupie.
-#' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
-#' @return liczba
-liczba_zbadanych = function(x) {
-  stopifnot(is.data.frame(x))
-  return(nrow(x))
-}
-#' @title Obliczanie wskaznikow na poziomie zagregowanym
 #' @description Funkcja przechowująca nazwę i adres szkoły jako listę.
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
@@ -21,7 +13,7 @@ dane_szkoly = function(x) {
 #' grupie.
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return liczba
-liczba_kobiet = function(x) {
+liczba_kobiet_2rm = function(x) {
   return(sum(x$M1 %in% 1))
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym
@@ -94,13 +86,14 @@ zawod_liczebnosc = function(x) {
 #' podstawę procentowania. Wynik funkcji jest wsadem do tabeli 1 w raporcie.
 #' @param x ramka danych ze wskaźnikami na poziomie indywidualnym
 #' @return lista
-#' @importFrom dplyr %>%
+#' @importFrom dplyr %>% .data
 zawod_przygotowanie_szkola = function(x) {
   x %>%
     select("S2_zawod", "W3") %>%
-    group_by(S2_zawod) %>%
-    summarise(przygotowanie = round(sum(W3 %in% c(4, 5)) / sum(W3 %in% (1:7)) * 100),
-              respN = sum(W3 %in% (1:7))) %>%
+    group_by(.data$S2_zawod) %>%
+    summarise(przygotowanie =
+                round(sum(.data$W3 %in% c(4, 5)) / sum(.data$W3 %in% (1:7)) * 100),
+              respN = sum(.data$W3 %in% (1:7))) %>%
     as.list() %>%
     return()
 }

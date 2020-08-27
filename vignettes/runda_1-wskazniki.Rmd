@@ -1,9 +1,11 @@
 ---
 title: "Wskaźniki na poziomie indywidualnym i zagregowanym obliczane na podstawie 1. rundy monitoringu"
-author: "Tomasz Żółtak"
-date: "15 marca 2019"
-output: rmarkdown::html_vignette
+author:
+  - "Tomasz Żółtak"
+  - "Bartłomiej Płatkowski"
+date: "1 sierpnia 2020"
 lang: pl
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Wskazniki na poziomie indywidualnym i zagregowanym obliczane na podstawie 1. rundy monitoringu}
   %\VignetteEngine{knitr::rmarkdown}

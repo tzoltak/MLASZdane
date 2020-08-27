@@ -4,7 +4,9 @@
 \name{nazwy_jst}
 \alias{nazwy_jst}
 \title{Nazwy powiatow i wojewodztw przypisane do kodow TERYT powiatow.}
-\format{Ramka danych z 3 kolumnami i 380 wierszami.}
+\format{
+Ramka danych z 3 kolumnami i 380 wierszami.
+}
 \usage{
 nazwy_jst
 }
