@@ -1,0 +1,262 @@
+---
+title: "Tworzenie nowych funkcji agregujących dane"
+subtitle: "(do obsłużenia kolejnych rund monitoringu)"
+author: "Tomasz Żółtak"
+date: "27 sierpnia 2020"
+lang: pl
+---
+
+# 1. Wprowadzenie
+
+Proces przygotowywania zbioru wskaźników zagregowanych, który może
+następnie zostać wykorzystany do wygenerowania raportów (przy pomocy
+pakietu *MLASZraporty*) przebiega zwykle w dwóch krokach:
+
+1.  Przygotowanie zbioru wskaźników indywidualnych na podstawie zbioru
+    z wynikami badań.
+    -   Ten etap nie zawsze trzeba wykonywać - niekiedy zbiór wyników
+        badania może zostać uznany za zbiór wskaźników indywidualnych
+        bez potrzeby stosowania żadnych dodatkowych przekształceń
+        (konieczność ich dokonania wiąże się przede wszystkim
+        z rekonstruowaniem historii edukacyjno-zawodowej respondentów,
+        co wymaga przechodzenia z zapisu danych w formie *szerokiej* na
+        formę *długą* - por. opis przygotowania zbiorów z 1. rundy
+        monitoringu).
+    -   Niekiedy obejmuje on też dołączenie do zbioru wskaźników
+        indywidualnych informacji z zewnętrznych źródeł danych (np.
+        Banku Danych Lokalnych GUS).
+2.  Agregacja zbioru wskaźników indywidualnych do zbioru wskaźników
+    zagregowanych.
+
+W tym dokumencie opisane jest, w jaki sposób należy tworzyć nowe
+funkcje, dodawane do pakietu *MLASZdane*, które będą służyć do
+realizacji drugiego z ww. kroków, w odniesieniu do rund i edycji
+monitoringu, które dopiero zostaną zrealizowane.
+
+# 2. Proces agregacji wskaźników
+
+Centralną funkcją pakietu *MLASZdane*, odpowiedzialną za agregację
+wskaźników, jest `agreguj_wskazniki()`. Przyjmuje ona następujące
+argumenty:
+
+-   `wskazniki` - ramka danych ze wskaźnikami na poziomie indywidualnym;
+-   `grupy` - ramka danych zawierająca definicje podziałów na grupy
+    (oraz ewentualnie inne zmienne, które zostaną dołączone do
+    zwracanych zbiorów):
+    -   jeśli definicje grup są stosunkowo proste, taką ramkę danych
+        można wygenerować przy pomocy funkcji
+        `utworz_grupowanie_ze_zmiennej()` (sprawdź dokumentację tej
+        funkcji, aby dowiedzieć się, w jakich sytuacjach daje się ją
+        zastosować);
+    -   ta ramka danych musi zawierać kolumny: `grupa` i `odniesienie`,
+        które zawierają wyrażenia wybierające jednostki obserwacji
+        należące do danej grupy lub grupy odniesienia;
+        -   wyrażenia takie mogą być zapisane w formie niezewaluowanych
+            wyrażeń języka (jak np. przekształcenia zmiennych
+            w `mutate()` z pakietu *dplyr*), ale także jako formuły lub
+            ciągi znaków - zwykle najłatwiej jest zastosować to ostatnie
+            podejście (por. jak jest to zaimplementowane w ramach
+            funkcji `utworz_grupowanie_ze_zmiennej()`);
+    -   grupy (ani grupy porównawcze) definiowane w poszczególnych
+        wierszach tej ramki danych **nie muszą** być rozłączne;
+-   wyrażenia postaci:
+    `nazwa_wskaznika = funkcja_obliczajaca_wskaznik(.data, ew_inne_argumenty)`.
+
+Funkcja `agreguj_wskazniki()` działa w taki sposób, że przechodzi przez
+pary grupa-grupa odniesienia (porównawcza) zdefiniowane w kolejnych
+wierszach argumentu `grupy`:
+
+1.  Na podstawie definicji danej grupy (lub grupy odniesienia)
+    odfiltrowuje z ramki danych przekazanej argumentem `wskazniki`
+    obserwacje należące do danej grupy.
+2.  Przypisuje je do ramki danych o nazwie `.data`, zdefiniowanej w nowo
+    utworzonym środowisku.
+3.  W ramach tego środowisko wykonuje kolejne wyrażenia obliczające
+    wskaźniki (przekazane jako trzeci i dalsze argumenty w wywołaniu
+    `agreguj_wskazniki()`).
+4.  Zwracane wyniki przypisywane są jako wartości odpowiedniego
+    wskaźnika dla danej grupy/grupy odniesienia (porównawczej).
+
+Funkcja zwraca listę, której pierwszy element stanowi ramka danych
+zawierająca wskaźniki zagregowane obliczone dla poszczególnych grup,
+a drugi element stanowi ramka danych zawierająca wskaźniki zagregowane
+obliczone dla odpowiadających im grup odniesienia (porównawczych).
+
+**Aby zaimplementować obliczanie nowego zestawu wskaźników
+zagregowanych, konieczne jest w związku z tym Dodanie do pakietu
+*MLASZdane*:**
+
+-   definicji *niskopoziomowych* funkcji, które będą obliczać wartości
+    nowych wskaźników dla danej grupy badanych;
+    -   definicje tych funkcji te co do zasady powinny zostać zgrupowane
+        w jednym pliku kodu o nazwie
+        *wskazniki\_poziom\_zagregowany\_\[sufiks identyfikujący
+        rundę/edycję\].R*;
+-   definicji *wysokopoziomowej* funkcji, która będzie wywoływać
+    `agreguj_wskazniki()` z odpowiednim zestawem definicji grup oraz
+    wywołaniami, wspomnianych w punkcie powyżej, funkcji obliczających
+    wartości poszczególnych wskaźników dla poszczególnych grup;
+    -   minimalistycznym przykładem takiej funkcji jest
+        `agreguj_wskazniki_2rm()`;
+    -   niekiedy użyteczne może okazać się przygotowanie kilku funkcji,
+        np. w sytuacji, gdy ten sam zestaw wskaźników może być na
+        podstawie tych samych danych obliczany na różnych poziomach
+        agregacji (por. `agreguj_wskazniki_1rm()`,
+        `agreguj_wskazniki_1rm_szk()`
+        i `agreguj_wskazniki_1rm_szk_branza()` w pliku
+        *agreguj\_wskazniki\_1rm.R*);
+-   opcjonalnie funkcji przygotowującej ramkę danych z definicjami grup
+    i odpowiadających im grup odniesienia (porównawczych) - do
+    wykorzystania w ramach funkcji wymienionej w poprzednim punkcie
+    (por. `utworz_grupowanie_ze_zmiennej()`).
+
+W kolejnych sekcjach opisane są wymagania, jakie powinny spełniać
+zestawy argumentów i struktura wyników zwracanych przez funkcje opisane
+w dwóch pierwszych punktach powyższego zestawienia.
+
+# 3. Niskopoziomowe funkcje obliczające wskaźnik dla konkretnej grupy badanych
+
+## 3.1. Nazwy funkcji
+
+Tworząc nową funkcję zawsze należy sprawdzić, czy w pakiecie nie
+istnieje już funkcja o nazwie, której chcemy użyć (np.
+*liczba\_kobiet*)! (W przyszłości najlepiej byłoby wprowadzić
+sufiksowanie nazw funkcji identyfikatorem rundy, ale póki co taka
+konwencja nie została zastosowana.)
+
+## 3.2. Argumenty przyjmowane przez funkcje
+
+Funkcja obowiązkowo musi przyjmować argument, którym zostanie jej
+przekazana ramka danych stanowiąca podzbiór obserwacji (należących do
+konkretnej grupy) ze zbioru wskaźników indywidualnych poddawanego
+agregacji. W wielu wypadkach będzie to jedyny argument. W oczywisty
+sposób takie funkcje wykorzystywane są do obliczania tylko jednego
+wskaźnika (tj. w wywołaniu `agreguj_wskazniki()` taka funkcja pojawi się
+tylko w jednym wyrażeniu opisującym sposób obliczenia wskaźnika).
+
+W pewnych przypadkach użyteczne jest jednak zdefiniowanie bardziej
+uniwersalnej funkcji, przyjmującej dodatkowe argumenty, która będzie
+mogła zostać wykorzystana do obliczenia kilku podobnych wskaźników, np.
+opisujących tą samą cechę badanych, ale mierzoną w różnym czasie lub
+okresie - por. `czas_rozklad()` i `czas_agregacja()` z pliku
+*wskazniki\_poziom\_zagregowany.R* oraz `plany_6m()` z pliku
+*wskazniki\_poziom\_zagregowany\_2rm.R*. **Jeśli istnieje możliwość
+takiego ograniczenia liczby nowych definicji funkcji dodawanych do
+pakietu, należy z niej korzystać.**
+
+## 3.3. Sposób działania funkcji
+
+Pisząc funkcje agregujące *niskiego poziomu* należy przestrzegać
+następujących reguł:
+
+-   Nie sprawdza się poprawności argumentów przekazywanych do funkcji
+    (ponieważ są one wywoływane wielokrotnie - oddzielnie na każdej
+    grupie i grupie odniesienia - byłoby to obciążające czasowo).
+-   Funkcja otrzymuje ramkę danych z wartościami wszystkich zmiennych ze
+    zbioru wskaźników indywidualnych - wybranie z niej kolumn (czy
+    pojedynczej kolumny) użytecznych do obliczenia danego wskaźnika
+    zagregowanego należy zaimplementować wewnątrz tworzonej funkcji.
+-   Należy pamiętać, że przekształcane zmienne mogą zawierać braki
+    danych.
+    -   Argument `na.rm` przy obliczaniu statystyk.
+    -   Nieuwzględnianie braków danych przy obliczaniu wartości
+        elementu `n` dla wskaźników *złożonych* podlegających
+        anonimizacji (p. niżej).
+
+## 3.4. Struktura obiektów zwracanych przez funkcje
+
+Ze względu na różnice w strukturze obiektów, zwracanych przez funkcje
+obliczające wskaźniki zagregowane dla konkretnej grupy badanych,
+użyteczne jest wyróżnienie trzech rodzajów takich wskaźników:
+
+1.  *Proste* wskaźniki - wartość zwracana przez funkcję to **wektor
+    jednoelementowy** (pojedyncza liczba lub ciąg znaków). Wskaźniki
+    takie nie podlegają anonimizacji.
+    -   Typowe przykłady to: liczba zbadanych w danej grupie, liczba
+        zbadanych kobiet w danej grupie, nazwa grupy (np. szkoły).
+2.  *Złożone* wskaźniki, które nie będą podlegać anonimizacji.
+    -   wartość zwracana przez funkcję ma postać **listy, której kolejne
+        elementy opisują składowe wartości wskaźnika**, np. wskaźnik
+        zwracany przez funkcję `formy` (plik
+        *wskazniki\_poziom\_zagregowany\_2rm.R*), który zawiera
+        odpowiednie do typu szkoły formy gramatyczne wyrazów, używanych
+        do dostosowania opisów znaczenia wskaźników w raportach szkół
+        z badania CAWI uczniów w ramach 2. RM;
+    -   co do zasady **każdy z elementów zwracanej listy powinien być
+        jednoelementowym wektorem**; w szczególności nie należy stosować
+        zagnieżdżania list w elementach zwracanej listy (nie przeszkodzi
+        to samemu procesowi przygotowywania zbioru wskaźników
+        zagregowanych, ale uniemożliwi potem poprawne przeprowadzenie
+        jego anonimizacji - p. `anonimizuj_wskazniki()` - lub
+        *spłaszczenia* - p. `splaszcz_wskazniki_zagregowane()`);
+3.  *Złożone* wskaźniki, które mogą później podlegać anonimizacji.
+    -   wartość zwracana przez funkcję ma postać **listy, której kolejne
+        elementy opisują składowe wartości wskaźnika**, np. liczebności
+        kolejnych komórek rozkładu wskaźnika indywidualnego w danej
+        grupie;
+    -   co do zasady wartości elementów zwracanej listy zawierają
+        *wartości* (zwykle liczby, choć por. `studia_gdzie()` w pliku
+        *wskazniki\_poziom\_zagregowany.R*), a nazwy elementów
+        odpowiadające im etykiety/interpretacje **spisane w języku
+        naturalnym** (por. `praca_forma()` w pliku
+        *wskazniki\_poziom\_zagregowany.R*)
+    -   zwracana lista obowiązkowo zawiera element o nazwie `n`
+        (i zwyczajowo jest to pierwszy element zwracanej listy), który
+        przechowuje liczbę badanych, którzy zostali uwzględnieni przy
+        obliczaniu (dalszych elementów) wskaźnika - to na jego podstawie
+        może potem zostać przeprowadzona ewentualna anonimizacja;
+    -   co do zasady **każdy z elementów zwracanej listy powinien być
+        jednoelementowym wektorem**; w szczególności nie należy stosować
+        zagnieżdżania list w elementach zwracanej listy (nie przeszkodzi
+        to samemu procesowi przygotowywania zbioru wskaźników
+        zagregowanych, ale uniemożliwi potem poprawne przeprowadzenie
+        jego anonimizacji - p. `anonimizuj_wskazniki()` - lub
+        *spłaszczenia* - p. `splaszcz_wskazniki_zagregowane()`);
+    -   większość obliczanych wskaźników zalicza się do tego rodzaju
+        (np. `praca_nauka()` lub `praca_czas_rozp()` w pliku
+        *wskazniki\_poziom\_zagregowany.R*).
+
+# 4. Wysokopoziomowa funkcja agregująca
+
+## 4.1. Funkcjonalności, które funkcja powinna implementować
+
+Zadaniem tej funkcji jest zapewnienie użytkownikowi pakietu możliwości
+przygotowania zbioru wskaźników zagregowanych w jak najprostszy sposób.
+W związku z tym co do zasady:
+
+-   Funkcja taka powinna przyjmować raczej niewiele argumentów. Ich
+    minimalny zestaw to:
+    -   Ramka danych ze wskaźnikami z poziomu indywidualnego.
+    -   Próg anonimizacji - liczba całkowita, która zostanie przekazana
+        do wywołania `anonimizuj_wskazniki()`.
+-   Funkcja powinna przeprowadzać anonimizację przygotowanego zbioru
+    wskaźników zagregowanych (i zwracać zbiór już zanonimizowany).
+-   Tworzenie podziału na grupy i odpowiadające im grupy odniesienia
+    (porównawcze) powinno zostać zaimplementowane wewnątrz takiej
+    funkcji (tak aby użytkownik nie musiał samodzielnie tworzyć go *na
+    zewnątrz* i przekazywać gotowy argumentem).
+-   Funkcja powinna sprawdzać kompletność przekazywanego jej zbioru
+    wskaźników indywidualnych (komunikaty o błędach zwracane przez
+    funkcje agregujące *niskiego poziomu* w związku z niemożliwością
+    znalezienia odpowiedniej zmiennej mogą być mało zrozumiałe).
+    -   Przyjazne użytkownikowi komunikaty o niekompletności zbioru
+        wskaźników indywidualnych pozwala generować funkcja
+        `sprawdz_nazwy()`.
+
+## 4.2. Sposób konstruowania wyrażeń opisujących wskaźniki w wywołaniu `agreguj_wskazniki()`
+
+W wyrażeniach postaci
+`nazwa_wskaznika = funkcja_obliczajaca_wskaznik(.data, ew_inne_argumenty)`,
+przekazywanych jako dalsze argumenty wywołania `agreguj_wskazniki()`
+w ramach tworzonej *wysokopoziomowej* funkcji agregującej powinny
+spełniać następujące warunki:
+
+-   nazwy wskaźników powinny być *legalnymi* wyrażeniami języka R
+    (zawierać tylko litery podstawowego alfabetu łacińskiego,
+    podkreślnik, kropkę i cyfry, przy czym cyfra nie może być pierwszym
+    znakiem);
+-   w wywołaniu funkcji obliczającej wskaźnik jako argument z danymi
+    (ramką danych z podzbiorem obserwacji ze zbioru wskaźników
+    indywidualnych) należy przekazać obiekt `.data` - jest to konwencja
+    opisania, że `agreguj_wskazniki()` ma w`agreguj_wskazniki()` to
+    miejsce podstawić odpowiednio odfiltrowany zbiór danych.

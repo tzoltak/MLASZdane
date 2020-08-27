@@ -5,7 +5,7 @@
 #' @param wskazniki ramka danych ze wskaźnikami na poziomie idywidualnym
 #' zwracana przez funkcję \code{\link{oblicz_wskazniki_ind_1rm}}
 #' @param grupy ramka danych zawierająca definicje podziałów na grupy (oraz
-#' ewentualnie inne zmienne, które zostan dołączone do zwracanych zbiorów) -
+#' ewentualnie inne zmienne, które zostaną dołączone do zwracanych zbiorów) -
 #' zwrócona przez funkcję \code{\link{utworz_grupowanie_ze_zmiennej}} lub
 #' przygotowana samodzielnie; musi zawierać kolumny \emph{grupa}
 #' i \emph{odniesienie}, które zawierają wyrażenia wybierające jednostki
