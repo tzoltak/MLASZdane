@@ -123,13 +123,13 @@ pobierz_dane_bdl = function(wskazniki, lata, poziom = "powiaty") { # nocov start
     temp = fromJSON(paste0("https://bdl.stat.gov.pl/api/v1/data/by-variable/",
                            i, "?", lata, poziom, "&page-size=100&lang=pl&format=json"))
     if (temp$totalRecords > 0) {
-      dane = bind_rows(dane, unnest(temp$results))
+      dane = bind_rows(dane, unnest(temp$results, everything()))
     } else {
       brakiDanych = c(brakiDanych, i)
     }
     while ("next" %in% names(temp$links)) {
       temp = fromJSON(temp$links$`next`)
-      dane = bind_rows(dane, unnest(temp$results))
+      dane = bind_rows(dane, unnest(temp$results, everything()))
     }
     dane = dane %>%
       mutate(idWsk = ifelse(is.na(.data$idWsk), i, .data$idWsk))
