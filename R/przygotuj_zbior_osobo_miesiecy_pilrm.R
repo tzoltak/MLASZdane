@@ -130,7 +130,7 @@ przygotuj_zbior_osobo_miesiecy_pilrm = function(x) {
     arrange(.data$ID, .data$czas) %>%
     group_by(.data$ID) %>%
     do(status = koryguj_statusy(.data, "ID", 8:9)) %>%
-    unnest() %>%
+    unnest(everything()) %>%
     mutate(status = ifelse(is.na(.data$praca) & is.na(.data$nauka) & is.na(.data$bezrobocie),
                            "999", ""),
            praca = ifelse(is.na(.data$praca), 0, .data$praca),

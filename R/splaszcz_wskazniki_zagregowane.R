@@ -15,7 +15,7 @@
 #' @return ramka danych
 #' @export
 #' @importFrom tidyr unnest
-#' @importFrom dplyr %>% .data bind_cols do group_by select ungroup
+#' @importFrom dplyr %>% .data all_of bind_cols do group_by select ungroup
 #' @importFrom haven labelled
 splaszcz_wskazniki_zagregowane = function(wskazniki) {
   stopifnot(is.data.frame(wskazniki))
@@ -25,17 +25,17 @@ splaszcz_wskazniki_zagregowane = function(wskazniki) {
     # właściwie należałoby zawartośc tej pętli przepisać tak, aby wykorzystać
     # funkcję `rowwise()` z dplyra po ostatniej dużej zmianie API tego pakietu
     temp = wskazniki %>%
-      select(i) %>%
+      select(all_of(i)) %>%
       mutate(`___tmpGrpVar___` = 1:nrow(wskazniki)) %>%
       group_by(.data$`___tmpGrpVar___`)
     temp = suppressWarnings(
       temp %>%
         do(przygotuj_wskaznik_do_splaszczenia(.data[[i]]))) %>%
       ungroup() %>%
-      unnest(cols = c()) %>%
+      unnest(everything()) %>%
       select(-"___tmpGrpVar___")
     for (j in 1:ncol(temp)) {
-      if (!is.character(temp[[j]])) {
+      if (all(!is.na(suppressWarnings(as.numeric(temp[[j]][!is.na(temp[[j]])]))))) {
         temp[[j]] = as.numeric(temp[[j]])
       }
       temp[[j]] = labelled(temp[[j]],
@@ -70,17 +70,15 @@ przygotuj_wskaznik_do_splaszczenia = function(x) {
       return(list(temp = x))
     } else {
       return(lapply(x, function(x) {
-        if (is.null(x)) {
+        if (is.null(x) | length(x) == 0) {
           return(NA_character_)
-        }
-        if (length(x) == 0) {
-          y = NA
-          mode(y) = mode(x)
-          return(y)
         } else if (length(x) > 1) {
           return(paste(x, collapse = ", "))
         } else {
-          return(x)
+          if (is.logical(x)) {
+            x = as.numeric(x)
+          }
+          return(as.character(x))
         }}))
     }
   }) %>%

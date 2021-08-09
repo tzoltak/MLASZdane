@@ -14,4 +14,15 @@ if (file.exists("dane_2rm.RData")) {
       expect_equal(nrow(wskCawi[[i]]), nrow(gru_cut))
     }
   })
+
+  wskCawiSplGrupy = splaszcz_wskazniki_zagregowane(wskCawi$grupy)
+  wskCawiSplGrupyOdn = splaszcz_wskazniki_zagregowane(wskCawi$grupyOdniesienia)
+  test_that("Zbiory wsk. zagregowanych z 2. RM dają się spłaszczyć.", {
+    expect_is(wskCawiSplGrupy, "data.frame")
+    expect_equal(ncol(wskCawiSplGrupy), 179)
+    expect_equal(nrow(wskCawiSplGrupy), 20)
+    expect_is(wskCawiSplGrupyOdn, "data.frame")
+    expect_equal(ncol(wskCawiSplGrupyOdn), 179)
+    expect_equal(nrow(wskCawiSplGrupyOdn), 20)
+  })
 }
