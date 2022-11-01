@@ -14,8 +14,8 @@
 #' formuł lub ciągów znaków)
 #' @param ... wyrażenia postaci
 #' \code{nazwa_wskaznika = funkcja_obliczajaca_wskaznik(.data, ew_inne_argumenty)}
-#' @param wielowatkowo wartość logiczna - czy obliczenia powinny zostać wykonane
-#' wielowątkowo
+#' @param wielowatkowo ciąg znaków - czy obliczenia powinny zostać wykonane
+#' wielowątkowo, a jeśli tak, to przy pomocy jakiego podejścia
 #' @param uzywajPakietow wektor ciągów znaków z nazwami pakietów, które musza
 #' zostac załadowane, aby móc wykonać wyrażenia podane w {...} (z wyjątkiem
 #' ładowanych domyślnie do sesji R oraz \emph{MLASZdane}, który zostanie
@@ -39,18 +39,22 @@
 #' @importFrom parallel clusterEvalQ clusterExport clusterMap mcMap stopCluster
 #' @importFrom parallelly availableCores makeClusterPSOCK supportsMulticore
 agreguj_wskazniki = function(wskazniki, grupy, ...,
-                             wielowatkowo = FALSE,
+                             wielowatkowo = c("brak", "socket", "fork"),
                              uzywajPakietow = vector(mode = "character",
                                                      length = 0)) {
   stopifnot(is.data.frame(wskazniki),
             is.data.frame(grupy),
             "grupa" %in% names(grupy), "odniesienie" %in% names(grupy),
-            is.logical(wielowatkowo), length(wielowatkowo) == 1,
-            wielowatkowo %in% c(TRUE, FALSE),
-            is.character(uzywajPakietow),
-            all(uzywajPakietow %in% installed.packages()[, "Package"]))
-  if (length(uzywajPakietow) > 0 && !wielowatkowo) {
-    warning("Argument 'uzywajPakietow' zostanie zignorowany, gdyż argument 'wielowatkowo' ma wartość FALSE.")
+            is.character(uzywajPakietow))
+  wielowatkowo = match.arg(wielowatkowo)
+  if (length(uzywajPakietow) > 0 && wielowatkowo %in% c("brak", "fork")) {
+    warning("Argument 'uzywajPakietow' zostanie zignorowany, gdyż argument 'wielowatkowo' ma wartość 'brak' lub 'fork'.")
+  } else if (length(uzywajPakietow) > 0) {
+    stopifnot(all(uzywajPakietow %in% installed.packages()[, "Package"]))
+  }
+  if (wielowatkowo == "fork" && !supportsMulticore()) {
+    warning("System operacyjny nie umożliwia tworzenia 'forków' procesów, do wielowątkowości zostanie wykorzystane podejście 'socket'.")
+    wielowatkowo = "socket"
   }
   funkcje = enexprs(...)
   # zanim zostanie odpalony potencjalnie czasochłonny proces obliczania
@@ -83,41 +87,39 @@ agreguj_wskazniki = function(wskazniki, grupy, ...,
     stop(blad)
   }
 
-  if (wielowatkowo) {
-    if (supportsMulticore()) {
-      odniesienia = bind_cols(
-        grupy,
-        bind_rows(mcMap(oblicz_wskazniki_w_forku, grupy$grupa,
-                        MoreArgs = list(.data = wskazniki, funkcje = funkcje),
-                        mc.cores = availableCores() - 1)))
-      grupy = bind_cols(
-        grupy,
-        bind_rows(mcMap(oblicz_wskazniki_w_forku, grupy$odniesienie,
-                        MoreArgs = list(.data = wskazniki, funkcje = funkcje),
-                        mc.cores = availableCores() - 1)))
-    } else {
-      # wydzielanie danych odpowiednich dla każdej grupy
-      wskaznikiG = wskaznikiO = vector(mode = "list", length = nrow(grupy))
-      for (i in 1:nrow(grupy)) {
-        wskaznikiG[[i]] = wskazniki[eval(zwroc_wywolanie_grupy(grupy$grupa[i]), wskazniki), ]
-        wskaznikiO[[i]] = wskazniki[eval(zwroc_wywolanie_grupy(grupy$odniesienie[i]), wskazniki), ]
-      }
-      # obliczenia na klastrze
-      cl = makeClusterPSOCK(availableCores() - 1, autoStop = TRUE)
-      uzywajPakietow = union("MLASZdane", uzywajPakietow)
-      clusterExport(cl, varlist = "uzywajPakietow", envir = environment())
-      clusterEvalQ(cl,
-                   for (p in uzywajPakietow) {library(p, character.only = TRUE)})
-      odniesienia = bind_cols(
-        grupy,
-        bind_rows(clusterMap(cl, oblicz_wskazniki_w_watku, wskaznikiO,
-                             MoreArgs = list(funkcje = funkcje))))
-      grupy = bind_cols(
-        grupy,
-        bind_rows(clusterMap(cl, oblicz_wskazniki_w_watku, wskaznikiG,
-                             MoreArgs = list(funkcje = funkcje))))
-      stopCluster(cl)
+  if (wielowatkowo == "fork") {
+    odniesienia = bind_cols(
+      grupy,
+      bind_rows(mcMap(oblicz_wskazniki_w_forku, grupy$grupa,
+                      MoreArgs = list(.data = wskazniki, funkcje = funkcje),
+                      mc.cores = availableCores() - 1)))
+    grupy = bind_cols(
+      grupy,
+      bind_rows(mcMap(oblicz_wskazniki_w_forku, grupy$odniesienie,
+                      MoreArgs = list(.data = wskazniki, funkcje = funkcje),
+                      mc.cores = availableCores() - 1)))
+  } else if (wielowatkowo == "socket") {
+    # wydzielanie danych odpowiednich dla każdej grupy
+    wskaznikiG = wskaznikiO = vector(mode = "list", length = nrow(grupy))
+    for (i in 1:nrow(grupy)) {
+      wskaznikiG[[i]] = wskazniki[eval(zwroc_wywolanie_grupy(grupy$grupa[i]), wskazniki), ]
+      wskaznikiO[[i]] = wskazniki[eval(zwroc_wywolanie_grupy(grupy$odniesienie[i]), wskazniki), ]
     }
+    # obliczenia na klastrze
+    cl = makeClusterPSOCK(availableCores() - 1, autoStop = TRUE)
+    uzywajPakietow = union("MLASZdane", uzywajPakietow)
+    clusterExport(cl, varlist = "uzywajPakietow", envir = environment())
+    clusterEvalQ(cl,
+                 for (p in uzywajPakietow) {library(p, character.only = TRUE)})
+    odniesienia = bind_cols(
+      grupy,
+      bind_rows(clusterMap(cl, oblicz_wskazniki_w_watku, wskaznikiO,
+                           MoreArgs = list(funkcje = funkcje))))
+    grupy = bind_cols(
+      grupy,
+      bind_rows(clusterMap(cl, oblicz_wskazniki_w_watku, wskaznikiG,
+                           MoreArgs = list(funkcje = funkcje))))
+    stopCluster(cl)
   } else {
     # tworzenie zmiennych do przechowywania obliczonych wskaźników
     for (z in names(funkcje)) {

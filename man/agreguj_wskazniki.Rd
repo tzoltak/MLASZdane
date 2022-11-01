@@ -8,7 +8,7 @@ agreguj_wskazniki(
   wskazniki,
   grupy,
   ...,
-  wielowatkowo = FALSE,
+  wielowatkowo = c("brak", "socket", "fork"),
   uzywajPakietow = vector(mode = "character", length = 0)
 )
 }
@@ -28,8 +28,8 @@ formuł lub ciągów znaków)}
 \item{...}{wyrażenia postaci
 \code{nazwa_wskaznika = funkcja_obliczajaca_wskaznik(.data, ew_inne_argumenty)}}
 
-\item{wielowatkowo}{wartość logiczna - czy obliczenia powinny zostać wykonane
-wielowątkowo}
+\item{wielowatkowo}{ciąg znaków - czy obliczenia powinny zostać wykonane
+wielowątkowo, a jeśli tak, to przy pomocy jakiego podejścia}
 
 \item{uzywajPakietow}{wektor ciągów znaków z nazwami pakietów, które musza
 zostac załadowane, aby móc wykonać wyrażenia podane w {...} (z wyjątkiem
