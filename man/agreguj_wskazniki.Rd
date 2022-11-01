@@ -4,7 +4,13 @@
 \alias{agreguj_wskazniki}
 \title{Obliczanie wskaznikow na poziomie zagregowanym}
 \usage{
-agreguj_wskazniki(wskazniki, grupy, ...)
+agreguj_wskazniki(
+  wskazniki,
+  grupy,
+  ...,
+  wielowatkowo = FALSE,
+  uzywajPakietow = vector(mode = "character", length = 0)
+)
 }
 \arguments{
 \item{wskazniki}{ramka danych ze wskaźnikami na poziomie idywidualnym
@@ -21,6 +27,15 @@ formuł lub ciągów znaków)}
 
 \item{...}{wyrażenia postaci
 \code{nazwa_wskaznika = funkcja_obliczajaca_wskaznik(.data, ew_inne_argumenty)}}
+
+\item{wielowatkowo}{wartość logiczna - czy obliczenia powinny zostać wykonane
+wielowątkowo}
+
+\item{uzywajPakietow}{wektor ciągów znaków z nazwami pakietów, które musza
+zostac załadowane, aby móc wykonać wyrażenia podane w {...} (z wyjątkiem
+ładowanych domyślnie do sesji R oraz \emph{MLASZdane}, który zostanie
+załadowany zawsze) - potrzebne tylko przy używaniu wielowątkowości
+w systemach operacyjnych Windows}
 }
 \value{
 lista dwóch ramek danych:
