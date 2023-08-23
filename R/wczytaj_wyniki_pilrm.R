@@ -19,8 +19,8 @@
 #' @importFrom stats setNames
 #' @importFrom haven read_spss
 #' @importFrom tidyr gather spread
-#' @importFrom dplyr .data bind_cols bind_rows case_when filter group_by
-#' left_join matches mutate mutate_all mutate_at one_of rename select
+#' @importFrom dplyr .data across bind_cols bind_rows case_when everything
+#' filter group_by left_join matches mutate mutate_at one_of rename select
 #' starts_with summarise vars
 wczytaj_wyniki_pilrm = function(x){
   stopifnot(is.character(x), length(x) == 1)
@@ -58,7 +58,7 @@ wczytaj_wyniki_pilrm = function(x){
   czasy = bind_cols(czasy,
                     t_laczny_czas = czasy %>%
                       select(starts_with("t_")) %>%
-                      mutate_all(as.numeric) %>%
+                      mutate(across(everything(), as.numeric)) %>%
                       rowSums(na.rm = TRUE))
   attributes(czasy$t_laczny_czas)$label = "Łączy czas trwania wywiadu [s]"
   #|<-

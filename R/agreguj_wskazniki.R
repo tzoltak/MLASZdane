@@ -7,11 +7,15 @@
 #' @param grupy ramka danych zawierająca definicje podziałów na grupy (oraz
 #' ewentualnie inne zmienne, które zostaną dołączone do zwracanych zbiorów) -
 #' zwrócona przez funkcję \code{\link{utworz_grupowanie_ze_zmiennej}} lub
-#' przygotowana samodzielnie; musi zawierać kolumny \emph{grupa}
-#' i \emph{odniesienie}, które zawierają wyrażenia wybierające jednostki
-#' obserwacji należące do danej grupy lub grupy odniesienia (mogą być one
-#' zapisane \emph{stricte} w formie niezewaluowanych wyrażeń języka, ale także
-#' formuł lub ciągów znaków)
+#' przygotowana samodzielnie; musi zawierać kolumnę \emph{grupa}, która zawiera
+#' wyrażenia wybierające jednostki obserwacji należące do danej grupy i zwykle
+#' zawiera (choć nie musi) kolumnę \emph{odniesienie} zawierającą wyrażenia
+#' wybierające jednostki obseracji należące do odpowiedniej grupy odniesienia
+#' (wyrażenia w każdej z tych kolumn mogą być  zapisane \emph{stricte} w formie
+#' niezewaluowanych wyrażeń języka, ale także formuł lub ciągów znaków);
+#' \strong{\emph{odniesienie} może też zawierać braki danych, co oznacza, że dla
+#' danej grupy nie istnieje adekwatna grupa odniesienia} (i w konsekwencji
+#' obliczenie wskaźników w grupie odniesienia jest tam niemożliwe)
 #' @param ... wyrażenia postaci
 #' \code{nazwa_wskaznika = funkcja_obliczajaca_wskaznik(.data, ew_inne_argumenty)}
 #' @param wielowatkowo ciąg znaków - czy obliczenia powinny zostać wykonane
@@ -19,14 +23,18 @@
 #' @param uzywajPakietow wektor ciągów znaków z nazwami pakietów, które musza
 #' zostac załadowane, aby móc wykonać wyrażenia podane w {...} (z wyjątkiem
 #' ładowanych domyślnie do sesji R oraz \emph{MLASZdane}, który zostanie
-#' załadowany zawsze) - potrzebne tylko przy używaniu wielowątkowości
+#' załadowany zawsze) - potrzebne tylko czasami przy używaniu wielowątkowości
 #' w systemach operacyjnych Windows
 #' @return lista dwóch ramek danych:
 #' \itemize{
 #'   \item{\code{grupy} - ramka danych zawierająca wskaźniki obliczone dla
 #'         poszczególnych grup,}
 #'   \item{\code{grupyOdniesienia} - ramka danych zawierająca wskaźniki
-#'         obliczone dla odpowiadających im grup odniesienia.}
+#'         obliczone dla odpowiadających im grup odniesienia. Jeśli dla danej
+#'         grupy zdefiniowano, że \strong{ma dla niej nie być używana grupa
+#'         odniesienia}, to wartość wskaźników w danym wierszu jest albo brakiem
+#'         danych (wskaźniki niebędące listami) lub jednoelementowym wektorem
+#'         logicznym zawierającym brak danych (kolumny-listy).}
 #' }
 #' @seealso Funkcje, które wywołują \code{agreguj_wskazniki}:
 #' \itemize{
@@ -34,7 +42,7 @@
 #' }
 #' @export
 #' @importFrom utils installed.packages
-#' @importFrom dplyr bind_cols bind_rows mutate_all
+#' @importFrom dplyr across bind_cols bind_rows everything mutate
 #' @importFrom rlang := !! enexprs
 #' @importFrom parallel clusterEvalQ clusterExport clusterMap mcMap stopCluster
 #' @importFrom parallelly availableCores makeClusterPSOCK supportsMulticore
@@ -44,7 +52,7 @@ agreguj_wskazniki = function(wskazniki, grupy, ...,
                                                      length = 0)) {
   stopifnot(is.data.frame(wskazniki),
             is.data.frame(grupy),
-            "grupa" %in% names(grupy), "odniesienie" %in% names(grupy),
+            "grupa" %in% names(grupy),
             is.character(uzywajPakietow))
   wielowatkowo = match.arg(wielowatkowo)
   if (length(uzywajPakietow) > 0 && wielowatkowo %in% c("brak", "fork")) {
@@ -61,7 +69,13 @@ agreguj_wskazniki = function(wskazniki, grupy, ...,
   # zagregowanych wskaźników sprawdźmy dla wszystkich grup, czy wyrażenia,
   # które je definiują, są poprawne
   problemyGrupa = sprawdz_definicje_grup(wskazniki, grupy$grupa)
-  problemyOdniesienie = sprawdz_definicje_grup(wskazniki, grupy$odniesienie)
+  if (!("odniesienie" %in% names(grupy))) {
+    grupy$odniesienie = rep(NA_character_, nrow(grupy))
+    problemyOdniesienie = rep("", nrow(grupy))
+  } else {
+    problemyOdniesienie = sprawdz_definicje_grup(wskazniki, grupy$odniesienie,
+                                                 dopuscPuste = TRUE)
+  }
   if (!all(problemyGrupa %in% "") | !all(problemyOdniesienie %in% "")) {
     blad = "\n"
     if (!all(problemyGrupa %in% "")) {
@@ -139,15 +153,23 @@ agreguj_wskazniki = function(wskazniki, grupy, ...,
 
       for (f in 1:length(funkcje)) {
         grupy[[names(funkcje)[f]]][[i]] = eval(funkcje[[f]], grupaEnv)
-        odniesienia[[names(funkcje)[f]]][[i]] = eval(funkcje[[f]], odniesienieEnv)
+        # być może funkcje[[f]] nie radzi sobie z ramkami danych o zerowej liczbie
+        # wierszy (w praktyce raczej z wektorami o zerowej długości), więc
+        # przy braku zdefiniowanej grupy odniesienia, lepiej powstrzymać się
+        # od wykonywania wyrażenia
+        if (nrow(odniesienieEnv$.data) > 0) {
+          odniesienia[[names(funkcje)[f]]][[i]] = eval(funkcje[[f]], odniesienieEnv)
+        } else {
+          odniesienia[[names(funkcje)[f]]][[i]] = NA
+        }
       }
     }
   }
 
   grupy = grupy %>%
-    mutate_all(list(proste_wskazniki_na_wektor))
+    mutate(across(everything(), proste_wskazniki_na_wektor))
   odniesienia = odniesienia %>%
-    mutate_all(list(proste_wskazniki_na_wektor))
+    mutate(across(everything(), proste_wskazniki_na_wektor))
   return(list(grupy = grupy,
               grupyOdniesienia = odniesienia))
 }
@@ -159,14 +181,19 @@ agreguj_wskazniki = function(wskazniki, grupy, ...,
 #' indywidualnego).
 #' @param wskazniki ramka danych ze wskaźnikami na poziomie idywidualnym
 #' @param definicje wektor lub lista zawierająca definicje podziałów na grupy
+#' @param dopuscPuste wartość logiczna wskazująca, czy jako definicja grupy
+#' dopuszczony jest brak danych - co może być używane w przypadku grup
+#' odniesienia i oznacza brak grupy odniesienia
 #' @return wektor tekstowy o długości równej długości \code{definicje}:
 #' zawiera komunikaty o błędach (jeśli wystąpiły) lub puste ciągi znaków (jeśli
 #' definicja zewaluowała się bez problemu)
 #' @seealso \code{\link{agreguj_wskazniki}}
-sprawdz_definicje_grup = function(wskazniki, definicje) {
+sprawdz_definicje_grup = function(wskazniki, definicje, dopuscPuste = FALSE) {
   problemy = rep("", length(definicje))
   for (i in 1:length(definicje)) {
+    if (is.na(definicje[i]) && dopuscPuste) next
     grupa = zwroc_wywolanie_grupy(definicje[i])
+
     if (!is.call(grupa)) {
       problemy[i] = "nie udało się skonwertować na 'wywołanie' ('call')"
       next
@@ -202,6 +229,9 @@ zwroc_wywolanie_grupy = function(x) {
   x = x[[1]]
   if (inherits(x, "formula")) {
     x = as.character(x[length(x)])
+  }
+  if (is.na(x)) {
+    x = "c()"
   }
   if (is.character(x)) {
     x = str2lang(x)

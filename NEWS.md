@@ -1,8 +1,11 @@
 # MLASZdane 0.5.0 (23.08.2023)
 
 -   Do funkcji `agreguj_wskazniki()` dodano wstępną obsługę wielowątkowości (z użyciem pakietu *parallelly*). Stabilność implementacji i ew. zyski z używania wielowątkowości (na różnych systemach operacyjnych) wymagają dalszych testów.
+-   Funkcja `agreguj_wskazniki()` akceptuje wskazanie, że dla danej grupy ma nie być używana żadna grupa odniesienia. W tym celu jako definicję grupy odniesienia w kolumnie `odniesienie` argumentu `grupy` należy podać brak danych (`NA`). Funkcja akceptuje też teraz wywołania, w których agrument `grupy` w ogóle nie zawiera kolumny `odniesienie`.
 
--   Poprawiono wywołania funkcji `rename` na zgodne z konwencją obowiązującą od wersji 1.0.0 pakietu *tidyselect*, w której preferowane jest wybieranie kolumn po ich nazwie (bez prefiksu `.data$`).
+    -   Uwaga, w przypadku, gdy brak grupy odniesienia dotyczy tylko niektórych grup i wykorzystywane są wskaźniki, których wartości dla poszczególnych grup mają postać inną, niż skalar, struktura wartości wskaźników zwracanych dla poszczególnych grup jest niestabilna! Dla grup, w przypadku których nie zdefiniowano grupy odniesienia wskaźnik będzie jednoelementowym wektorem logicznym zawierającym brak danych, podczas gdy dla pozostałych grup będzie miał bardziej złożoną, właściwą sobie strukturę.
+
+-   Poprawiono wywołania funkcji `rename` na zgodne z konwencją obowiązującą od wersji 1.0.0 pakietu *tidyselect*, w której preferowane jest wybieranie kolumn po ich nazwie (bez prefiksu `.data$`) oraz zamieniono wywołania `mutate_all(., ...)` na `mutate(., across(everything(), ...))`.
 
 # MLASZdane 0.4.2 (9.08.2021)
 
