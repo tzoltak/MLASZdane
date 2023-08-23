@@ -225,7 +225,7 @@ imputuj_miesiac_pk_1rm = function(x, print = TRUE) {
   epizodyImput = suppressWarnings(bind_rows(epizodyImputM)) %>%
     select("ID_RESP", "typ_epizodu", "nr", "czas_rozp", "czas_zakon",
            "czy_zakonczony") %>%
-    rename(imput_czas_rozp = .data$czas_rozp, imput_czas_zakon = .data$czas_zakon)
+    rename(imput_czas_rozp = "czas_rozp", imput_czas_zakon = "czas_zakon")
   if (print) {
     message("Wyniki imputacji:")
     table(imput_czas_rozp = epizodyImput$imput_czas_rozp,

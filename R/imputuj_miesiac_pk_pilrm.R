@@ -231,7 +231,7 @@ imputuj_miesiac_pk_pilrm = function(x) {
   # łączenie
   epizodyImput = suppressWarnings(bind_rows(epizodyImputM)) %>%
     select("ID", "typ_epizodu", "nr", "czas_rozp", "czas_kon", "czy_zakonczony") %>%
-    rename(czas_rozp_imput = .data$czas_rozp, czas_kon_imput = .data$czas_kon)
+    rename(czas_rozp_imput = "czas_rozp", czas_kon_imput = "czas_kon")
   message("Wyniki imputacji:")
   table(czas_rozp_imput = epizodyImput$czas_rozp_imput,
         czas_kon_imput = epizodyImput$czas_kon_imput, exclude = NULL) %>%

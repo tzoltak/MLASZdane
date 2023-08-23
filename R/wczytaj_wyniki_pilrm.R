@@ -322,13 +322,13 @@ wczytaj_wyniki_pilrm = function(x){
         setNames(sub("^pi", "pio", names(select(dane, "ID", matches("^pi"))))) %>%
         left_join(lPrac %>%
                     select("ID", "nr_min") %>%
-                    rename(nr = .data$nr_min)),
+                    rename(nr = "nr_min")),
       dane %>%
         select("ID", matches("^po")) %>%
         setNames(sub("^po", "pio", names(select(dane, "ID", matches("^po"))))) %>%
         left_join(lPrac %>%
                     select("ID", "nr_max") %>%
-                    rename(nr = .data$nr_max)))) %>%
+                    rename(nr = "nr_max")))) %>%
       filter(.data$pio1 %in% 1:4) %>%
       mutate(pio0 = ifelse(.data$pio0 %in% 0:95, .data$pio0, NA),
              pio1 = ifelse(.data$pio1 %in% 1:4, .data$pio1, NA),

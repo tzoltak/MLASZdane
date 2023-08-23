@@ -1,3 +1,9 @@
+# MLASZdane 0.5.0 (23.08.2023)
+
+-   Do funkcji `agreguj_wskazniki()` dodano wstępną obsługę wielowątkowości (z użyciem pakietu *parallelly*). Stabilność implementacji i ew. zyski z używania wielowątkowości (na różnych systemach operacyjnych) wymagają dalszych testów.
+
+-   Poprawiono wywołania funkcji `rename` na zgodne z konwencją obowiązującą od wersji 1.0.0 pakietu *tidyselect*, w której preferowane jest wybieranie kolumn po ich nazwie (bez prefiksu `.data$`).
+
 # MLASZdane 0.4.2 (9.08.2021)
 
 -   Funkcja `przygotuj_wskaznik_do_splaszczenia()` konwertuje wszystkie zmienne wskaźników na ciągi znaków (zmienne logiczne są uprzednio konwertowane na liczby), aby uniknąć sytuacji, kiedy w niektórych grupach zachowują one oryginalny format, a w innych są ciągami znaków (por. wskaźnik *l_zawod_przyg* w zbiorze z 2. RM). Dla równowagi `splaszcz_wskazniki_zagregowane()` konwertuje z powrotem na liczby zmienne, dla których da się to zrobić.
