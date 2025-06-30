@@ -4,12 +4,16 @@
 \alias{sprawdz_definicje_grup}
 \title{Obliczanie wskaznikow na poziomie zagregowanym - funkcje pomocnicze}
 \usage{
-sprawdz_definicje_grup(wskazniki, definicje)
+sprawdz_definicje_grup(wskazniki, definicje, dopuscPuste = FALSE)
 }
 \arguments{
 \item{wskazniki}{ramka danych ze wskaźnikami na poziomie idywidualnym}
 
 \item{definicje}{wektor lub lista zawierająca definicje podziałów na grupy}
+
+\item{dopuscPuste}{wartość logiczna wskazująca, czy jako definicja grupy
+dopuszczony jest brak danych - co może być używane w przypadku grup
+odniesienia i oznacza brak grupy odniesienia}
 }
 \value{
 wektor tekstowy o długości równej długości \code{definicje}:

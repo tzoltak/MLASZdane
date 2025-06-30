@@ -7,37 +7,75 @@
 #' @param grupy ramka danych zawierająca definicje podziałów na grupy (oraz
 #' ewentualnie inne zmienne, które zostaną dołączone do zwracanych zbiorów) -
 #' zwrócona przez funkcję \code{\link{utworz_grupowanie_ze_zmiennej}} lub
-#' przygotowana samodzielnie; musi zawierać kolumny \emph{grupa}
-#' i \emph{odniesienie}, które zawierają wyrażenia wybierające jednostki
-#' obserwacji należące do danej grupy lub grupy odniesienia (mogą być one
-#' zapisane \emph{stricte} w formie niezewaluowanych wyrażeń języka, ale także
-#' formuł lub ciągów znaków)
+#' przygotowana samodzielnie; musi zawierać kolumnę \emph{grupa}, która zawiera
+#' wyrażenia wybierające jednostki obserwacji należące do danej grupy i zwykle
+#' zawiera (choć nie musi) kolumnę \emph{odniesienie} zawierającą wyrażenia
+#' wybierające jednostki obseracji należące do odpowiedniej grupy odniesienia
+#' (wyrażenia w każdej z tych kolumn mogą być  zapisane \emph{stricte} w formie
+#' niezewaluowanych wyrażeń języka, ale także formuł lub ciągów znaków);
+#' \strong{\emph{odniesienie} może też zawierać braki danych, co oznacza, że dla
+#' danej grupy nie istnieje adekwatna grupa odniesienia} (i w konsekwencji
+#' obliczenie wskaźników w grupie odniesienia jest tam niemożliwe)
 #' @param ... wyrażenia postaci
 #' \code{nazwa_wskaznika = funkcja_obliczajaca_wskaznik(.data, ew_inne_argumenty)}
+#' @param wielowatkowo ciąg znaków - czy obliczenia powinny zostać wykonane
+#' wielowątkowo, a jeśli tak, to przy pomocy jakiego podejścia
+#' @param uzywajPakietow wektor ciągów znaków z nazwami pakietów, które musza
+#' zostac załadowane, aby móc wykonać wyrażenia podane w {...} (z wyjątkiem
+#' ładowanych domyślnie do sesji R oraz \emph{MLASZdane}, który zostanie
+#' załadowany zawsze) - potrzebne tylko czasami przy używaniu wielowątkowości
+#' w systemach operacyjnych Windows
 #' @return lista dwóch ramek danych:
 #' \itemize{
 #'   \item{\code{grupy} - ramka danych zawierająca wskaźniki obliczone dla
 #'         poszczególnych grup,}
 #'   \item{\code{grupyOdniesienia} - ramka danych zawierająca wskaźniki
-#'         obliczone dla odpowiadających im grup odniesienia.}
+#'         obliczone dla odpowiadających im grup odniesienia. Jeśli dla danej
+#'         grupy zdefiniowano, że \strong{ma dla niej nie być używana grupa
+#'         odniesienia}, to wartość wskaźników w danym wierszu jest albo brakiem
+#'         danych (wskaźniki niebędące listami) lub jednoelementowym wektorem
+#'         logicznym zawierającym brak danych (kolumny-listy).}
 #' }
 #' @seealso Funkcje, które wywołują \code{agreguj_wskazniki}:
 #' \itemize{
 #'   \item{\code{\link{agreguj_wskazniki_1rm}}.}
 #' }
 #' @export
-#' @importFrom dplyr mutate_all
+#' @importFrom utils installed.packages
+#' @importFrom dplyr across bind_cols bind_rows everything mutate
 #' @importFrom rlang := !! enexprs
-agreguj_wskazniki = function(wskazniki, grupy, ...) {
+#' @importFrom parallel clusterEvalQ clusterExport clusterMap mcMap stopCluster
+#' @importFrom parallelly availableCores makeClusterPSOCK supportsMulticore
+agreguj_wskazniki = function(wskazniki, grupy, ...,
+                             wielowatkowo = c("brak", "socket", "fork"),
+                             uzywajPakietow = vector(mode = "character",
+                                                     length = 0)) {
   stopifnot(is.data.frame(wskazniki),
             is.data.frame(grupy),
-            "grupa" %in% names(grupy), "odniesienie" %in% names(grupy))
+            "grupa" %in% names(grupy),
+            is.character(uzywajPakietow))
+  wielowatkowo = match.arg(wielowatkowo)
+  if (length(uzywajPakietow) > 0 && wielowatkowo %in% c("brak", "fork")) {
+    warning("Argument 'uzywajPakietow' zostanie zignorowany, gdyż argument 'wielowatkowo' ma wartość 'brak' lub 'fork'.")
+  } else if (length(uzywajPakietow) > 0) {
+    stopifnot(all(uzywajPakietow %in% installed.packages()[, "Package"]))
+  }
+  if (wielowatkowo == "fork" && !supportsMulticore()) {
+    warning("System operacyjny nie umożliwia tworzenia 'forków' procesów, do wielowątkowości zostanie wykorzystane podejście 'socket'.")
+    wielowatkowo = "socket"
+  }
   funkcje = enexprs(...)
   # zanim zostanie odpalony potencjalnie czasochłonny proces obliczania
   # zagregowanych wskaźników sprawdźmy dla wszystkich grup, czy wyrażenia,
   # które je definiują, są poprawne
   problemyGrupa = sprawdz_definicje_grup(wskazniki, grupy$grupa)
-  problemyOdniesienie = sprawdz_definicje_grup(wskazniki, grupy$odniesienie)
+  if (!("odniesienie" %in% names(grupy))) {
+    grupy$odniesienie = rep(NA_character_, nrow(grupy))
+    problemyOdniesienie = rep("", nrow(grupy))
+  } else {
+    problemyOdniesienie = sprawdz_definicje_grup(wskazniki, grupy$odniesienie,
+                                                 dopuscPuste = TRUE)
+  }
   if (!all(problemyGrupa %in% "") | !all(problemyOdniesienie %in% "")) {
     blad = "\n"
     if (!all(problemyGrupa %in% "")) {
@@ -63,32 +101,75 @@ agreguj_wskazniki = function(wskazniki, grupy, ...) {
     stop(blad)
   }
 
-  # tworzenie zmiennych do przechowywania obliczonych wskaźników
-  for (z in names(funkcje)) {
-    grupy = mutate(grupy, !!z := vector(mode = "list", length = nrow(grupy)))
-  }
-  odniesienia = grupy
-  # sama agregacja
-  for (i in 1:nrow(grupy)) {
-    grupaEnv = new.env()
-    assign(".data",
-           wskazniki[eval(zwroc_wywolanie_grupy(grupy$grupa[i]), wskazniki), ],
-           envir = grupaEnv)
-    odniesienieEnv = new.env()
-    assign(".data",
-           wskazniki[eval(zwroc_wywolanie_grupy(grupy$odniesienie[i]), wskazniki), ],
-           envir = odniesienieEnv)
+  if (wielowatkowo == "fork") {
+    odniesienia = bind_cols(
+      grupy,
+      bind_rows(mcMap(oblicz_wskazniki_w_forku, grupy$grupa,
+                      MoreArgs = list(.data = wskazniki, funkcje = funkcje),
+                      mc.cores = availableCores() - 1)))
+    grupy = bind_cols(
+      grupy,
+      bind_rows(mcMap(oblicz_wskazniki_w_forku, grupy$odniesienie,
+                      MoreArgs = list(.data = wskazniki, funkcje = funkcje),
+                      mc.cores = availableCores() - 1)))
+  } else if (wielowatkowo == "socket") {
+    # wydzielanie danych odpowiednich dla każdej grupy
+    wskaznikiG = wskaznikiO = vector(mode = "list", length = nrow(grupy))
+    for (i in 1:nrow(grupy)) {
+      wskaznikiG[[i]] = wskazniki[eval(zwroc_wywolanie_grupy(grupy$grupa[i]), wskazniki), ]
+      wskaznikiO[[i]] = wskazniki[eval(zwroc_wywolanie_grupy(grupy$odniesienie[i]), wskazniki), ]
+    }
+    # obliczenia na klastrze
+    cl = makeClusterPSOCK(availableCores() - 1, autoStop = TRUE)
+    uzywajPakietow = union("MLASZdane", uzywajPakietow)
+    clusterExport(cl, varlist = "uzywajPakietow", envir = environment())
+    clusterEvalQ(cl,
+                 for (p in uzywajPakietow) {library(p, character.only = TRUE)})
+    odniesienia = bind_cols(
+      grupy,
+      bind_rows(clusterMap(cl, oblicz_wskazniki_w_watku, wskaznikiO,
+                           MoreArgs = list(funkcje = funkcje))))
+    grupy = bind_cols(
+      grupy,
+      bind_rows(clusterMap(cl, oblicz_wskazniki_w_watku, wskaznikiG,
+                           MoreArgs = list(funkcje = funkcje))))
+    stopCluster(cl)
+  } else {
+    # tworzenie zmiennych do przechowywania obliczonych wskaźników
+    for (z in names(funkcje)) {
+      grupy = mutate(grupy, !!z := vector(mode = "list", length = nrow(grupy)))
+    }
+    odniesienia = grupy
+    # sama agregacja
+    for (i in 1:nrow(grupy)) {
+      grupaEnv = new.env()
+      assign(".data",
+             wskazniki[eval(zwroc_wywolanie_grupy(grupy$grupa[i]), wskazniki), ],
+             envir = grupaEnv)
+      odniesienieEnv = new.env()
+      assign(".data",
+             wskazniki[eval(zwroc_wywolanie_grupy(grupy$odniesienie[i]), wskazniki), ],
+             envir = odniesienieEnv)
 
-    for (f in 1:length(funkcje)) {
-      grupy[[names(funkcje)[f]]][[i]] = eval(funkcje[[f]], grupaEnv)
-      odniesienia[[names(funkcje)[f]]][[i]] = eval(funkcje[[f]], odniesienieEnv)
+      for (f in 1:length(funkcje)) {
+        grupy[[names(funkcje)[f]]][[i]] = eval(funkcje[[f]], grupaEnv)
+        # być może funkcje[[f]] nie radzi sobie z ramkami danych o zerowej liczbie
+        # wierszy (w praktyce raczej z wektorami o zerowej długości), więc
+        # przy braku zdefiniowanej grupy odniesienia, lepiej powstrzymać się
+        # od wykonywania wyrażenia
+        if (nrow(odniesienieEnv$.data) > 0) {
+          odniesienia[[names(funkcje)[f]]][[i]] = eval(funkcje[[f]], odniesienieEnv)
+        } else {
+          odniesienia[[names(funkcje)[f]]][[i]] = NA
+        }
+      }
     }
   }
 
   grupy = grupy %>%
-    mutate_all(list(proste_wskazniki_na_wektor))
+    mutate(across(everything(), proste_wskazniki_na_wektor))
   odniesienia = odniesienia %>%
-    mutate_all(list(proste_wskazniki_na_wektor))
+    mutate(across(everything(), proste_wskazniki_na_wektor))
   return(list(grupy = grupy,
               grupyOdniesienia = odniesienia))
 }
@@ -100,14 +181,19 @@ agreguj_wskazniki = function(wskazniki, grupy, ...) {
 #' indywidualnego).
 #' @param wskazniki ramka danych ze wskaźnikami na poziomie idywidualnym
 #' @param definicje wektor lub lista zawierająca definicje podziałów na grupy
+#' @param dopuscPuste wartość logiczna wskazująca, czy jako definicja grupy
+#' dopuszczony jest brak danych - co może być używane w przypadku grup
+#' odniesienia i oznacza brak grupy odniesienia
 #' @return wektor tekstowy o długości równej długości \code{definicje}:
 #' zawiera komunikaty o błędach (jeśli wystąpiły) lub puste ciągi znaków (jeśli
 #' definicja zewaluowała się bez problemu)
 #' @seealso \code{\link{agreguj_wskazniki}}
-sprawdz_definicje_grup = function(wskazniki, definicje) {
+sprawdz_definicje_grup = function(wskazniki, definicje, dopuscPuste = FALSE) {
   problemy = rep("", length(definicje))
   for (i in 1:length(definicje)) {
+    if (is.na(definicje[i]) && dopuscPuste) next
     grupa = zwroc_wywolanie_grupy(definicje[i])
+
     if (!is.call(grupa)) {
       problemy[i] = "nie udało się skonwertować na 'wywołanie' ('call')"
       next
@@ -144,10 +230,53 @@ zwroc_wywolanie_grupy = function(x) {
   if (inherits(x, "formula")) {
     x = as.character(x[length(x)])
   }
+  if (is.na(x)) {
+    x = "c()"
+  }
   if (is.character(x)) {
     x = str2lang(x)
   }
   return(x)
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym - funkcje pomocnicze
+#' @description Nieeksportowana funkcja używana w ramach
+#' \code{\link{agreguj_wskazniki}} do obliczania wsartości wskaźników, kiedy
+#' wykorzystywana jest wielowątkowość w systemach innych niż Windows (tj.,
+#' kiedy możliwe jest tworzenie \emph{forków} procesów)
+#' @param grupa wyrażenie zawierające definicję grupy (lub grupy odniesienia)
+#' @param .data ramka danych (zawierająca wskaźniki na poziomie indywidualnym)
+#' @param funkcje lista wyrażeń przekazanych w wywołaniu
+#' \code{\link{agreguj_wskazniki}} poprzez \code{...}
+#' @return ramka danych
+#' @seealso \code{\link{agreguj_wskazniki}}
+oblicz_wskazniki_w_forku = function(grupa, .data, funkcje) {
+  .data = .data[eval(zwroc_wywolanie_grupy(grupa), .data), ]
+  wyniki = rep(vector(mode = "list", length = 1),
+               length(funkcje))
+  names(wyniki) = names(funkcje)
+  for (f in 1:length(funkcje)) {
+    wyniki[[names(funkcje)[f]]][[1]] = eval(funkcje[[f]])
+  }
+  return(wyniki)
+}
+#' @title Obliczanie wskaznikow na poziomie zagregowanym - funkcje pomocnicze
+#' @description Nieeksportowana funkcja używana w ramach
+#' \code{\link{agreguj_wskazniki}} do obliczania wsartości wskaźników, kiedy
+#' wykorzystywana jest wielowątkowość w systemach Windows (tj. z użyciem
+#' \emph{socket connections})
+#' @param .data ramka danych (zawierająca wskaźniki na poziomie indywidualnym)
+#' @param funkcje lista wyrażeń przekazanych w wywołaniu
+#' \code{\link{agreguj_wskazniki}} poprzez \code{...}
+#' @return ramka danych
+#' @seealso \code{\link{agreguj_wskazniki}}
+oblicz_wskazniki_w_watku = function(.data, funkcje) {
+  wyniki = rep(vector(mode = "list", length = 1),
+               length(funkcje))
+  names(wyniki) = names(funkcje)
+  for (f in 1:length(funkcje)) {
+    wyniki[[names(funkcje)[f]]][[1]] = eval(funkcje[[f]])
+  }
+  return(wyniki)
 }
 #' @title Obliczanie wskaznikow na poziomie zagregowanym - funkcje pomocnicze
 #' @description Nieeksportowana funkcja używana w ramach
@@ -162,73 +291,4 @@ proste_wskazniki_na_wektor = function(x) {
   } else {
     return(x)
   }
-}
-#' @title Obliczanie wskaznikow na poziomie zagregowanym - definiowanie grupowania
-#' @description Funkcja pozwala przygotować ramkę danych opisującą podział na
-#' grupy, dla których mają następnie zostać obliczone wskaźniki zagregowane
-#' przy pomocy funkcji \code{\link{agreguj_wskazniki}}, oraz odpowiadające im
-#' grupy odniesienia w prostej, aczy typowej sytuacji, kiedy taki podział
-#' definiują różne wartości jednej zmiennej w zbiorze (np. identyfikator szkoły),
-#' a grupa odniesienia daje się określić przez taką samą (jak w analizowanej
-#' grupie) wartość innej zmiennej (np. typ szkoły). Dodatkowy argument pozwala
-#' określić czy obserwacje należące do analizowanej grupy powinny zostać,
-#' wykluczone, czy też włączone do grupy odniesienia.
-#' @param x ramka danych (zwykle zbiór wskaźników indywidualnych)
-#' @param zmGrupujaca nazwa zmiennej, której wartości definiują podział na
-#' grupy, podana jako wyrażenie lub ciąg znaków
-#' @param zmGrupaOdniesienia nazwa zmiennej, której wartości definiują grupę
-#' odniesienia, podana jako wyrażenie lub ciąg znaków
-#' @param wykluczGrupeZGrupyOdniesienia wartość logiczna - czy obserwacje
-#' z analizowanej grupy powinny zostać wykluczone z grupy odniesienia
-#' @param ... opcjonalnie specyfikacja dodatkowych kolumn z ramki danych
-#' podanej argumentem \code{x}, które mają zostać dołączone do zwracanej ramki
-#' danych (podane w dowolny sposób akceptowany przez funkcję
-#' \code{\link[dplyr]{select}})
-#' @return ramka danych, która może zostać użyta jako argument \code{grupy}
-#' w wywołaniu funkcji \code{\link{agreguj_wskazniki}}.
-#' @export
-#' @importFrom dplyr %>% .data count distinct mutate select
-utworz_grupowanie_ze_zmiennej = function(x, zmGrupujaca, zmGrupaOdniesienia,
-                                         wykluczGrupeZGrupyOdniesienia = TRUE,
-                                         ...) {
-  stopifnot(is.data.frame(x),
-            is.logical(wykluczGrupeZGrupyOdniesienia),
-            length(wykluczGrupeZGrupyOdniesienia) == 1)
-  stopifnot(wykluczGrupeZGrupyOdniesienia %in% c(TRUE, FALSE))
-  zmGrupujaca = ensym(zmGrupujaca)
-  zmGrupaOdniesienia = ensym(zmGrupaOdniesienia)
-  stopifnot(as.character(zmGrupujaca) %in% names(x),
-            as.character(zmGrupaOdniesienia) %in% names(x))
-
-  x = x %>%
-    select(!!zmGrupujaca, !!zmGrupaOdniesienia, ...) %>%
-    distinct()
-  powtorzenia = x %>%
-    count(!!zmGrupujaca) %>%
-    filter(n > 1) %>%
-    select(!!zmGrupujaca)
-  if (nrow(powtorzenia) > 0) {
-    blad = paste("W ramach niektórych grup występują różne wartości zmiennnej, która powinna definiować grupę odniesienia lub innych zmiennych, które mają zostać dołączone do zwracanej ramki danych. Uniemożliwia to przygotowanie definicji grup odniesienia. Grupy, w których wystąpił problem:\n\n",
-                 pokaz_ramke_danych(powtorzenia), "\n\n")
-    stop(blad)
-  }
-  x = x %>%
-    mutate(grupa = paste0(as.character(zmGrupujaca), " %in% ",
-                          ifelse(is.character(!!zmGrupujaca), '"', ''),
-                          !!zmGrupujaca,
-                          ifelse(is.character(!!zmGrupujaca), '"', '')),
-           odniesienie = paste0(as.character(zmGrupaOdniesienia), " %in% ",
-                                ifelse(is.character(!!zmGrupaOdniesienia), '"', ''),
-                                !!zmGrupaOdniesienia,
-                                ifelse(is.character(!!zmGrupaOdniesienia), '"', '')))
-  if (wykluczGrupeZGrupyOdniesienia) {
-    x = x %>%
-      mutate(odniesienie = paste0("(", .data$odniesienie, ") & !(",
-                                  as.character(zmGrupujaca), " %in% ",
-                                  ifelse(is.character(!!zmGrupujaca), '"', ''),
-                                  !!zmGrupujaca,
-                                  ifelse(is.character(!!zmGrupujaca), '"', ''),
-                                  ")"))
-  }
-  return(x)
 }

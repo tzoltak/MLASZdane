@@ -242,7 +242,7 @@ wczytaj_wyniki_1rm = function(x){
            czas_zakon_imput = ifelse(is.na(.data$pp6f1), 1, 2)) %>%
       left_join(get("kzsb") %>% select("kod_zawodu", "branza_2019"),
                 by = c("pp3_kierunek_kod" = "kod_zawodu")) %>%
-    rename(pp3_kierunek_branza_kzsb = .data$branza_2019) %>%
+    rename(pp3_kierunek_branza_kzsb = "branza_2019") %>%
     select(-"pp6i_4") %>%
     select("ID_RESP", "typ_epizodu", "nr", "czas_rozp", "czas_zakon",
            "czy_zakonczony", "swiadectwo", "czas_rozp_imput", "czas_zakon_imput",
@@ -354,10 +354,12 @@ wczytaj_wyniki_1rm = function(x){
   #|<-
   #|-> łączenie obu rodzajóW uprawnień
   szkoleniaU4 = szkoleniaU4 %>%
-    rename(u4h = .data$u4g)
+    rename(u4h = "u4g")
   names(szkoleniaU4) = sub("u4", "u2", names(szkoleniaU4))
-  szkolenia = suppressWarnings(bind_rows(szkoleniaU2,
-                                         szkoleniaU4))
+  szkolenia = suppressWarnings(
+    bind_rows(szkoleniaU2,
+              mutate(szkoleniaU4,
+                     swiadectwo = as.numeric(.data$swiadectwo))))
   szkolenia = przywroc_etykiety(szkolenia, labWspolne)
   szkolenia = przywroc_etykiety(szkolenia, szkoleniaU2)
   rm(szkoleniaU2, szkoleniaU4)
@@ -444,14 +446,14 @@ wczytaj_wyniki_1rm = function(x){
                    names(select(dane, "ID_RESP", matches("^pi"))))) %>%
       left_join(lPrac %>%
                   select("ID_RESP", "nr_min") %>%
-                  rename(nr = .data$nr_min)),
+                  rename(nr = "nr_min")),
     dane %>%
       select("ID_RESP", matches("^po[[:digit:]]")) %>%
       setNames(sub("^po(1|[234].*)$", "pio\\1",
                    names(select(dane, "ID_RESP", matches("^po[[:digit:]]"))))) %>%
       left_join(lPrac %>%
                   select("ID_RESP", "nr_max") %>%
-                  rename(nr = .data$nr_max))))) %>%
+                  rename(nr = "nr_max"))))) %>%
     filter(.data$pio1 %in% 1:4) %>%
     mutate(pi0 = ifelse(.data$pi0 %in% 0:94, .data$pi0, NA),
            pio1 = ifelse(.data$pio1 %in% 1:4, .data$pio1, NA),

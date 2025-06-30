@@ -19,8 +19,8 @@
 #' @importFrom stats setNames
 #' @importFrom haven read_spss
 #' @importFrom tidyr gather spread
-#' @importFrom dplyr .data bind_cols bind_rows case_when filter group_by
-#' left_join matches mutate mutate_all mutate_at one_of rename select
+#' @importFrom dplyr .data across bind_cols bind_rows case_when everything
+#' filter group_by left_join matches mutate mutate_at one_of rename select
 #' starts_with summarise vars
 wczytaj_wyniki_pilrm = function(x){
   stopifnot(is.character(x), length(x) == 1)
@@ -58,7 +58,7 @@ wczytaj_wyniki_pilrm = function(x){
   czasy = bind_cols(czasy,
                     t_laczny_czas = czasy %>%
                       select(starts_with("t_")) %>%
-                      mutate_all(as.numeric) %>%
+                      mutate(across(everything(), as.numeric)) %>%
                       rowSums(na.rm = TRUE))
   attributes(czasy$t_laczny_czas)$label = "Łączy czas trwania wywiadu [s]"
   #|<-
@@ -322,13 +322,13 @@ wczytaj_wyniki_pilrm = function(x){
         setNames(sub("^pi", "pio", names(select(dane, "ID", matches("^pi"))))) %>%
         left_join(lPrac %>%
                     select("ID", "nr_min") %>%
-                    rename(nr = .data$nr_min)),
+                    rename(nr = "nr_min")),
       dane %>%
         select("ID", matches("^po")) %>%
         setNames(sub("^po", "pio", names(select(dane, "ID", matches("^po"))))) %>%
         left_join(lPrac %>%
                     select("ID", "nr_max") %>%
-                    rename(nr = .data$nr_max)))) %>%
+                    rename(nr = "nr_max")))) %>%
       filter(.data$pio1 %in% 1:4) %>%
       mutate(pio0 = ifelse(.data$pio0 %in% 0:95, .data$pio0, NA),
              pio1 = ifelse(.data$pio1 %in% 1:4, .data$pio1, NA),

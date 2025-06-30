@@ -4,7 +4,13 @@
 \alias{agreguj_wskazniki}
 \title{Obliczanie wskaznikow na poziomie zagregowanym}
 \usage{
-agreguj_wskazniki(wskazniki, grupy, ...)
+agreguj_wskazniki(
+  wskazniki,
+  grupy,
+  ...,
+  wielowatkowo = c("brak", "socket", "fork"),
+  uzywajPakietow = vector(mode = "character", length = 0)
+)
 }
 \arguments{
 \item{wskazniki}{ramka danych ze wskaźnikami na poziomie idywidualnym
@@ -13,14 +19,27 @@ zwracana przez funkcję \code{\link{oblicz_wskazniki_ind_1rm}}}
 \item{grupy}{ramka danych zawierająca definicje podziałów na grupy (oraz
 ewentualnie inne zmienne, które zostaną dołączone do zwracanych zbiorów) -
 zwrócona przez funkcję \code{\link{utworz_grupowanie_ze_zmiennej}} lub
-przygotowana samodzielnie; musi zawierać kolumny \emph{grupa}
-i \emph{odniesienie}, które zawierają wyrażenia wybierające jednostki
-obserwacji należące do danej grupy lub grupy odniesienia (mogą być one
-zapisane \emph{stricte} w formie niezewaluowanych wyrażeń języka, ale także
-formuł lub ciągów znaków)}
+przygotowana samodzielnie; musi zawierać kolumnę \emph{grupa}, która zawiera
+wyrażenia wybierające jednostki obserwacji należące do danej grupy i zwykle
+zawiera (choć nie musi) kolumnę \emph{odniesienie} zawierającą wyrażenia
+wybierające jednostki obseracji należące do odpowiedniej grupy odniesienia
+(wyrażenia w każdej z tych kolumn mogą być  zapisane \emph{stricte} w formie
+niezewaluowanych wyrażeń języka, ale także formuł lub ciągów znaków);
+\strong{\emph{odniesienie} może też zawierać braki danych, co oznacza, że dla
+danej grupy nie istnieje adekwatna grupa odniesienia} (i w konsekwencji
+obliczenie wskaźników w grupie odniesienia jest tam niemożliwe)}
 
 \item{...}{wyrażenia postaci
 \code{nazwa_wskaznika = funkcja_obliczajaca_wskaznik(.data, ew_inne_argumenty)}}
+
+\item{wielowatkowo}{ciąg znaków - czy obliczenia powinny zostać wykonane
+wielowątkowo, a jeśli tak, to przy pomocy jakiego podejścia}
+
+\item{uzywajPakietow}{wektor ciągów znaków z nazwami pakietów, które musza
+zostac załadowane, aby móc wykonać wyrażenia podane w {...} (z wyjątkiem
+ładowanych domyślnie do sesji R oraz \emph{MLASZdane}, który zostanie
+załadowany zawsze) - potrzebne tylko czasami przy używaniu wielowątkowości
+w systemach operacyjnych Windows}
 }
 \value{
 lista dwóch ramek danych:
@@ -28,7 +47,11 @@ lista dwóch ramek danych:
   \item{\code{grupy} - ramka danych zawierająca wskaźniki obliczone dla
         poszczególnych grup,}
   \item{\code{grupyOdniesienia} - ramka danych zawierająca wskaźniki
-        obliczone dla odpowiadających im grup odniesienia.}
+        obliczone dla odpowiadających im grup odniesienia. Jeśli dla danej
+        grupy zdefiniowano, że \strong{ma dla niej nie być używana grupa
+        odniesienia}, to wartość wskaźników w danym wierszu jest albo brakiem
+        danych (wskaźniki niebędące listami) lub jednoelementowym wektorem
+        logicznym zawierającym brak danych (kolumny-listy).}
 }
 }
 \description{

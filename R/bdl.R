@@ -142,9 +142,9 @@ pobierz_dane_bdl = function(wskazniki, lata, poziom = "powiaty") { # nocov start
     cat("\n")
   }
   dane = suppressMessages(wskazniki %>%
-                            rename(idWsk = .data$id) %>%
+                            rename(idWsk = "id") %>%
                             left_join(dane)) %>%
-    rename(idJst = .data$id) %>%
+    rename(idJst = "id") %>%
     mutate(year = as.integer(.data$year))
   if (dodajTeryt) {
     dane = dane %>%
@@ -230,8 +230,7 @@ przeksztalc_dane_bdl = function(daneBdl, rocznik, prefiks = "") {
            name = sub("^Powiat", "powiat", .data$name),
            name = sub("^Gmina", "gmina", .data$name)) %>%
     filter(!grepl("^-", .data$czas)) %>%
-    select(wskaznik = .data$n1, wartosc = .data$val, teryt = .data$teryt,
-           nazwaJst = .data$name) %>%
+    select(wskaznik = "n1", wartosc = "val", teryt = "teryt", nazwaJst = "name") %>%
     spread("wskaznik", "wartosc")
   if (prefiks != "") {
     names(daneBdl)[names(daneBdl) %in% c("teryt", "nazwaJst")] =

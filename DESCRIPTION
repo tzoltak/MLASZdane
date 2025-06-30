@@ -1,7 +1,7 @@
 Package: MLASZdane
 Type: Package
 Title: Pakiet do zlaczania danych na potrzeby projektu MLEZAiMD
-Version: 0.4.2
+Version: 0.5.0
 Authors@R: c(person("Tomasz", "Żółtak", email = "t.zoltak@ibe.edu.pl", role = c("aut", "cre")),
              person("Bartłomiej", "Płatkowski", email = "b.platkowski@ibe.edu.pl", role = c("aut")))
 Description: Pakiet do złączania danych z rejestrów, baz danych administracyjnych,
@@ -14,9 +14,10 @@ Imports:
     methods,
     rlang (>= 0.4.1),
     tidyr (>= 1.0.0),
-    dplyr (>= 0.8.2),
+    dplyr (>= 1.0.0),
     haven (>= 2.1.0),
-    jsonlite (>= 1.6)
+    jsonlite (>= 1.6),
+    parallelly (>= 1.32.1)
 Suggests:
     testthat,
     covr,
@@ -24,4 +25,4 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
